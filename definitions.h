@@ -35,20 +35,20 @@
 #define KG_COL_BACK_A                       1.00f
 
 #define KG_COL_SELECTED_R                   1.00f
-#define KG_COL_SELECTED_G                   0.75f
+#define KG_COL_SELECTED_G                   1.00f
 #define KG_COL_SELECTED_B                   0.00f
 
-#define KG_COL_NONSELECTED_R                1.00f
-#define KG_COL_NONSELECTED_G                1.00f
-#define KG_COL_NONSELECTED_B                1.00f
+#define KG_COL_NONSELECTED_R                0.00f
+#define KG_COL_NONSELECTED_G                0.00f
+#define KG_COL_NONSELECTED_B                0.00f
 
 #define KG_COL_X_AXIS_R                     0.0f
-#define KG_COL_X_AXIS_G                     0.0f
+#define KG_COL_X_AXIS_G                     0.5f
 #define KG_COL_X_AXIS_B                     1.0f
 
 #define KG_COL_Y_AXIS_R                     0.0f
 #define KG_COL_Y_AXIS_G                     1.0f
-#define KG_COL_Y_AXIS_B                     0.0f
+#define KG_COL_Y_AXIS_B                     0.5f
 
 #define KG_COL_Z_AXIS_R                     0.0f
 #define KG_COL_Z_AXIS_G                     0.0f

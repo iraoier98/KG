@@ -5,6 +5,7 @@
 
 extern object3d * _first_object;
 extern object3d * _selected_object;
+extern int _saretaErakutsi;
 
 extern GLdouble _ortho_x_min,_ortho_x_max;
 extern GLdouble _ortho_y_min,_ortho_y_max;
@@ -44,6 +45,7 @@ void keyboard(unsigned char key, int x, int y) {
     int read = 0;
     object3d *auxiliar_object = 0;
     GLdouble wd,he,midx,midy;
+    int sarr;
 
     switch (key) {
     case 'f':
@@ -81,12 +83,18 @@ void keyboard(unsigned char key, int x, int y) {
     case 'I':
         // Objetuari buruzko informazioa printeatuko du.
         if (_selected_object != NULL){
-            printf("%s objektua:\n",_selected_object->filename);
-            printf("%d erpin eta %d aurpegi ditu.\n", _selected_object->num_vertices, _selected_object->num_faces);
+            printf("%s objektua: ",_selected_object->filename);
+            printf("%d erpin eta %d aurpegi.\n", _selected_object->num_vertices, _selected_object->num_faces);
         }
         else{
             printf("Lehenik aukeratu objektu bat.\n");
         }
+        break;
+
+    case 's':
+    case 'S':
+        // Sareta erakutsi / ezkutatu
+        _saretaErakutsi = (_saretaErakutsi == 1) ? 0 : 1;
         break;
 
     case 9: /* <TAB> */
@@ -165,7 +173,7 @@ void keyboard(unsigned char key, int x, int y) {
 
     default:
         /*In the default case we just print the code of the key. This is usefull to define new cases*/
-        // printf("%d %c\n", key, key);
+        printf("%d %c\n", key, key);
     }
     /*In case we have do any modification affecting the displaying of the object, we redraw them*/
     glutPostRedisplay();

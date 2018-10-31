@@ -15,6 +15,8 @@ GLdouble _ortho_z_min,_ortho_z_max;         /*Variables for the control of the o
 
 object3d * _first_object= 0;                /*List of objects*/
 object3d * _selected_object = 0;            /*Object currently selected*/
+int _saretaErakutsi = 0;                    /*Sareta erakusteko "boolearra"  // 1 => erakutsi
+                                                                             // 0 => ezkutatu*/
 
 /** GENERAL INITIALIZATION **/
 void initialization (){
@@ -26,6 +28,7 @@ void initialization (){
     _ortho_y_max = KG_ORTHO_Y_MAX_INIT;
     _ortho_z_min = KG_ORTHO_Z_MIN_INIT;
     _ortho_z_max = KG_ORTHO_Z_MAX_INIT;
+
 
     _window_ratio = (GLdouble) KG_WINDOW_WIDTH / (GLdouble) KG_WINDOW_HEIGHT;
 

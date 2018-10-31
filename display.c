@@ -12,6 +12,18 @@ extern GLdouble _ortho_z_min,_ortho_z_max;
 
 extern object3d *_first_object;
 extern object3d *_selected_object;
+extern int _saretaErakutsi;
+
+/**
+ * @brief Function to draw a line given two 3D points
+ */
+void draw_line(point3 a, point3 b){
+    glBegin(GL_LINES);
+    glVertex3d(a.x, a.y, a.z);
+    glVertex3d(b.x, b.y, b.z);
+    glEnd();
+}
+
 
 /**
  * @brief Function to draw the axes
@@ -36,6 +48,25 @@ void draw_axes()
     glVertex3d(0,0,KG_MAX_DOUBLE);
     glVertex3d(0,0,-1*KG_MAX_DOUBLE);
     glEnd();
+
+    if (_saretaErakutsi){
+        glColor3f(0, 0, 0);
+        for (int i = 0; i < 5; i++){
+            double ii = (double) i+1;
+            glBegin(GL_LINES);
+            glVertex3d(1, 1 + ii / 2,0);
+            glVertex3d(4, 1 + ii / 2,0);
+            glEnd();
+        }
+
+        for (int i = 0; i < 5; i++){
+            double ii = (double) i+1;
+            glBegin(GL_LINES);
+            glVertex3d(1 + ii / 2, 1, 0);
+            glVertex3d(1 + ii / 2, 4, 0);
+            glEnd();
+        }
+    }
 }
 
 
