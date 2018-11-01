@@ -48,7 +48,12 @@ void draw_axes()
     glVertex3d(0,0,KG_MAX_DOUBLE);
     glVertex3d(0,0,-1*KG_MAX_DOUBLE);
     glEnd();
+}
 
+/**
+ * @brief Lehenengo koadrantean sareta marrazten duen funtzioa
+ */
+void draw_sareta(){
     if (_saretaErakutsi){
         glColor3f(0, 0, 0);
         for (int i = 0; i < 5; i++){
@@ -120,6 +125,9 @@ void display(void) {
 
     /*First, we draw the axes*/
     draw_axes();
+    
+    /* Sareta gero */
+    draw_sareta();
 
     /*Now each of the objects in the list*/
     while (aux_obj != 0) {
