@@ -115,6 +115,7 @@ struct object3d{
     point3 max;                         /* coordinates' bigger bounds */
     struct object3d *next;              /* next element in the pile of objects */
     char* filename;                     /* which file contains this object*/
+    GLdouble* tmatrix;                  /* transformation matrix */
 };
 
 typedef struct object3d object3d;

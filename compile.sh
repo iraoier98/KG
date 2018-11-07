@@ -1,1 +1,1 @@
-cc -o p *.c -lGL -lGLU -lglut
+cc -o p *.c -lGL -lGLU -lglut -lm

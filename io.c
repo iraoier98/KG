@@ -2,6 +2,7 @@
 #include "load_obj.h"
 #include <GL/glut.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 extern object3d * _first_object;
 extern object3d * _selected_object;
@@ -11,6 +12,9 @@ extern GLdouble _ortho_x_min,_ortho_x_max;
 extern GLdouble _ortho_y_min,_ortho_y_max;
 extern GLdouble _ortho_z_min,_ortho_z_max;
 
+GLdouble* m;
+
+
 /**
  * @brief This function just prints information about the use
  * of the keys
@@ -19,8 +23,8 @@ void print_help(){
     printf("KbG Irakasgaiaren Praktika. Programa honek 3D objektuak \n");
     printf("aldatzen eta bistaratzen ditu.  \n\n");
 
-    printf("Egilea: Borja Calvo (borja.calvo@ehu.es) \n");
-    printf("Data: Irailak, 2014 \n");
+    printf("Egilea: Oier Irazabal eta Txus Calleja\n");
+    printf("Data: 2018ko azaroa\n");
     printf("\n\n");
     printf("FUNTZIO NAGUSIAK \n");
     printf("<?>\t\t Laguntza hau bistaratu \n");
@@ -46,8 +50,25 @@ void keyboard(unsigned char key, int x, int y) {
     object3d *auxiliar_object = 0;
     GLdouble wd,he,midx,midy;
     int sarr;
+    static int i = 0;
 
     switch (key) {
+
+    // case 'a':
+    //     printf("Kaizo %d", i);
+    //     scanf("oeubfqjb");
+    //     i++;
+    //     m = (GLdouble*) malloc(16 * sizeof(GLdouble));
+    //     m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
+    //     m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
+    //     m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
+    //     m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
+    //     m[12] = i;
+    //     _selected_object->tmatrix = m;
+    //     break;
+
+
+
     case 'f':
     case 'F':
         /*Ask for file*/

@@ -32,6 +32,8 @@ void initialization (){
 
     _window_ratio = (GLdouble) KG_WINDOW_WIDTH / (GLdouble) KG_WINDOW_HEIGHT;
 
+    printf("GL version: %s\n", glGetString(GL_VERSION));
+
     /*Definition of the background color*/
     glClearColor(KG_COL_BACK_R, KG_COL_BACK_G, KG_COL_BACK_B, KG_COL_BACK_A);
 
