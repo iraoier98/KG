@@ -12,6 +12,9 @@ extern GLdouble _ortho_x_min,_ortho_x_max;
 extern GLdouble _ortho_y_min,_ortho_y_max;
 extern GLdouble _ortho_z_min,_ortho_z_max;
 
+extern int transformazio_mota;
+extern int erreferentzia_sistema;
+
 GLdouble* m;
 
 
@@ -51,21 +54,34 @@ void keyboard(unsigned char key, int x, int y) {
     GLdouble wd,he,midx,midy;
     int sarr;
     static int i = 0;
+    printf("kqjbribuq\n");
 
     switch (key) {
 
-    // case 'a':
-    //     printf("Kaizo %d", i);
-    //     scanf("oeubfqjb");
-    //     i++;
-    //     m = (GLdouble*) malloc(16 * sizeof(GLdouble));
-    //     m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
-    //     m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
-    //     m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
-    //     m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
-    //     m[12] = i;
-    //     _selected_object->tmatrix = m;
-    //     break;
+    case 'm':
+    case 'M':
+        transformazio_mota = TRANSLAZIOA;
+        break;
+
+    case 'b':
+    case 'B':
+        transformazio_mota = ERROTAZIOA;
+        break;
+
+    case 't':
+    case 'T':
+        transformazio_mota = ESKALAKETA;
+        break;
+
+    case 'g':
+    case 'G':
+        erreferentzia_sistema = GLOBALA;
+        break;
+
+    case 'l':
+    case 'L':
+        transformazio_mota = LOKALA;
+        break;
 
 
 
@@ -198,4 +214,86 @@ void keyboard(unsigned char key, int x, int y) {
     }
     /*In case we have do any modification affecting the displaying of the object, we redraw them*/
     glutPostRedisplay();
+}
+
+
+void special_keyboard(int keyCode, int x, int y){
+
+    printf("%d\n", keyCode);
+    
+    switch (keyCode) {
+
+    // case 'a':
+    //     printf("Kaizo %d", i);
+    //     scanf("oeubfqjb");
+    //     i++;
+    //     m = (GLdouble*) malloc(16 * sizeof(GLdouble));
+    //     m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
+    //     m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
+    //     m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
+    //     m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
+    //     m[12] = i;
+    //     _selected_object->tmatrix = m;
+    //     break;
+
+    case KEY_GORA:
+        if (transformazio_mota == TRANSLAZIOA){
+            //+y
+        }
+        else if (transformazio_mota == ERROTAZIOA){
+
+        }
+        else if (transformazio_mota == ESKALAKETA){
+
+        }
+        else{
+
+        }
+        break;
+
+    case KEY_BEHERA:
+        if (transformazio_mota == TRANSLAZIOA){
+            
+        }
+        else if (transformazio_mota == ERROTAZIOA){
+
+        }
+        else if (transformazio_mota == ESKALAKETA){
+
+        }
+        else{
+
+        }
+        break;
+
+    case KEY_EZKERRA:
+        if (transformazio_mota == TRANSLAZIOA){
+            
+        }
+        else if (transformazio_mota == ERROTAZIOA){
+
+        }
+        else if (transformazio_mota == ESKALAKETA){
+
+        }
+        else{
+
+        }
+        break;
+
+    case KEY_ESKUMA:
+        if (transformazio_mota == TRANSLAZIOA){
+            
+        }
+        else if (transformazio_mota == ERROTAZIOA){
+
+        }
+        else if (transformazio_mota == ESKALAKETA){
+
+        }
+        else{
+
+        }
+        break;
+
 }

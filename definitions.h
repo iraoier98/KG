@@ -56,6 +56,19 @@
 
 #define KG_MAX_DOUBLE                       10E25
 
+
+#define TRANSLAZIOA                          0
+#define ERROTAZIOA                           1
+#define ESKALAKETA                           2
+#define LOKALA                               3
+#define GLOBALA                              4
+
+
+#define KEY_GORA                            101
+#define KEY_BEHERA                          103
+#define KEY_EZKERRA                         100
+#define KEY_ESKUMA                          102
+
 /** STRUCTURES **/
 
 /****************************

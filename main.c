@@ -15,8 +15,10 @@ GLdouble _ortho_z_min,_ortho_z_max;         /*Variables for the control of the o
 
 object3d * _first_object= 0;                /*List of objects*/
 object3d * _selected_object = 0;            /*Object currently selected*/
-int _saretaErakutsi = 0;                    /*Sareta erakusteko "boolearra"  // 1 => erakutsi
-                                                                             // 0 => ezkutatu*/
+int _saretaErakutsi = 0;                    /*Sareta erakusteko "boolearra"  // 1 => erakutsi, 0 => ezkutatu*/
+
+int transformazio_mota;                     /*Translazioa, errotazioa edo eskalaketa*/
+int erreferentzia_sistema;                  /*Ĝlobala ala objektuarekiko lokala*/
 
 /** GENERAL INITIALIZATION **/
 void initialization (){
@@ -59,6 +61,7 @@ int main(int argc, char** argv) {
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
     glutKeyboardFunc(keyboard);
+    glutSpecialFunc(special_keyboard);
 
     /* this initialization has to be AFTER the creation of the window */
     initialization();
