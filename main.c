@@ -41,6 +41,8 @@ void initialization (){
 
     /*Definition of the method to draw the objects*/
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    io_init();
 }
 
 

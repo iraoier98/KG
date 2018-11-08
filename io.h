@@ -4,5 +4,6 @@
 void keyboard(unsigned char key, int x, int y);
 void special_keyboard(int keyCode, int x, int y);
 void print_help();
+void io_init();
 
 #endif // IO_H

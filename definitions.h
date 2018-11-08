@@ -69,6 +69,9 @@
 #define KEY_EZKERRA                         100
 #define KEY_ESKUMA                          102
 
+#define KEY_REPAG                           104
+#define KEY_AVPAG                           105
+
 /** STRUCTURES **/
 
 /****************************
@@ -132,5 +135,6 @@ struct object3d{
 };
 
 typedef struct object3d object3d;
+
 
 #endif // DEFINITIONS_H

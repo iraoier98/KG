@@ -17,6 +17,14 @@ extern int erreferentzia_sistema;
 
 GLdouble* m;
 
+GLdouble* mult(GLdouble* a, GLdouble* b);
+void printMatrix(GLdouble* matrix);
+
+
+void io_init(){
+    m = (GLdouble*) malloc(16 * sizeof(GLdouble));
+}
+
 
 /**
  * @brief This function just prints information about the use
@@ -52,9 +60,6 @@ void keyboard(unsigned char key, int x, int y) {
     int read = 0;
     object3d *auxiliar_object = 0;
     GLdouble wd,he,midx,midy;
-    int sarr;
-    static int i = 0;
-    printf("kqjbribuq\n");
 
     switch (key) {
 
@@ -80,8 +85,18 @@ void keyboard(unsigned char key, int x, int y) {
 
     case 'l':
     case 'L':
-        transformazio_mota = LOKALA;
+        erreferentzia_sistema = LOKALA;
         break;
+
+
+    case 'z':
+    case 'Z':
+        if (glutGetModifiers() == GLUT_ACTIVE_CTRL){
+            /* Transformazioak desegin */
+
+        }
+        break;
+
 
 
 
@@ -119,13 +134,13 @@ void keyboard(unsigned char key, int x, int y) {
     case 'i':
     case 'I':
         // Objetuari buruzko informazioa printeatuko du.
-        if (_selected_object != NULL){
-            printf("%s objektua: ",_selected_object->filename);
-            printf("%d erpin eta %d aurpegi.\n", _selected_object->num_vertices, _selected_object->num_faces);
-        }
-        else{
+        if (_selected_object == NULL){
             printf("Lehenik aukeratu objektu bat.\n");
+            break;
         }
+        
+        printf("%s objektua: ",_selected_object->filename);
+        printf("%d erpin eta %d aurpegi.\n", _selected_object->num_vertices, _selected_object->num_faces);
         break;
 
     case 's':
@@ -182,6 +197,25 @@ void keyboard(unsigned char key, int x, int y) {
             _ortho_y_max = midy + he/2;
             _ortho_y_min = midy - he/2;
         }
+        else{
+            /* Objektuaren eskala txikitu ardatz guztietan*/
+            if (_selected_object == NULL){
+                printf("Lehenik aukeratu objektu bat.\n");
+                break;
+            }
+            else{
+                printMatrix(_selected_object->tmatrix);
+                m[0]=0.9;   m[4]=0;   m[8]=0;    m[12]=0;
+                m[1]=0;   m[5]=0.9;   m[9]=0;    m[13]=0;
+                m[2]=0;   m[6]=0;   m[10]=0.9;   m[14]=0;
+                m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
+                printMatrix(m);
+                printMatrix(mult(m,_selected_object->tmatrix));
+                _selected_object->tmatrix = mult(m, _selected_object->tmatrix);
+            }
+
+            
+        }
         break;
 
     case '+':
@@ -197,6 +231,14 @@ void keyboard(unsigned char key, int x, int y) {
             _ortho_x_min = midx - wd/2;
             _ortho_y_max = midy + he/2;
             _ortho_y_min = midy - he/2;
+        }
+        else{
+            if (_selected_object == NULL){
+                printf("Lehenik aukeratu objektu bat.\n");
+                break;
+            }
+            
+            /* Objektuaren eskala handitu ardatz guztietan*/
         }
         break;
 
@@ -218,33 +260,28 @@ void keyboard(unsigned char key, int x, int y) {
 
 
 void special_keyboard(int keyCode, int x, int y){
-
-    printf("%d\n", keyCode);
     
     switch (keyCode) {
 
-    // case 'a':
-    //     printf("Kaizo %d", i);
-    //     scanf("oeubfqjb");
-    //     i++;
-    //     m = (GLdouble*) malloc(16 * sizeof(GLdouble));
-    //     m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
-    //     m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
-    //     m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
-    //     m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
-    //     m[12] = i;
-    //     _selected_object->tmatrix = m;
-    //     break;
-
     case KEY_GORA:
+        printf("Gora\n");
+        if (_selected_object == NULL){
+            printf("Lehenik aukeratu objektu bat.\n");
+            break;
+        }
+
         if (transformazio_mota == TRANSLAZIOA){
-            //+y
+            m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
+            m[1]=0;   m[5]=1;   m[9]=0;    m[13]=1;
+            m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
+            m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
+            _selected_object->tmatrix = mult(m, _selected_object->tmatrix);
         }
         else if (transformazio_mota == ERROTAZIOA){
-
+            //+x
         }
         else if (transformazio_mota == ESKALAKETA){
-
+            //-y
         }
         else{
 
@@ -252,14 +289,24 @@ void special_keyboard(int keyCode, int x, int y){
         break;
 
     case KEY_BEHERA:
+        printf("Behera\n");
+        if (_selected_object == NULL){
+            printf("Lehenik aukeratu objektu bat.\n");
+            break;
+        }
+        
         if (transformazio_mota == TRANSLAZIOA){
-            
+            m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
+            m[1]=0;   m[5]=1;   m[9]=0;    m[13]=-1;
+            m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
+            m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
+            _selected_object->tmatrix = mult(m, _selected_object->tmatrix);
         }
         else if (transformazio_mota == ERROTAZIOA){
-
+            //-x
         }
         else if (transformazio_mota == ESKALAKETA){
-
+            //+y
         }
         else{
 
@@ -267,14 +314,24 @@ void special_keyboard(int keyCode, int x, int y){
         break;
 
     case KEY_EZKERRA:
+        printf("Ezkerra\n");
+        if (_selected_object == NULL){
+            printf("Lehenik aukeratu objektu bat.\n");
+            break;
+        }
+        
         if (transformazio_mota == TRANSLAZIOA){
-            
+            m[0]=1;   m[4]=0;   m[8]=0;    m[12]=-1;
+            m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
+            m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
+            m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
+            _selected_object->tmatrix = mult(m, _selected_object->tmatrix);
         }
         else if (transformazio_mota == ERROTAZIOA){
-
+            //-y
         }
         else if (transformazio_mota == ESKALAKETA){
-
+            //+x
         }
         else{
 
@@ -282,18 +339,109 @@ void special_keyboard(int keyCode, int x, int y){
         break;
 
     case KEY_ESKUMA:
+        printf("Eskuma\n");
+        if (_selected_object == NULL){
+            printf("Lehenik aukeratu objektu bat.\n");
+            break;
+        }
+        
         if (transformazio_mota == TRANSLAZIOA){
-            
+            m[0]=1;   m[4]=0;   m[8]=0;    m[12]=1;
+            m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
+            m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
+            m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
+            _selected_object->tmatrix = mult(_selected_object->tmatrix, m);
         }
         else if (transformazio_mota == ERROTAZIOA){
-
+            //+y
         }
         else if (transformazio_mota == ESKALAKETA){
-
+            //-x
         }
         else{
 
         }
         break;
 
+    case KEY_REPAG:
+        printf("REPAG\n");
+        if (_selected_object == NULL){
+            printf("Lehenik aukeratu objektu bat.\n");
+            break;
+        }
+        
+        if (transformazio_mota == TRANSLAZIOA){
+            m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
+            m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
+            m[2]=0;   m[6]=0;   m[10]=1;   m[14]=-1;
+            m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
+            _selected_object->tmatrix = mult(m, _selected_object->tmatrix);
+        }
+        else if (transformazio_mota == ERROTAZIOA){
+            //-z
+        }
+        else if (transformazio_mota == ESKALAKETA){
+            //-z
+        }
+        else{
+
+        }
+        break;
+
+    case KEY_AVPAG:
+        printf("AVPAG\n");
+        if (_selected_object == NULL){
+            printf("Lehenik aukeratu objektu bat.\n");
+            break;
+        }
+        
+        if (transformazio_mota == TRANSLAZIOA){
+            m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
+            m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
+            m[2]=0;   m[6]=0;   m[10]=1;   m[14]=1;
+            m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
+            _selected_object->tmatrix = mult(m, _selected_object->tmatrix);
+        }
+        else if (transformazio_mota == ERROTAZIOA){
+            //-z
+        }
+        else if (transformazio_mota == ESKALAKETA){
+            //-z
+        }
+        else{
+
+        }
+        break;
+
+    default:
+        printf("%d\n", keyCode);
+    }
+    /*In case we have do any modification affecting the displaying of the object, we redraw them*/
+    glutPostRedisplay();
+
+}
+
+GLdouble* mult(GLdouble* a, GLdouble* b){
+    //TODO
+    int sum, lerro, zutabe, k;
+    GLdouble* result = (GLdouble*) malloc(16 * sizeof(GLdouble));
+    for (lerro = 0; lerro < 4; lerro++) {
+      for (zutabe = 0; zutabe < 4; zutabe++) {
+        sum = 0;
+        for (k = 0; k < 4; k++) {
+          sum = sum + a[] * b[k+d];
+        }
+ 
+        result[c+d] = sum;
+      }
+    }
+    return result;
+}
+
+void printMatrix(GLdouble* matrix){
+    int c, d;
+    for (c = 0; c < 4; c++) {
+        printf("%f %f %f %f\n", matrix[c*4], matrix[c*4+1], matrix[c*4+2], matrix[c*4+3]);
+    }
+    printf("\n");
 }
