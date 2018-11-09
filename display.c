@@ -130,8 +130,6 @@ void display(void) {
     /* Sareta gero */
     draw_sareta();
 
-    //static double t = 0;
-
     /*Now each of the objects in the list*/
     while (aux_obj != 0) {
 
@@ -144,9 +142,7 @@ void display(void) {
 
         /* Draw the object; for each face create a new polygon with the corresponding vertices */
         glLoadIdentity();
-        //aux_obj->tmatrix[12] = sin(t);
-        //t += 0.6;
-        glMultMatrixd(aux_obj->tmatrix);
+        glMultMatrixd(peek(aux_obj->transformazio_pila));
         for (f = 0; f < aux_obj->num_faces; f++) {
             glBegin(GL_POLYGON);
             for (v = 0; v < aux_obj->face_table[f].num_vertices; v++) {

@@ -61,6 +61,7 @@ void keyboard(unsigned char key, int x, int y) {
     object3d *auxiliar_object = 0;
     GLdouble wd,he,midx,midy;
 
+
     switch (key) {
 
     case 'm':
@@ -89,12 +90,10 @@ void keyboard(unsigned char key, int x, int y) {
         break;
 
 
-    case 'z':
-    case 'Z':
-        if (glutGetModifiers() == GLUT_ACTIVE_CTRL){
-            /* Transformazioak desegin */
-
-        }
+    case CTRL_Z:
+        /* Transformazioak desegin */
+        printf("Kaizo\n");
+        pop(_selected_object->transformazio_pila);
         break;
 
 
@@ -204,14 +203,15 @@ void keyboard(unsigned char key, int x, int y) {
                 break;
             }
             else{
-                printMatrix(_selected_object->tmatrix);
                 m[0]=0.9;   m[4]=0;   m[8]=0;    m[12]=0;
                 m[1]=0;   m[5]=0.9;   m[9]=0;    m[13]=0;
                 m[2]=0;   m[6]=0;   m[10]=0.9;   m[14]=0;
                 m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
                 printMatrix(m);
-                printMatrix(mult(m,_selected_object->tmatrix));
-                _selected_object->tmatrix = mult(m, _selected_object->tmatrix);
+
+                m = mult(peek(_selected_object->transformazio_pila), m);
+                printMatrix(m);
+                push(_selected_object->transformazio_pila, m);
             }
 
             
@@ -275,7 +275,10 @@ void special_keyboard(int keyCode, int x, int y){
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=1;
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
-            _selected_object->tmatrix = mult(m, _selected_object->tmatrix);
+            
+            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+            printMatrix(m2);
+            push(_selected_object->transformazio_pila, m2);
         }
         else if (transformazio_mota == ERROTAZIOA){
             //+x
@@ -300,7 +303,10 @@ void special_keyboard(int keyCode, int x, int y){
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=-1;
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
-            _selected_object->tmatrix = mult(m, _selected_object->tmatrix);
+            
+            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+            printMatrix(m2);
+            push(_selected_object->transformazio_pila, m2);
         }
         else if (transformazio_mota == ERROTAZIOA){
             //-x
@@ -325,7 +331,10 @@ void special_keyboard(int keyCode, int x, int y){
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
-            _selected_object->tmatrix = mult(m, _selected_object->tmatrix);
+            
+            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+            printMatrix(m2);
+            push(_selected_object->transformazio_pila, m2);
         }
         else if (transformazio_mota == ERROTAZIOA){
             //-y
@@ -344,13 +353,15 @@ void special_keyboard(int keyCode, int x, int y){
             printf("Lehenik aukeratu objektu bat.\n");
             break;
         }
-        
         if (transformazio_mota == TRANSLAZIOA){
             m[0]=1;   m[4]=0;   m[8]=0;    m[12]=1;
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
-            _selected_object->tmatrix = mult(_selected_object->tmatrix, m);
+
+            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+            printMatrix(m2);
+            push(_selected_object->transformazio_pila, m2);
         }
         else if (transformazio_mota == ERROTAZIOA){
             //+y
@@ -375,7 +386,10 @@ void special_keyboard(int keyCode, int x, int y){
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=-1;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
-            _selected_object->tmatrix = mult(m, _selected_object->tmatrix);
+            
+            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+            printMatrix(m2);
+            push(_selected_object->transformazio_pila, m2);
         }
         else if (transformazio_mota == ERROTAZIOA){
             //-z
@@ -400,7 +414,10 @@ void special_keyboard(int keyCode, int x, int y){
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=1;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
-            _selected_object->tmatrix = mult(m, _selected_object->tmatrix);
+            
+            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+            printMatrix(m2);
+            push(_selected_object->transformazio_pila, m2);
         }
         else if (transformazio_mota == ERROTAZIOA){
             //-z
@@ -421,26 +438,45 @@ void special_keyboard(int keyCode, int x, int y){
 
 }
 
+// GLdouble* mult(GLdouble* a, GLdouble* b){
+//     int elem, k, lerroa, zutabea;
+//     float sum;
+//     GLdouble* result = (GLdouble*) malloc(16 * sizeof(GLdouble));
+//     for (elem = 0; elem < 16; elem++) {
+//       sum = 0;
+//       lerroa = elem/4;
+//       zutabea = elem%4;
+//       for (k = 0; k < 4; k++){
+//           sum += a[lerroa+(k*4)] * b[zutabea*4+k];
+//       }
+//       result[elem] = sum;
+//     }
+//     return result;
+// }
+
 GLdouble* mult(GLdouble* a, GLdouble* b){
-    int elem, k, lerroa, zutabea;
-    float sum;
     GLdouble* result = (GLdouble*) malloc(16 * sizeof(GLdouble));
-    for (elem = 0; elem < 16; elem++) {
-      sum = 0;
-      lerroa = elem/4;
-      zutabea = elem%4;
-      for (k = 0; k < 4; k++){
-          sum += a[lerroa+(k*4)] * b[zutabea*4+k];
-      }
-      result[elem] = sum;
+    float sum;
+    int c, d, k;
+    for (d = 0; d < 4; d++) {
+        for (c = 0; c < 4; c++) {
+            sum = 0;
+            for (k = 0; k < 4; k++) {
+                sum += a[d*4 + k] * b[k*4 + c];
+            }
+ 
+            result[d*4 + c] = sum;
+        }
     }
     return result;
 }
 
+
+
 void printMatrix(GLdouble* matrix){
     int c, d;
     for (c = 0; c < 4; c++) {
-        printf("%f %f %f %f\n", matrix[c*4], matrix[c*4+1], matrix[c*4+2], matrix[c*4+3]);
+        printf("%f %f %f %f\n", matrix[c], matrix[c+4], matrix[c+8], matrix[c+12]);
     }
     printf("\n");
 }
