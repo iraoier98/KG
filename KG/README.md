@@ -1,2 +1,0 @@
-# KG
-ano autista

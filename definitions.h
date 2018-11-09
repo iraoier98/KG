@@ -2,6 +2,7 @@
 #define DEFINITIONS_H
 
 #include <GL/gl.h>
+#include "pila.h"
 
 /** DEFINITIONS **/
 
@@ -132,6 +133,7 @@ struct object3d{
     struct object3d *next;              /* next element in the pile of objects */
     char* filename;                     /* which file contains this object*/
     GLdouble* tmatrix;                  /* transformation matrix */
+    pila* transformazio_pila;           /* transformation matrix */
 };
 
 typedef struct object3d object3d;

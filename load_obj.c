@@ -162,15 +162,15 @@ int read_wavefront(char * file_name, object3d * object_ptr) {
     object_ptr->face_table = face_table;
     object_ptr->num_vertices = num_vertices;
     object_ptr->num_faces = num_faces;
-    //object_ptr->filename = malloc(file_name * sizeof(char));
     object_ptr->filename = file_name;
 
-    GLdouble* m = (GLdouble*) malloc(16 * sizeof(GLdouble));
-    m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
-    m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
-    m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
-    m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
-    object_ptr->tmatrix = m;
+    GLdouble* I = (GLdouble*) malloc(16 * sizeof(GLdouble));
+    I[0]=1;   I[4]=0;   I[8]=0;    I[12]=0;
+    I[1]=0;   I[5]=1;   I[9]=0;    I[13]=0;
+    I[2]=0;   I[6]=0;   I[10]=1;   I[14]=0;
+    I[3]=0;   I[7]=0;   I[11]=0;   I[15]=1;
+    object_ptr->transformazio_pila = pila_sortu();
+    push(object_ptr->transformazio_pila, I);
 
 
 
