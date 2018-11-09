@@ -422,18 +422,17 @@ void special_keyboard(int keyCode, int x, int y){
 }
 
 GLdouble* mult(GLdouble* a, GLdouble* b){
-    //TODO
-    int sum, lerro, zutabe, k;
+    int elem, k, lerroa, zutabea;
+    float sum;
     GLdouble* result = (GLdouble*) malloc(16 * sizeof(GLdouble));
-    for (lerro = 0; lerro < 4; lerro++) {
-      for (zutabe = 0; zutabe < 4; zutabe++) {
-        sum = 0;
-        for (k = 0; k < 4; k++) {
-          sum = sum + a[] * b[k+d];
-        }
- 
-        result[c+d] = sum;
+    for (elem = 0; elem < 16; elem++) {
+      sum = 0;
+      lerroa = elem/4;
+      zutabea = elem%4;
+      for (k = 0; k < 4; k++){
+          sum += a[lerroa+(k*4)] * b[zutabea*4+k];
       }
+      result[elem] = sum;
     }
     return result;
 }
