@@ -25,7 +25,7 @@ typedef struct pila pila;
 //  FUNTZIOAK:
 
 /* Pila hutsa sortzeko funtzioa (eraikitzilea) */
-pila* sortu();
+pila* pila_sortu();
 
 /* Pilaren gailurrean sartzen du emandako matrizea */
 void push(pila* p, GLdouble* matrix);
