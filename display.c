@@ -52,24 +52,23 @@ void draw_axes()
 }
 
 /**
- * @brief Lehenengo koadrantean sareta marrazten duen funtzioa
+ * @brief Sareta marrazteko funtzioa
  */
 void draw_sareta(){
     if (_saretaErakutsi){
+        //  HAU AZPIKOA EINEZKERO, GERO OBJETOAK TODO WAPO AGERTEDIE.
+        // glMatrixMode(GL_PROJECTION);
+        // glLoadIdentity();
         glColor3f(0, 0, 0);
-        for (int i = 0; i < 5; i++){
-            double ii = (double) i+1;
-            glBegin(GL_LINES);
-            glVertex3d(1, 1 + ii / 2,0);
-            glVertex3d(4, 1 + ii / 2,0);
-            glEnd();
-        }
 
-        for (int i = 0; i < 5; i++){
-            double ii = (double) i+1;
+        for (float i = -1; i < 1; i += 0.2){
             glBegin(GL_LINES);
-            glVertex3d(1 + ii / 2, 1, 0);
-            glVertex3d(1 + ii / 2, 4, 0);
+            glVertex3d(i, -1, 0);
+            glVertex3d(i, 1, 0);
+            glEnd();
+            glBegin(GL_LINES);
+            glVertex3d(-1, i, 0);
+            glVertex3d(1, i, 0);
             glEnd();
         }
     }
