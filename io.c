@@ -3,6 +3,7 @@
 #include <GL/glut.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 extern object3d * _first_object;
 extern object3d * _selected_object;
@@ -16,6 +17,7 @@ extern int transformazio_mota;
 extern int erreferentzia_sistema;
 
 GLdouble* m;
+double theta = PI/10;
 
 GLdouble* mult(GLdouble* a, GLdouble* b);
 void printMatrix(GLdouble* matrix);
@@ -92,11 +94,18 @@ void keyboard(unsigned char key, int x, int y) {
 
     case CTRL_Z:
         /* Transformazioak desegin */
-        printf("Kaizo\n");
-        pop(_selected_object->transformazio_pila);
+        if (_selected_object == NULL){
+            printf("Lehenik aukeratu objektu bat.\n");
+            break;
+        }
+        
+        if (glutGetModifiers() & GLUT_ACTIVE_SHIFT){
+            depop(_selected_object->transformazio_pila);
+        }
+        else{
+            pop(_selected_object->transformazio_pila);
+        }
         break;
-
-
 
 
     case 'f':
@@ -252,7 +261,7 @@ void keyboard(unsigned char key, int x, int y) {
 
     default:
         /*In the default case we just print the code of the key. This is usefull to define new cases*/
-        printf("%d %c\n", key, key);
+        printf("Tekla arrunta: %d %c\n", key, key);
     }
     /*In case we have do any modification affecting the displaying of the object, we redraw them*/
     glutPostRedisplay();
@@ -271,6 +280,7 @@ void special_keyboard(int keyCode, int x, int y){
         }
 
         if (transformazio_mota == TRANSLAZIOA){
+            //+y
             m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=1;
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
@@ -282,9 +292,21 @@ void special_keyboard(int keyCode, int x, int y){
         }
         else if (transformazio_mota == ERROTAZIOA){
             //+x
+            m[0]=1;   m[4]=0;              m[8]=0;              m[12]=0;
+            m[1]=0;   m[5]=cos(theta);     m[9]=sin(theta);     m[13]=0;
+            m[2]=0;   m[6]=-sin(theta);    m[10]=cos(theta);    m[14]=0;
+            m[3]=0;   m[7]=0;              m[11]=0;             m[15]=1;
         }
         else if (transformazio_mota == ESKALAKETA){
             //-y
+            m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
+            m[1]=0;   m[5]=0.9; m[9]=0;    m[13]=0;
+            m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
+            m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
+            
+            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+            printMatrix(m2);
+            push(_selected_object->transformazio_pila, m2);
         }
         else{
 
@@ -310,9 +332,25 @@ void special_keyboard(int keyCode, int x, int y){
         }
         else if (transformazio_mota == ERROTAZIOA){
             //-x
+            m[0]=1;   m[4]=0;              m[8]=0;              m[12]=0;
+            m[1]=0;   m[5]=cos(-theta);    m[9]=sin(-theta);    m[13]=0;
+            m[2]=0;   m[6]=-sin(-theta);   m[10]=cos(-theta);   m[14]=0;
+            m[3]=0;   m[7]=0;              m[11]=0;             m[15]=1;
+            
+            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+            printMatrix(m2);
+            push(_selected_object->transformazio_pila, m2);
         }
         else if (transformazio_mota == ESKALAKETA){
             //+y
+            m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
+            m[1]=0;   m[5]=1.1; m[9]=0;    m[13]=0;
+            m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
+            m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
+            
+            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+            printMatrix(m2);
+            push(_selected_object->transformazio_pila, m2);
         }
         else{
 
@@ -338,9 +376,25 @@ void special_keyboard(int keyCode, int x, int y){
         }
         else if (transformazio_mota == ERROTAZIOA){
             //-y
+            m[0]=cos(-theta);    m[4]=0;    m[8]=sin(-theta);    m[12]=0;
+            m[1]=0;              m[5]=1;    m[9]=0;              m[13]=0;
+            m[2]=-sin(-theta);   m[6]=0;    m[10]=cos(-theta);   m[14]=0;
+            m[3]=0;              m[7]=0;    m[11]=0;             m[15]=1;
+            
+            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+            printMatrix(m2);
+            push(_selected_object->transformazio_pila, m2);
         }
         else if (transformazio_mota == ESKALAKETA){
             //+x
+            m[0]=1.1; m[4]=0;   m[8]=0;    m[12]=0;
+            m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
+            m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
+            m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
+            
+            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+            printMatrix(m2);
+            push(_selected_object->transformazio_pila, m2);
         }
         else{
 
@@ -365,9 +419,25 @@ void special_keyboard(int keyCode, int x, int y){
         }
         else if (transformazio_mota == ERROTAZIOA){
             //+y
+            m[0]=cos(theta);    m[4]=0;    m[8]=sin(theta);    m[12]=0;
+            m[1]=0;             m[5]=1;    m[9]=0;             m[13]=0;
+            m[2]=-sin(theta);   m[6]=0;    m[10]=cos(theta);   m[14]=0;
+            m[3]=0;             m[7]=0;    m[11]=0;            m[15]=1;
+            
+            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+            printMatrix(m2);
+            push(_selected_object->transformazio_pila, m2);
         }
         else if (transformazio_mota == ESKALAKETA){
             //-x
+            m[0]=0.9; m[4]=0;   m[8]=0;    m[12]=0;
+            m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
+            m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
+            m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
+            
+            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+            printMatrix(m2);
+            push(_selected_object->transformazio_pila, m2);
         }
         else{
 
@@ -393,9 +463,25 @@ void special_keyboard(int keyCode, int x, int y){
         }
         else if (transformazio_mota == ERROTAZIOA){
             //-z
+            m[0]=cos(theta);    m[4]=sin(theta);    m[8]=0;    m[12]=0;
+            m[1]=-sin(theta);   m[5]=cos(theta);    m[9]=0;     m[13]=0;
+            m[2]=0;             m[6]=0;             m[10]=1;   m[14]=0;
+            m[3]=0;             m[7]=0;             m[11]=0;   m[15]=1;
+            
+            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+            printMatrix(m2);
+            push(_selected_object->transformazio_pila, m2);
         }
         else if (transformazio_mota == ESKALAKETA){
-            //-z
+            //+z
+            m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
+            m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
+            m[2]=0;   m[6]=0;   m[10]=1.1; m[14]=0;
+            m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
+            
+            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+            printMatrix(m2);
+            push(_selected_object->transformazio_pila, m2);
         }
         else{
 
@@ -421,9 +507,21 @@ void special_keyboard(int keyCode, int x, int y){
         }
         else if (transformazio_mota == ERROTAZIOA){
             //-z
+            m[0]=cos(-theta);    m[4]=sin(-theta);    m[8]=0;    m[12]=0;
+            m[1]=-sin(-theta);   m[5]=cos(-theta);    m[9]=0;     m[13]=0;
+            m[2]=0;             m[6]=0;             m[10]=1;   m[14]=0;
+            m[3]=0;             m[7]=0;             m[11]=0;   m[15]=1;
         }
         else if (transformazio_mota == ESKALAKETA){
             //-z
+            m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
+            m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
+            m[2]=0;   m[6]=0;   m[10]=0.9; m[14]=0;
+            m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
+            
+            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+            printMatrix(m2);
+            push(_selected_object->transformazio_pila, m2);
         }
         else{
 
@@ -431,28 +529,12 @@ void special_keyboard(int keyCode, int x, int y){
         break;
 
     default:
-        printf("%d\n", keyCode);
+        printf("Tekla berezia: %d\n", keyCode);
     }
     /*In case we have do any modification affecting the displaying of the object, we redraw them*/
     glutPostRedisplay();
 
 }
-
-// GLdouble* mult(GLdouble* a, GLdouble* b){
-//     int elem, k, lerroa, zutabea;
-//     float sum;
-//     GLdouble* result = (GLdouble*) malloc(16 * sizeof(GLdouble));
-//     for (elem = 0; elem < 16; elem++) {
-//       sum = 0;
-//       lerroa = elem/4;
-//       zutabea = elem%4;
-//       for (k = 0; k < 4; k++){
-//           sum += a[lerroa+(k*4)] * b[zutabea*4+k];
-//       }
-//       result[elem] = sum;
-//     }
-//     return result;
-// }
 
 GLdouble* mult(GLdouble* a, GLdouble* b){
     GLdouble* result = (GLdouble*) malloc(16 * sizeof(GLdouble));

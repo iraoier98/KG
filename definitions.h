@@ -57,6 +57,8 @@
 
 #define KG_MAX_DOUBLE                       10E25
 
+#define PI                                  3.14159265358979323846
+
 
 #define TRANSLAZIOA                          0
 #define ERROTAZIOA                           1

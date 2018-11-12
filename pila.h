@@ -24,7 +24,7 @@ typedef struct pila pila;
 
 //  FUNTZIOAK:
 
-/* Pila hutsa sortzeko funtzioa (eraikitzilea) */
+/* Pila berri bat sortzeko funtzioa, identitate matrizea sartuko du pilan. */
 pila* pila_sortu();
 
 /* Pilaren gailurrean sartzen du emandako matrizea */
@@ -35,5 +35,8 @@ GLdouble* pop(pila* p);
 
 /* Pilaren gailurreko matrizea itzultzen du. */
 GLdouble* peek(pila* p);
+
+/* Pilatik kendutako azken elementua berriro pilaratuko du */
+void depop(pila* p);
 
 #endif
