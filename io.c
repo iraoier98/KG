@@ -17,6 +17,8 @@ extern int transformazio_mota;
 extern int erreferentzia_sistema;
 
 GLdouble* m;
+GLdouble* m2;
+
 double theta = PI/10;
 
 GLdouble* mult(GLdouble* a, GLdouble* b);
@@ -212,15 +214,20 @@ void keyboard(unsigned char key, int x, int y) {
                 break;
             }
             else{
-                m[0]=0.9;   m[4]=0;   m[8]=0;    m[12]=0;
-                m[1]=0;   m[5]=0.9;   m[9]=0;    m[13]=0;
-                m[2]=0;   m[6]=0;   m[10]=0.9;   m[14]=0;
+                m[0]=0.9; m[4]=0;   m[8]=0;    m[12]=0;
+                m[1]=0;   m[5]=0.9; m[9]=0;    m[13]=0;
+                m[2]=0;   m[6]=0;   m[10]=0.9; m[14]=0;
                 m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
                 printMatrix(m);
 
-                m = mult(peek(_selected_object->transformazio_pila), m);
-                printMatrix(m);
-                push(_selected_object->transformazio_pila, m);
+                if(erreferentzia_sistema == GLOBALA){
+                    m2 = mult(m, peek(_selected_object->transformazio_pila));
+                }
+                else{
+                    m2 = mult(peek(_selected_object->transformazio_pila), m);
+                }
+                printMatrix(m2);
+                push(_selected_object->transformazio_pila, m2);
             }
 
             
@@ -248,6 +255,26 @@ void keyboard(unsigned char key, int x, int y) {
             }
             
             /* Objektuaren eskala handitu ardatz guztietan*/
+            if (_selected_object == NULL){
+                printf("Lehenik aukeratu objektu bat.\n");
+                break;
+            }
+            else{
+                m[0]=1.1; m[4]=0;   m[8]=0;    m[12]=0;
+                m[1]=0;   m[5]=1.1; m[9]=0;    m[13]=0;
+                m[2]=0;   m[6]=0;   m[10]=1.1; m[14]=0;
+                m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
+                printMatrix(m);
+
+                if(erreferentzia_sistema == GLOBALA){
+                    m2 = mult(m, peek(_selected_object->transformazio_pila));
+                }
+                else{
+                    m2 = mult(peek(_selected_object->transformazio_pila), m);
+                }
+                printMatrix(m2);
+                push(_selected_object->transformazio_pila, m2);
+            }
         }
         break;
 
@@ -286,7 +313,12 @@ void special_keyboard(int keyCode, int x, int y){
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
             
-            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+            if(erreferentzia_sistema == GLOBALA){
+                m2 = mult(m, peek(_selected_object->transformazio_pila));
+            }
+            else{
+                m2 = mult(peek(_selected_object->transformazio_pila), m);
+            }
             printMatrix(m2);
             push(_selected_object->transformazio_pila, m2);
         }
@@ -296,6 +328,15 @@ void special_keyboard(int keyCode, int x, int y){
             m[1]=0;   m[5]=cos(theta);     m[9]=sin(theta);     m[13]=0;
             m[2]=0;   m[6]=-sin(theta);    m[10]=cos(theta);    m[14]=0;
             m[3]=0;   m[7]=0;              m[11]=0;             m[15]=1;
+
+            if(erreferentzia_sistema == GLOBALA){
+                m2 = mult(m, peek(_selected_object->transformazio_pila));
+            }
+            else{
+                m2 = mult(peek(_selected_object->transformazio_pila), m);
+            }
+            printMatrix(m2);
+            push(_selected_object->transformazio_pila, m2);
         }
         else if (transformazio_mota == ESKALAKETA){
             //-y
@@ -303,10 +344,16 @@ void special_keyboard(int keyCode, int x, int y){
             m[1]=0;   m[5]=0.9; m[9]=0;    m[13]=0;
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
-            
-            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+
+            if(erreferentzia_sistema == GLOBALA){
+                m2 = mult(m, peek(_selected_object->transformazio_pila));
+            }
+            else{
+                m2 = mult(peek(_selected_object->transformazio_pila), m);
+            }
             printMatrix(m2);
             push(_selected_object->transformazio_pila, m2);
+            
         }
         else{
 
@@ -325,8 +372,13 @@ void special_keyboard(int keyCode, int x, int y){
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=-1;
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
-            
-            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+
+            if(erreferentzia_sistema == GLOBALA){
+                m2 = mult(m, peek(_selected_object->transformazio_pila));
+            }
+            else{
+                m2 = mult(peek(_selected_object->transformazio_pila), m);
+            }
             printMatrix(m2);
             push(_selected_object->transformazio_pila, m2);
         }
@@ -337,7 +389,12 @@ void special_keyboard(int keyCode, int x, int y){
             m[2]=0;   m[6]=-sin(-theta);   m[10]=cos(-theta);   m[14]=0;
             m[3]=0;   m[7]=0;              m[11]=0;             m[15]=1;
             
-            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+            if(erreferentzia_sistema == GLOBALA){
+                m2 = mult(m, peek(_selected_object->transformazio_pila));
+            }
+            else{
+                m2 = mult(peek(_selected_object->transformazio_pila), m);
+            }
             printMatrix(m2);
             push(_selected_object->transformazio_pila, m2);
         }
@@ -347,8 +404,13 @@ void special_keyboard(int keyCode, int x, int y){
             m[1]=0;   m[5]=1.1; m[9]=0;    m[13]=0;
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
-            
-            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+
+            if(erreferentzia_sistema == GLOBALA){
+                m2 = mult(m, peek(_selected_object->transformazio_pila));
+            }
+            else{
+                m2 = mult(peek(_selected_object->transformazio_pila), m);
+            }
             printMatrix(m2);
             push(_selected_object->transformazio_pila, m2);
         }
@@ -369,8 +431,13 @@ void special_keyboard(int keyCode, int x, int y){
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
-            
-            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+
+            if(erreferentzia_sistema == GLOBALA){
+                m2 = mult(m, peek(_selected_object->transformazio_pila));
+            }
+            else{
+                m2 = mult(peek(_selected_object->transformazio_pila), m);
+            }
             printMatrix(m2);
             push(_selected_object->transformazio_pila, m2);
         }
@@ -381,7 +448,12 @@ void special_keyboard(int keyCode, int x, int y){
             m[2]=-sin(-theta);   m[6]=0;    m[10]=cos(-theta);   m[14]=0;
             m[3]=0;              m[7]=0;    m[11]=0;             m[15]=1;
             
-            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+            if(erreferentzia_sistema == GLOBALA){
+                m2 = mult(m, peek(_selected_object->transformazio_pila));
+            }
+            else{
+                m2 = mult(peek(_selected_object->transformazio_pila), m);
+            }
             printMatrix(m2);
             push(_selected_object->transformazio_pila, m2);
         }
@@ -392,7 +464,12 @@ void special_keyboard(int keyCode, int x, int y){
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
             
-            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+            if(erreferentzia_sistema == GLOBALA){
+                m2 = mult(m, peek(_selected_object->transformazio_pila));
+            }
+            else{
+                m2 = mult(peek(_selected_object->transformazio_pila), m);
+            }
             printMatrix(m2);
             push(_selected_object->transformazio_pila, m2);
         }
@@ -413,7 +490,12 @@ void special_keyboard(int keyCode, int x, int y){
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
 
-            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+            if(erreferentzia_sistema == GLOBALA){
+                m2 = mult(m, peek(_selected_object->transformazio_pila));
+            }
+            else{
+                m2 = mult(peek(_selected_object->transformazio_pila), m);
+            }
             printMatrix(m2);
             push(_selected_object->transformazio_pila, m2);
         }
@@ -424,7 +506,12 @@ void special_keyboard(int keyCode, int x, int y){
             m[2]=-sin(theta);   m[6]=0;    m[10]=cos(theta);   m[14]=0;
             m[3]=0;             m[7]=0;    m[11]=0;            m[15]=1;
             
-            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+            if(erreferentzia_sistema == GLOBALA){
+                m2 = mult(m, peek(_selected_object->transformazio_pila));
+            }
+            else{
+                m2 = mult(peek(_selected_object->transformazio_pila), m);
+            }
             printMatrix(m2);
             push(_selected_object->transformazio_pila, m2);
         }
@@ -435,7 +522,12 @@ void special_keyboard(int keyCode, int x, int y){
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
             
-            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+            if(erreferentzia_sistema == GLOBALA){
+                m2 = mult(m, peek(_selected_object->transformazio_pila));
+            }
+            else{
+                m2 = mult(peek(_selected_object->transformazio_pila), m);
+            }
             printMatrix(m2);
             push(_selected_object->transformazio_pila, m2);
         }
@@ -457,7 +549,12 @@ void special_keyboard(int keyCode, int x, int y){
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=-1;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
             
-            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+            if(erreferentzia_sistema == GLOBALA){
+                m2 = mult(m, peek(_selected_object->transformazio_pila));
+            }
+            else{
+                m2 = mult(peek(_selected_object->transformazio_pila), m);
+            }
             printMatrix(m2);
             push(_selected_object->transformazio_pila, m2);
         }
@@ -468,7 +565,12 @@ void special_keyboard(int keyCode, int x, int y){
             m[2]=0;             m[6]=0;             m[10]=1;   m[14]=0;
             m[3]=0;             m[7]=0;             m[11]=0;   m[15]=1;
             
-            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+            if(erreferentzia_sistema == GLOBALA){
+                m2 = mult(m, peek(_selected_object->transformazio_pila));
+            }
+            else{
+                m2 = mult(peek(_selected_object->transformazio_pila), m);
+            }
             printMatrix(m2);
             push(_selected_object->transformazio_pila, m2);
         }
@@ -478,8 +580,13 @@ void special_keyboard(int keyCode, int x, int y){
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
             m[2]=0;   m[6]=0;   m[10]=1.1; m[14]=0;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
-            
-            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+
+            if(erreferentzia_sistema == GLOBALA){
+                m2 = mult(m, peek(_selected_object->transformazio_pila));
+            }
+            else{
+                m2 = mult(peek(_selected_object->transformazio_pila), m);
+            }
             printMatrix(m2);
             push(_selected_object->transformazio_pila, m2);
         }
@@ -500,10 +607,16 @@ void special_keyboard(int keyCode, int x, int y){
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=1;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
-            
-            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+
+            if(erreferentzia_sistema == GLOBALA){
+                m2 = mult(m, peek(_selected_object->transformazio_pila));
+            }
+            else{
+                m2 = mult(peek(_selected_object->transformazio_pila), m);
+            }
             printMatrix(m2);
             push(_selected_object->transformazio_pila, m2);
+            
         }
         else if (transformazio_mota == ERROTAZIOA){
             //-z
@@ -511,6 +624,15 @@ void special_keyboard(int keyCode, int x, int y){
             m[1]=-sin(-theta);   m[5]=cos(-theta);    m[9]=0;     m[13]=0;
             m[2]=0;             m[6]=0;             m[10]=1;   m[14]=0;
             m[3]=0;             m[7]=0;             m[11]=0;   m[15]=1;
+
+            if(erreferentzia_sistema == GLOBALA){
+                m2 = mult(m, peek(_selected_object->transformazio_pila));
+            }
+            else{
+                m2 = mult(peek(_selected_object->transformazio_pila), m);
+            }
+            printMatrix(m2);
+            push(_selected_object->transformazio_pila, m2);
         }
         else if (transformazio_mota == ESKALAKETA){
             //-z
@@ -518,8 +640,13 @@ void special_keyboard(int keyCode, int x, int y){
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
             m[2]=0;   m[6]=0;   m[10]=0.9; m[14]=0;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
-            
-            GLdouble* m2 = mult(m, peek(_selected_object->transformazio_pila));
+
+            if(erreferentzia_sistema == GLOBALA){
+                m2 = mult(m, peek(_selected_object->transformazio_pila));
+            }
+            else{
+                m2 = mult(peek(_selected_object->transformazio_pila), m);
+            }
             printMatrix(m2);
             push(_selected_object->transformazio_pila, m2);
         }
