@@ -18,11 +18,17 @@ extern int erreferentzia_sistema;
 
 GLdouble* m;
 GLdouble* m2;
-
 double theta = PI/10;
 
+
+/* a matrizea b-rekin biderkatuta itzultzen du */
 GLdouble* mult(GLdouble* a, GLdouble* b);
+
+/* matrix matrizea pantailaratzen du iraulita*/
 void printMatrix(GLdouble* matrix);
+
+/* obj objektua tranformatzen du emandako matrizearekin */
+void transformatu(object3d* obj, GLdouble* transformazio_matrizea);
 
 
 void io_init(){
@@ -94,17 +100,18 @@ void keyboard(unsigned char key, int x, int y) {
         break;
 
 
-    case CTRL_Z:
-        /* Transformazioak desegin */
+    case KEY_CTRL_Z:
         if (_selected_object == NULL){
             printf("Lehenik aukeratu objektu bat.\n");
             break;
         }
-        
+
         if (glutGetModifiers() & GLUT_ACTIVE_SHIFT){
+            /* Transformazioak berregin */
             depop(_selected_object->transformazio_pila);
         }
         else{
+            /* Transformazioak desegin */
             pop(_selected_object->transformazio_pila);
         }
         break;
@@ -148,7 +155,7 @@ void keyboard(unsigned char key, int x, int y) {
             printf("Lehenik aukeratu objektu bat.\n");
             break;
         }
-        
+
         printf("%s objektua: ",_selected_object->filename);
         printf("%d erpin eta %d aurpegi.\n", _selected_object->num_vertices, _selected_object->num_faces);
         break;
@@ -160,36 +167,41 @@ void keyboard(unsigned char key, int x, int y) {
         break;
 
     case 9: /* <TAB> */
-        if (_selected_object != NULL){
-            _selected_object = _selected_object->next;
-            /*The selection is circular, thus if we move out of the list we go back to the first element*/
-            if (_selected_object == 0) _selected_object = _first_object;
+        if (_selected_object == NULL){
+            printf("Lehenik aukeratu objektu bat.\n");
+            break;
         }
+        _selected_object = _selected_object->next;
+        /*The selection is circular, thus if we move out of the list we go back to the first element*/
+        if (_selected_object == 0) _selected_object = _first_object;
         break;
 
     case 127: /* <SUPR> */
         /*Erasing an object depends on whether it is the first one or not*/
-        if (_selected_object != NULL){
-            if (_selected_object == _first_object)
-            {
-                /*To remove the first object we just set the first as the current's next*/
-                _first_object = _first_object->next;
-                /*Once updated the pointer to the first object it is save to free the memory*/
-                free(_selected_object);
-                /*Finally, set the selected to the new first one*/
-                _selected_object = _first_object;
-            } else {
-                /*In this case we need to get the previous element to the one we want to erase*/
-                auxiliar_object = _first_object;
-                while (auxiliar_object->next != _selected_object)
-                    auxiliar_object = auxiliar_object->next;
-                /*Now we bypass the element to erase*/
-                auxiliar_object->next = _selected_object->next;
-                /*free the memory*/
-                free(_selected_object);
-                /*and update the selection*/
-                _selected_object = auxiliar_object;
-            }
+        if (_selected_object == NULL){
+            printf("Lehenik aukeratu objektu bat.\n");
+            break;
+        }
+
+        if (_selected_object == _first_object)
+        {
+            /*To remove the first object we just set the first as the current's next*/
+            _first_object = _first_object->next;
+            /*Once updated the pointer to the first object it is save to free the memory*/
+            free(_selected_object);
+            /*Finally, set the selected to the new first one*/
+            _selected_object = _first_object;
+        } else {
+            /*In this case we need to get the previous element to the one we want to erase*/
+            auxiliar_object = _first_object;
+            while (auxiliar_object->next != _selected_object)
+                auxiliar_object = auxiliar_object->next;
+            /*Now we bypass the element to erase*/
+            auxiliar_object->next = _selected_object->next;
+            /*free the memory*/
+            free(_selected_object);
+            /*and update the selection*/
+            _selected_object = auxiliar_object;
         }
         break;
 
@@ -218,19 +230,11 @@ void keyboard(unsigned char key, int x, int y) {
                 m[1]=0;   m[5]=0.9; m[9]=0;    m[13]=0;
                 m[2]=0;   m[6]=0;   m[10]=0.9; m[14]=0;
                 m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
-                printMatrix(m);
 
-                if(erreferentzia_sistema == GLOBALA){
-                    m2 = mult(m, peek(_selected_object->transformazio_pila));
-                }
-                else{
-                    m2 = mult(peek(_selected_object->transformazio_pila), m);
-                }
-                printMatrix(m2);
-                push(_selected_object->transformazio_pila, m2);
+                transformatu(_selected_object, m);
             }
 
-            
+
         }
         break;
 
@@ -253,7 +257,7 @@ void keyboard(unsigned char key, int x, int y) {
                 printf("Lehenik aukeratu objektu bat.\n");
                 break;
             }
-            
+
             /* Objektuaren eskala handitu ardatz guztietan*/
             if (_selected_object == NULL){
                 printf("Lehenik aukeratu objektu bat.\n");
@@ -264,16 +268,8 @@ void keyboard(unsigned char key, int x, int y) {
                 m[1]=0;   m[5]=1.1; m[9]=0;    m[13]=0;
                 m[2]=0;   m[6]=0;   m[10]=1.1; m[14]=0;
                 m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
-                printMatrix(m);
 
-                if(erreferentzia_sistema == GLOBALA){
-                    m2 = mult(m, peek(_selected_object->transformazio_pila));
-                }
-                else{
-                    m2 = mult(peek(_selected_object->transformazio_pila), m);
-                }
-                printMatrix(m2);
-                push(_selected_object->transformazio_pila, m2);
+                transformatu(_selected_object, m);
             }
         }
         break;
@@ -295,8 +291,15 @@ void keyboard(unsigned char key, int x, int y) {
 }
 
 
+
+/**
+ * @brief Tekla berezientzako callback funtzioa
+ * @param keyCode teklaren kodea
+ * @param x saguaren x posizioa
+ * @param y saguaren y posizioa
+ */
 void special_keyboard(int keyCode, int x, int y){
-    
+
     switch (keyCode) {
 
     case KEY_GORA:
@@ -312,15 +315,8 @@ void special_keyboard(int keyCode, int x, int y){
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=1;
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
-            
-            if(erreferentzia_sistema == GLOBALA){
-                m2 = mult(m, peek(_selected_object->transformazio_pila));
-            }
-            else{
-                m2 = mult(peek(_selected_object->transformazio_pila), m);
-            }
-            printMatrix(m2);
-            push(_selected_object->transformazio_pila, m2);
+
+            transformatu(_selected_object, m);
         }
         else if (transformazio_mota == ERROTAZIOA){
             //+x
@@ -329,14 +325,7 @@ void special_keyboard(int keyCode, int x, int y){
             m[2]=0;   m[6]=-sin(theta);    m[10]=cos(theta);    m[14]=0;
             m[3]=0;   m[7]=0;              m[11]=0;             m[15]=1;
 
-            if(erreferentzia_sistema == GLOBALA){
-                m2 = mult(m, peek(_selected_object->transformazio_pila));
-            }
-            else{
-                m2 = mult(peek(_selected_object->transformazio_pila), m);
-            }
-            printMatrix(m2);
-            push(_selected_object->transformazio_pila, m2);
+            transformatu(_selected_object, m);
         }
         else if (transformazio_mota == ESKALAKETA){
             //-y
@@ -345,17 +334,7 @@ void special_keyboard(int keyCode, int x, int y){
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
 
-            if(erreferentzia_sistema == GLOBALA){
-                m2 = mult(m, peek(_selected_object->transformazio_pila));
-            }
-            else{
-                m2 = mult(peek(_selected_object->transformazio_pila), m);
-            }
-            printMatrix(m2);
-            push(_selected_object->transformazio_pila, m2);
-            
-        }
-        else{
+            transformatu(_selected_object, m);
 
         }
         break;
@@ -366,21 +345,14 @@ void special_keyboard(int keyCode, int x, int y){
             printf("Lehenik aukeratu objektu bat.\n");
             break;
         }
-        
+
         if (transformazio_mota == TRANSLAZIOA){
             m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=-1;
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
 
-            if(erreferentzia_sistema == GLOBALA){
-                m2 = mult(m, peek(_selected_object->transformazio_pila));
-            }
-            else{
-                m2 = mult(peek(_selected_object->transformazio_pila), m);
-            }
-            printMatrix(m2);
-            push(_selected_object->transformazio_pila, m2);
+            transformatu(_selected_object, m);
         }
         else if (transformazio_mota == ERROTAZIOA){
             //-x
@@ -388,15 +360,8 @@ void special_keyboard(int keyCode, int x, int y){
             m[1]=0;   m[5]=cos(-theta);    m[9]=sin(-theta);    m[13]=0;
             m[2]=0;   m[6]=-sin(-theta);   m[10]=cos(-theta);   m[14]=0;
             m[3]=0;   m[7]=0;              m[11]=0;             m[15]=1;
-            
-            if(erreferentzia_sistema == GLOBALA){
-                m2 = mult(m, peek(_selected_object->transformazio_pila));
-            }
-            else{
-                m2 = mult(peek(_selected_object->transformazio_pila), m);
-            }
-            printMatrix(m2);
-            push(_selected_object->transformazio_pila, m2);
+
+            transformatu(_selected_object, m);
         }
         else if (transformazio_mota == ESKALAKETA){
             //+y
@@ -405,17 +370,7 @@ void special_keyboard(int keyCode, int x, int y){
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
 
-            if(erreferentzia_sistema == GLOBALA){
-                m2 = mult(m, peek(_selected_object->transformazio_pila));
-            }
-            else{
-                m2 = mult(peek(_selected_object->transformazio_pila), m);
-            }
-            printMatrix(m2);
-            push(_selected_object->transformazio_pila, m2);
-        }
-        else{
-
+            transformatu(_selected_object, m);
         }
         break;
 
@@ -425,21 +380,14 @@ void special_keyboard(int keyCode, int x, int y){
             printf("Lehenik aukeratu objektu bat.\n");
             break;
         }
-        
+
         if (transformazio_mota == TRANSLAZIOA){
             m[0]=1;   m[4]=0;   m[8]=0;    m[12]=-1;
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
 
-            if(erreferentzia_sistema == GLOBALA){
-                m2 = mult(m, peek(_selected_object->transformazio_pila));
-            }
-            else{
-                m2 = mult(peek(_selected_object->transformazio_pila), m);
-            }
-            printMatrix(m2);
-            push(_selected_object->transformazio_pila, m2);
+            transformatu(_selected_object, m);
         }
         else if (transformazio_mota == ERROTAZIOA){
             //-y
@@ -447,15 +395,8 @@ void special_keyboard(int keyCode, int x, int y){
             m[1]=0;              m[5]=1;    m[9]=0;              m[13]=0;
             m[2]=-sin(-theta);   m[6]=0;    m[10]=cos(-theta);   m[14]=0;
             m[3]=0;              m[7]=0;    m[11]=0;             m[15]=1;
-            
-            if(erreferentzia_sistema == GLOBALA){
-                m2 = mult(m, peek(_selected_object->transformazio_pila));
-            }
-            else{
-                m2 = mult(peek(_selected_object->transformazio_pila), m);
-            }
-            printMatrix(m2);
-            push(_selected_object->transformazio_pila, m2);
+
+            transformatu(_selected_object, m);
         }
         else if (transformazio_mota == ESKALAKETA){
             //+x
@@ -463,19 +404,9 @@ void special_keyboard(int keyCode, int x, int y){
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
-            
-            if(erreferentzia_sistema == GLOBALA){
-                m2 = mult(m, peek(_selected_object->transformazio_pila));
-            }
-            else{
-                m2 = mult(peek(_selected_object->transformazio_pila), m);
-            }
-            printMatrix(m2);
-            push(_selected_object->transformazio_pila, m2);
-        }
-        else{
 
-        }
+            transformatu(_selected_object, m);
+        };
         break;
 
     case KEY_ESKUMA:
@@ -490,14 +421,7 @@ void special_keyboard(int keyCode, int x, int y){
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
 
-            if(erreferentzia_sistema == GLOBALA){
-                m2 = mult(m, peek(_selected_object->transformazio_pila));
-            }
-            else{
-                m2 = mult(peek(_selected_object->transformazio_pila), m);
-            }
-            printMatrix(m2);
-            push(_selected_object->transformazio_pila, m2);
+            transformatu(_selected_object, m);
         }
         else if (transformazio_mota == ERROTAZIOA){
             //+y
@@ -505,15 +429,8 @@ void special_keyboard(int keyCode, int x, int y){
             m[1]=0;             m[5]=1;    m[9]=0;             m[13]=0;
             m[2]=-sin(theta);   m[6]=0;    m[10]=cos(theta);   m[14]=0;
             m[3]=0;             m[7]=0;    m[11]=0;            m[15]=1;
-            
-            if(erreferentzia_sistema == GLOBALA){
-                m2 = mult(m, peek(_selected_object->transformazio_pila));
-            }
-            else{
-                m2 = mult(peek(_selected_object->transformazio_pila), m);
-            }
-            printMatrix(m2);
-            push(_selected_object->transformazio_pila, m2);
+
+            transformatu(_selected_object, m);
         }
         else if (transformazio_mota == ESKALAKETA){
             //-x
@@ -521,18 +438,8 @@ void special_keyboard(int keyCode, int x, int y){
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
-            
-            if(erreferentzia_sistema == GLOBALA){
-                m2 = mult(m, peek(_selected_object->transformazio_pila));
-            }
-            else{
-                m2 = mult(peek(_selected_object->transformazio_pila), m);
-            }
-            printMatrix(m2);
-            push(_selected_object->transformazio_pila, m2);
-        }
-        else{
 
+            transformatu(_selected_object, m);
         }
         break;
 
@@ -542,21 +449,14 @@ void special_keyboard(int keyCode, int x, int y){
             printf("Lehenik aukeratu objektu bat.\n");
             break;
         }
-        
+
         if (transformazio_mota == TRANSLAZIOA){
             m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=-1;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
-            
-            if(erreferentzia_sistema == GLOBALA){
-                m2 = mult(m, peek(_selected_object->transformazio_pila));
-            }
-            else{
-                m2 = mult(peek(_selected_object->transformazio_pila), m);
-            }
-            printMatrix(m2);
-            push(_selected_object->transformazio_pila, m2);
+
+            transformatu(_selected_object, m);
         }
         else if (transformazio_mota == ERROTAZIOA){
             //-z
@@ -564,15 +464,8 @@ void special_keyboard(int keyCode, int x, int y){
             m[1]=-sin(theta);   m[5]=cos(theta);    m[9]=0;     m[13]=0;
             m[2]=0;             m[6]=0;             m[10]=1;   m[14]=0;
             m[3]=0;             m[7]=0;             m[11]=0;   m[15]=1;
-            
-            if(erreferentzia_sistema == GLOBALA){
-                m2 = mult(m, peek(_selected_object->transformazio_pila));
-            }
-            else{
-                m2 = mult(peek(_selected_object->transformazio_pila), m);
-            }
-            printMatrix(m2);
-            push(_selected_object->transformazio_pila, m2);
+
+            transformatu(_selected_object, m);
         }
         else if (transformazio_mota == ESKALAKETA){
             //+z
@@ -581,17 +474,7 @@ void special_keyboard(int keyCode, int x, int y){
             m[2]=0;   m[6]=0;   m[10]=1.1; m[14]=0;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
 
-            if(erreferentzia_sistema == GLOBALA){
-                m2 = mult(m, peek(_selected_object->transformazio_pila));
-            }
-            else{
-                m2 = mult(peek(_selected_object->transformazio_pila), m);
-            }
-            printMatrix(m2);
-            push(_selected_object->transformazio_pila, m2);
-        }
-        else{
-
+            transformatu(_selected_object, m);
         }
         break;
 
@@ -601,22 +484,14 @@ void special_keyboard(int keyCode, int x, int y){
             printf("Lehenik aukeratu objektu bat.\n");
             break;
         }
-        
+
         if (transformazio_mota == TRANSLAZIOA){
             m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=1;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
 
-            if(erreferentzia_sistema == GLOBALA){
-                m2 = mult(m, peek(_selected_object->transformazio_pila));
-            }
-            else{
-                m2 = mult(peek(_selected_object->transformazio_pila), m);
-            }
-            printMatrix(m2);
-            push(_selected_object->transformazio_pila, m2);
-            
+            transformatu(_selected_object, m);
         }
         else if (transformazio_mota == ERROTAZIOA){
             //-z
@@ -625,14 +500,7 @@ void special_keyboard(int keyCode, int x, int y){
             m[2]=0;             m[6]=0;             m[10]=1;   m[14]=0;
             m[3]=0;             m[7]=0;             m[11]=0;   m[15]=1;
 
-            if(erreferentzia_sistema == GLOBALA){
-                m2 = mult(m, peek(_selected_object->transformazio_pila));
-            }
-            else{
-                m2 = mult(peek(_selected_object->transformazio_pila), m);
-            }
-            printMatrix(m2);
-            push(_selected_object->transformazio_pila, m2);
+            transformatu(_selected_object, m);
         }
         else if (transformazio_mota == ESKALAKETA){
             //-z
@@ -641,17 +509,7 @@ void special_keyboard(int keyCode, int x, int y){
             m[2]=0;   m[6]=0;   m[10]=0.9; m[14]=0;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
 
-            if(erreferentzia_sistema == GLOBALA){
-                m2 = mult(m, peek(_selected_object->transformazio_pila));
-            }
-            else{
-                m2 = mult(peek(_selected_object->transformazio_pila), m);
-            }
-            printMatrix(m2);
-            push(_selected_object->transformazio_pila, m2);
-        }
-        else{
-
+            transformatu(_selected_object, m);
         }
         break;
 
@@ -661,6 +519,21 @@ void special_keyboard(int keyCode, int x, int y){
     /*In case we have do any modification affecting the displaying of the object, we redraw them*/
     glutPostRedisplay();
 
+}
+
+
+
+void transformatu(object3d* obj, GLdouble* transformazio_matrizea){
+  GLdouble* transformatu_gabe = peek(obj->transformazio_pila);
+  GLdouble* tranformatua;
+
+  if (erreferentzia_sistema == LOKALA){
+    tranformatua = mult(m, transformatu_gabe);
+  }else{
+    tranformatua = mult(transformatu_gabe, m);
+  }
+
+  push(obj->transformazio_pila, tranformatua);
 }
 
 GLdouble* mult(GLdouble* a, GLdouble* b){
@@ -673,13 +546,12 @@ GLdouble* mult(GLdouble* a, GLdouble* b){
             for (k = 0; k < 4; k++) {
                 sum += a[d*4 + k] * b[k*4 + c];
             }
- 
+
             result[d*4 + c] = sum;
         }
     }
     return result;
 }
-
 
 
 void printMatrix(GLdouble* matrix){

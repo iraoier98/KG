@@ -1,6 +1,13 @@
 #Visual Studio
 .vscode/
 
+#Latexeko mierdak
+*.aux
+*.log
+*.gz
+*.toc
+*.out
+
 # Prerequisites
 *.d
 

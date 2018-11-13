@@ -75,7 +75,9 @@
 #define KEY_REPAG                           104
 #define KEY_AVPAG                           105
 
-#define CTRL_Z                              26
+#define KEY_CTRL_Z                              26
+
+
 
 /** STRUCTURES **/
 
@@ -136,7 +138,7 @@ struct object3d{
     point3 max;                         /* coordinates' bigger bounds */
     struct object3d *next;              /* next element in the pile of objects */
     char* filename;                     /* which file contains this object*/
-    pila* transformazio_pila;           /* transformation matrix */
+    pila* transformazio_pila;           /* transformazio matrizeen pila */
 };
 
 typedef struct object3d object3d;

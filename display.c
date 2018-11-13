@@ -56,16 +56,12 @@ void draw_axes()
  */
 void draw_sareta(){
     if (_saretaErakutsi){
-        //  HAU AZPIKOA EINEZKERO, GERO OBJETOAK TODO WAPO AGERTEDIE.
-        // glMatrixMode(GL_PROJECTION);
-        // glLoadIdentity();
-        glColor3f(0, 0, 0);
-
-        for (float i = -1; i < 1; i += 0.2){
+        for (float i = -0.8 ; i < 1; i += 0.2){
             glBegin(GL_LINES);
             glVertex3d(i, -1, 0);
             glVertex3d(i, 1, 0);
             glEnd();
+
             glBegin(GL_LINES);
             glVertex3d(-1, i, 0);
             glVertex3d(1, i, 0);
@@ -101,6 +97,9 @@ void display(void) {
     /* Define the projection */
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
+    
+    /* Puntuak kameraren transformazioarekin biderkatu baino lehen, marraztu sareta */
+    draw_sareta();
 
     /*When the window is wider than our original projection plane we extend the plane in the X axis*/
     if ((_ortho_x_max - _ortho_x_min) / (_ortho_y_max - _ortho_y_min) < _window_ratio) {
@@ -125,9 +124,6 @@ void display(void) {
 
     /*First, we draw the axes*/
     draw_axes();
-    
-    /* Sareta gero */
-    draw_sareta();
 
     /*Now each of the objects in the list*/
     while (aux_obj != 0) {

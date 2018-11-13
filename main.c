@@ -17,8 +17,9 @@ object3d * _first_object= 0;                /*List of objects*/
 object3d * _selected_object = 0;            /*Object currently selected*/
 int _saretaErakutsi = 0;                    /*Sareta erakusteko "boolearra"  // 1 => erakutsi, 0 => ezkutatu*/
 
-int transformazio_mota;                     /*Translazioa, errotazioa edo eskalaketa*/
-int erreferentzia_sistema;                  /*Ĝlobala ala objektuarekiko lokala*/
+int transformazio_mota = TRANSLAZIOA;                     /*Translazioa, errotazioa edo eskalaketa*/
+int erreferentzia_sistema = LOKALA;                  /*Ĝlobala ala objektuarekiko lokala*/
+
 
 /** GENERAL INITIALIZATION **/
 void initialization (){
@@ -31,10 +32,7 @@ void initialization (){
     _ortho_z_min = KG_ORTHO_Z_MIN_INIT;
     _ortho_z_max = KG_ORTHO_Z_MAX_INIT;
 
-
     _window_ratio = (GLdouble) KG_WINDOW_WIDTH / (GLdouble) KG_WINDOW_HEIGHT;
-
-    printf("GL version: %s\n", glGetString(GL_VERSION));
 
     /*Definition of the background color*/
     glClearColor(KG_COL_BACK_R, KG_COL_BACK_G, KG_COL_BACK_B, KG_COL_BACK_A);
@@ -51,6 +49,9 @@ int main(int argc, char** argv) {
 
     /*First of all, print the help information*/
     print_help();
+
+    /* OpenGLren bertsioa pantailaratu */
+    printf("GL version: %s\n", glGetString(GL_VERSION));
 
     /* glut initializations */
     glutInit(&argc, argv);
