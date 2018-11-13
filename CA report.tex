@@ -1,0 +1,401 @@
+\documentclass[12pt]{article}
+\usepackage{hyperref}
+\usepackage[a4paper]{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{multirow}
+
+\newcommand{\fitxategi}[1] {\underline{\textit{#1}}}
+\newcommand{\kode}[1] {\textit{#1}}
+
+
+\geometry{
+ a4paper,
+ total={170mm,257mm},
+ left=2cm,
+ top=2cm,
+ }
+
+
+\title{Parallelism Project Results Report}
+\author{
+        Oier Irazabal\\
+        Jesus Calleja
+}
+\date{\today}
+
+
+
+\begin{document}
+\maketitle
+
+%\begin{abstract}
+%This is the paper's abstract \ldots
+%\end{abstract}
+
+\tableofcontents
+
+\pagebreak
+
+
+
+\section{Inplementazio berriak}\label{intro}
+
+\subsection{Objektuen transformazioak}
+
+Hiru oinarrizko transformazioak (translazioa, errotazioa eta eskalaketa) inplementatu ditugu, erreferentzia-sistema globala zein lokala izanik.
+Bai transformazio mota, bai erreferentzia-sistema automata baten bidez kodetuta daude. Automataren egoera batetik beste batera mugitzeko taula hauetan jasotako teklak sakatu behar dira:\\
+
+\begin{center}
+
+\begin{tabular}{|c|c|}
+																				\hline
+	Tekla							& Ekintza								\\	\hline
+	\textbf{M} edo \textbf{m}		& Translazioa aktibatu					\\	\hline
+	\textbf{B} edo \textbf{b}		& Biraketa aktibatu						\\	\hline
+	\textbf{T} edo \textbf{t}		& Tamaina aldaketa aktibatu				\\	\hline
+	\textbf{+}						& Ardatz guztietan handitu objektua	\\	\hline
+	\textbf{-}						& Ardatz guztietan handitu objektua	\\	\hline
+\end{tabular}
+
+\vspace{0.3cm}
+1. taula: qkwhrbjqhevfqwefweqf
+\end{center}
+
+\begin{center}
+
+\begin{tabular}{|c|c|c|c|}
+																				\hline
+	\multirow{2}{*}{Tekla}		& \multicolumn{3}{|c|}{Ekintza} 		\\	\cline{2-4}
+	& Translazioaren norabidea & Biraketaren ardatza & Eskalaketaren norabidea 	\\ \hline
+	\textbf{Goranzko gezia}		 &  Mugitu +Y & Biratu +X & Txikitu Y		\\	\hline
+	\textbf{Beheranzko gezia}	 &  Mugitu -Y & Biratu -X & Handitu Y		\\	\hline
+	\textbf{Ezkerreranzko gezia}&  Mugitu +X & Biratu +Y & Txikitu X		\\	\hline
+	\textbf{Eskuineranzko gezia}&  Mugitu -X & Biratu -Y & Handitu X		\\	\hline
+	\textbf{REPAG}				 &  Mugitu +Z & Biratu +Z & Txikitu Z		\\	\hline
+	\textbf{AVPAG}				 &  Mugitu -Z & Biratu -Z & Handitu Z		\\	\hline
+\end{tabular}
+
+\vspace{0.3cm}
+2. taula: qkwhrbjqhevfqwefweqf
+\end{center}
+
+
+Beraz, automata honela geratuko litzaiguke:\\
+
+% AUTOMATAN IRUDIXE
+
+%\begin{center}
+%\includegraphics[scale=0.8]{speedups.png}
+%\end{center}
+
+
+Transformazio-mota eta erreferentzia-sistema aldagai globalak \fitxategi{main.c}-n daude definituta eta hasieratuta translazio lokala burutzeko. Gainontzeko fitxategiek extern moduan erabili behar dituzte. Aldagai hauek hartu ditzaketen balioak \fitxategi{definizioak.h}-n daude definituta horrela:
+
+\begin{center}
+	\begin{lstlisting}[language=C, basicstyle=\footnotesize]
+	#define TRANSLAZIOA                          0
+	#define ERROTAZIOA                           1
+	#define ESKALAKETA                           2
+	#define LOKALA                               3
+	#define GLOBALA                              4
+	\end{lstlisting}
+\end{center}
+
+
+Orain, dena teorikoki definituta badaukagula, tekla bakoitza sakatzerakoan exekutatu behar den kodea bete behar da \fitxategi{io.c} fitxategian. 1. taulan jasotako teklek bakarrik esleitzen diote dagokion aldagaiari dagokion balioa, adibidez m teklaren kasuan:
+
+\begin{center}
+	\begin{lstlisting}[language=C, basicstyle=\footnotesize]
+	case 'm':
+	case 'M':
+		transformazio_mota = TRANSLAZIOA;
+		break;
+	\end{lstlisting}
+\end{center}
+
+
+2. taulako teklak inplementatzeko funtzio berri bat definitu behar dugu, orain arte erabilitakoak bakarrik ASCII karaktereak erregistratzen baititu (a-tik z-rako karaktereak CTRL-ekin sakatuz gero ere detektatzen ditu tekla desberdin moduan). Funtzio berri hori ...
+
+HASIERATU KODIGOAN TRANSFORMAZIO MOTA ETA ERREFERENTZIA SISTEMA!!!!!!
+ESPLIKEU GLUTSPECIALFUNC() CALLBACKA!!!
+
+
+
+
+\section{Analysis of the results}
+
+\subsection{Procedure}\label{procedure}
+
+The way we accomplished the experiment was the following:\\
+
+First, we completed the serial code and made sure it was working properly. Then, we measured execution times fivefold so that we could pick the mean as the execution time as well as documenting the dispersion of the data.\\
+Then, we built the parallel code and repeated the process of the data doubling each time the core count. Taking into account that our machine has 48 cores, the different amounts for this experiment will be 1, 2, 4, 8, 16 and 32. This way, we can observe how our application scales and how stable it is with the increase on the amount of cores.\\
+
+All in all, for each step of the six stated in the introduction (Section \ref{intro}), we recorded 5 times its execution time and calculated the mean, standard deviation, the minimum and the maximum. We also did the same with the total sum of all the parts.
+
+\paragraph{Note:}
+This experiment recollects no data using all 48 cores of the machine as times were too inconsistent, especially for Mars1. We will only append to this case the fact that the improvements were not notable and the divergence of data from sample to sample varied significantly. This might be caused by utilizing too much processor power when other programs or users were using it concurrently.
+
+\paragraph{Note:}
+The second and third step got in all measurements a 0 millisecond time, so those two piece of data will not be included in the following tables, but it will on the full tables on the appendices (Appendix \ref{data_tables}).
+
+\paragraph{Note:}
+The recordings were performed during times of low amount of concurrent users to reduce the influence of other people using heavily the processors.
+
+\subsection{Serial code}
+
+The only conclusion we can infer about the times on the serial version is how consistent the program is.\\
+
+\begin{center}
+
+\begin{tabular}{|c|c|c|c|c|}
+																	\hline
+			&Calc. hist	&Equalise	&	Encrypt	&	Trasmit		\\	\hline
+	Max		&	139.6	&	228.0	&	220.4	&	671.4		\\	\hline
+	Mean	&	138.94	&	227.46	&	220.2	&	670.58		\\	\hline
+	Min		&	138.7	&	226.9	&	219.8	&	669.8		\\	\hline
+\end{tabular}
+
+\vspace{0.3cm}
+Table 1: Mars1 Serial Times
+\end{center}
+
+\vspace{0.5cm}
+
+\begin{center}
+
+\begin{tabular}{|c|c|c|c|c|}
+																	\hline
+			&Calc. hist	&Equalise	&	Encrypt	&	Trasmit		\\	\hline
+	Max		&	399.4	&	660.2	&	629.8	&	1936.1		\\	\hline
+	Mean	&	398.22	&	658.94	&	629.26	&	1909.06		\\	\hline
+	Min		&	395.8	&	657.7	&	628.3	&	1891.4		\\	\hline
+\end{tabular}
+
+\vspace{0.3cm}
+Table 2: Mars2 Serial Times
+\end{center}
+
+\vspace{0.5cm}
+
+\begin{center}
+
+\begin{tabular}{|c|c|c|c|c|}
+																	\hline
+			&Calc. hist	&Equalise	&	Encrypt	&	Trasmit		\\	\hline
+	Max		&	737.6	&	1205.8	&	1168.7	&	3754.4		\\	\hline
+	Mean	&	736.52	&	1203.4	&	1167.38	&	3611.51		\\	\hline
+	Min		&	735.3	&	1200.9	&	1165.7	&	3569.1		\\	\hline
+\end{tabular}
+
+\vspace{0.3cm}
+Table 3: Mars3 Serial Times
+\end{center}
+
+\vspace{0.5cm}
+
+The times show a negligible gap of some milliseconds among the different observations with the exception of the transmission part. In Mars3 the difference between the maximum and the minimum is 185.3 and the standard deviation 79.98 (Datum taken from the section \ref{data_tables}).\\
+
+
+Although there is not more to show in this part, it is the baseline to further observe the improvements of the parallel code.
+
+\subsection{Parallel code}
+
+In an idealistic environment, our program's execution time should be cut linearly proportionally to the amount of processors. However, the reality is that not all the code is parallelizable nor optimizable 100$\%$ to scale perfectly linearly.\\
+That's why some times will be around 45$\%$, 40$\%$\ldots better to the previous experiment, according to the \textit{Gustafson's Law}\cite{gustafson}.
+
+\paragraph{Note:}
+We will call $P$ to the amount of processors throughout the document\\
+
+\paragraph{Note:}
+PROBEU MARS2 TA MARS3erako TA ANTZEKO ESKALAMENTUE BADEKO, REDAKTEU HAMEN ANTZEKOPARESIDO DIELA TA BAKARRIK ANALIZEKO DALA PARALELOAN MARS NAMBERWAN.\\
+
+First, we will analyse a curious case, $P=1$. The times we get are slightly above serial times as the processor amount is the same but with the slight handicap of parallelization of code requiring some setup, which costs time as a consequence.\\
+Still, times are quite concentrated as the minimum and the maximum are significantly near the mean.
+
+\begin{center}
+
+\begin{tabular}{|c|c|c|c|c|}
+																	\hline
+			&Calc. hist	&Equalise	&	Encrypt	&	Trasmit		\\	\hline
+	Max		&	156,7	&	294.4	&	252.1	&	688.6		\\	\hline
+	Mean	&	156.52	&	293.7	&	251.5	&	684.48		\\	\hline
+	Min		&	156.3	&	293.4	&	251.1	&	681.1		\\	\hline
+\end{tabular}
+
+\vspace{0.3cm}
+Table 4: $P=1$ Times
+\end{center}
+
+\vspace{0.5cm}
+
+Moving onto the next cases, we can see times almost drop to a half and remain still consistent for $P=2$. $P=4$ again almost halves the times and is even more consistent with less standard variaton than both experiments before.
+
+\begin{center}
+
+\begin{tabular}{|c|c|c|c|c|}
+																	\hline
+			&Calc. hist	&Equalise	&	Encrypt	&	Trasmit		\\	\hline
+	Max		&	79.5	&	150.6	&	130.2	&	342.6		\\	\hline
+	Mean	&	78.66	&	149.96	&	129.48	&	341.66		\\	\hline
+	Min		&	78.4	&	149.7	&	128.8	&	341.2		\\	\hline
+\end{tabular}
+
+\vspace{0.3cm}
+Table 5: $P=2$ Times
+\end{center}
+
+\vspace{0.5cm}
+
+\begin{center}
+
+\begin{tabular}{|c|c|c|c|c|}
+																	\hline
+			&Calc. hist	&Equalise	&	Encrypt	&	Trasmit		\\	\hline
+	Max		&	42.0	&	79.8	&	68.1	&	171.1		\\	\hline
+	Mean	&	41.88	&	79.0	&	67.64	&	170.54		\\	\hline
+	Min		&	41.8	&	78.5	&	67.3	&	170.0		\\	\hline
+\end{tabular}
+
+\vspace{0.3cm}
+Table 6: $P=4$ Times
+\end{center}
+
+\vspace{0.5cm}
+
+\begin{center}
+SEGIDU HAMENDIK EURRERA\\
+
+EIN P GEIXAUGAZ TA IA MARS2 TA MARS3EGAZ ZE PASETAN DAN
+\end{center}
+
+
+\subsection{Speedups}
+
+First of all, we can distinguish two types of speedup: the one related with the increase in cores and the one related with the increase in image size.
+
+%\begin{center}
+%\includegraphics[scale=0.8]{speedups.png}
+%\end{center}
+
+\subsubsection{Image size}
+This speedup is related with how the speedup varies from image to image. In the figure above, it will be represented by the height jump between two points on the same x value.\\
+
+We can see in the figure that the speedups diverge when $P$ is higher than 8. Also, the Mars2 and Mars3 lines mantain a similar slope albeit their difference in values. We could have gone on and plotted the 48 core marks, but as said in the section \ref{procedure}, times were too unstable and inconsistent at that core amount.
+
+\subsubsection{Processor amount}
+This speedup is related with how close the speedup is from the function $y=x$. In the figure above, it will be represented by the jump from the function $y=x$ and the curve.\\
+
+Although the scale of the figure is not 1:1 as the x axis is exponential, we cannot draw a straight 45º line to ease the observation. But with some staring, there is a notable jump in $P=8$, as the values lie nearer to $6$ than to $8$. From there on, the values fall behind, especially for Mars1, which for the case $P=32$, the speedup is $10,41$ (Section \ref{data_tables}).
+
+\section{Conclusions}\label{conclusions}
+We worked hard, and achieved very little. <-ZI	(bajatuten templategaz etorri da xD)
+
+
+BETE
+
+	KOMENTEU:
+\begin{itemize}
+	\item Inconsistent times due to system inestability
+	\item Inconsistent times due to multiple concurrent users.
+
+\end{itemize}
+
+\bibliographystyle{abbrv}
+\bibliography{main}
+
+\begin{thebibliography}{9}
+
+\bibitem{equalisation} 
+\underline{Contrast Enhancement}:\\
+\url{https://egela1718.ehu.eus/pluginfile.php/336309/mod_resource/content/1/ILWIS.pdf} Page 217
+
+\bibitem{hill_method} 
+\underline{The Hill method}:\\
+\url{https://egela1718.ehu.eus/pluginfile.php/336310/mod_resource/content/2/PBL/Hill.pdf} Page 31
+
+\bibitem{gustafson}
+\underline{Gustafson's law:}\\
+Basque version: \url{http://www.sc.ehu.es/acwarfra/arpar/AP/apnagusia.html} Page 28 (file \textbf{2. gaia} under \textbf{dokumentazioa})\\
+Spanish version: \url{http://www.sc.ehu.es/acwarfra/arpar/AP/apc.docu.html} Page 82 (file \textbf{apuntes (1)})\\
+Wikipedia: \url{https://en.wikipedia.org/wiki/Gustafson%27s_law}
+
+
+\end{thebibliography}
+
+\section{Appendices}
+
+\subsection{Sample images}\label{images}
+
+%\begin{tabular}{cc}
+%	\includegraphics[scale=0.6]{Mars1.png}  & Mars1.pgm (2882 $\cdot$ 3508)\\
+%	\includegraphics[scale=0.03]{Mars2.png} & Mars2.pgm (6000 $\cdot$ 4800)\\
+%	\includegraphics[scale=0.01]{Mars3.png} & Mars3.pgm (8292 $\cdot$ 6485)\\
+%\end{tabular}
+
+DESKOMENTEU GOIKOA. ASAKO TARDETAZTE PROCESETAN TA EZIOT LORTU ONDO DISPLAYIETIE, IA LORTZEZUN
+
+\subsection{Source code}
+
+\subsubsection{Serial code}\label{serial_code}
+
+\begin{lstlisting}[language=C, basicstyle=\footnotesize]
+/****************************************************************
+     File: encrypt.c
+
+ 	Generates the encrypted image
+*****************************************************************/
+
+#include "pixmap.h"
+
+#define M11 21
+#define M12 35
+#define M21 18
+#define M22 79
+
+void encrypt (unsigned char *v1, unsigned char *v2)
+{
+	char nv1 = (*(v1) * M11 + *(v2) * M12) % 256;
+	char nv2 = (*(v1) * M21 + *(v2) * M22) % 256;
+
+	*(v1) = nv1;
+	*(v2) = nv2;
+}
+
+
+void generate_encrypted_image(image in_image, image *out_image)
+{
+	generate_image(out_image,in_image.h,in_image.w,BLACK);
+
+	int i = 0;
+	int j = 0;
+	char a;
+	char b;
+
+	for (i =0 ; i < in_image.h ; i++ ){
+		for (j = 0 ; j < in_image.w ; j = j+2){
+
+			a = in_image.im[i][j];
+			b = in_image.im[i][j+1];
+
+			encrypt(&a,&b);
+
+			out_image->im[i][j] = a;
+			out_image->im[i][j+1] = b;
+
+		}
+	}
+}
+\end{lstlisting}
+
+EINGUN KODIGOA SARTU, TA EZ OKUPETIE HAMAR MILLOI ORRI
+
+
+
+\subsubsection{Parallel code}\label{parallel_code}
+
+\subsection{Complete data tables}\label{data_tables}
+
+\end{document}
+
