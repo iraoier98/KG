@@ -47,14 +47,26 @@ void print_help(){
     printf("Egilea: Oier Irazabal eta Txus Calleja\n");
     printf("Data: 2018ko azaroa\n");
     printf("\n\n");
+
     printf("FUNTZIO NAGUSIAK \n");
     printf("<?>\t\t Laguntza hau bistaratu \n");
     printf("<ESC>\t\t Programatik irten \n");
+    printf("<CTRL + ->\t Bistaratze-eremua handitu\n");
+    printf("<CTRL + +>\t Bistaratze-eremua txikitu\n\n");
+    printf("<S>\t\t Sareta erakutsi\n");
+
     printf("<F>\t\t Objektua bat kargatu\n");
     printf("<TAB>\t\t Kargaturiko objektuen artean bat hautatu\n");
-    printf("<DEL>\t\t Hautatutako objektua ezabatu\n");
-    printf("<CTRL + ->\t Bistaratze-eremua handitu\n");
-    printf("<CTRL + +>\t Bistaratze-eremua txikitu\n");
+    printf("<SUPR>\t\t Hautatutako objektua ezabatu\n");
+    printf("<I>\t\t Hautatutako objektuari buruzko informazioa pantailaratu\n");
+
+    printf("<M>\t\t Objektuaren translazioa aktibatu\n");
+    printf("<B>\t\t Objektuaren biraketa aktibatu\n");
+    printf("<T>\t\t Objektuaren eskalaketa aktibatu\n");
+    printf("<L>\t\t Objektuaren transformazioak objektuarekiko erreferentzia_sisteman egin\n");
+    printf("<L>\t\t Objektuaren transformazioak erreferentzia_sistema globalean egin\n");
+    printf("<->\t\t Objektua ardatz guztietan txikitu\n");
+    printf("<+>\t\t Objektua ardatz guztietan handitu\n");
     printf("\n\n");
 }
 
@@ -77,26 +89,39 @@ void keyboard(unsigned char key, int x, int y) {
     case 'm':
     case 'M':
         transformazio_mota = TRANSLAZIOA;
+        printf("Translazioa aktibatuta\n");
         break;
 
     case 'b':
     case 'B':
-        transformazio_mota = ERROTAZIOA;
+        transformazio_mota = BIRAKETA;
+        printf("Biraketa aktibatuta\n");
         break;
 
     case 't':
     case 'T':
         transformazio_mota = ESKALAKETA;
+        printf("Eskalaketa aktibatuta\n");
+        break;
+
+
+    case 's':
+    case 'S':
+        transformazio_mota = ZIZAILAKETA;
+        printf("Zizailaketa aktibatuta\n");
+        // https://www.tutorialspoint.com/computer_graphics/3d_transformation.htm
         break;
 
     case 'g':
     case 'G':
         erreferentzia_sistema = GLOBALA;
+        printf("Aldaketa globalak aktibatuta\n");
         break;
 
     case 'l':
     case 'L':
         erreferentzia_sistema = LOKALA;
+        printf("Aldaketa lokalak aktibatuta\n");
         break;
 
 
@@ -158,10 +183,11 @@ void keyboard(unsigned char key, int x, int y) {
 
         printf("%s objektua: ",_selected_object->filename);
         printf("%d erpin eta %d aurpegi.\n", _selected_object->num_vertices, _selected_object->num_faces);
+        printf("Transformazio-matrizea:\n");
+        printMatrix(peek(_selected_object->transformazio_pila));
         break;
 
-    case 's':
-    case 'S':
+    case KEY_CTRL_S:
         // Sareta erakutsi / ezkutatu
         _saretaErakutsi = (_saretaErakutsi == 1) ? 0 : 1;
         break;
@@ -303,7 +329,6 @@ void special_keyboard(int keyCode, int x, int y){
     switch (keyCode) {
 
     case KEY_GORA:
-        printf("Gora\n");
         if (_selected_object == NULL){
             printf("Lehenik aukeratu objektu bat.\n");
             break;
@@ -318,7 +343,7 @@ void special_keyboard(int keyCode, int x, int y){
 
             transformatu(_selected_object, m);
         }
-        else if (transformazio_mota == ERROTAZIOA){
+        else if (transformazio_mota == BIRAKETA){
             //+x
             m[0]=1;   m[4]=0;              m[8]=0;              m[12]=0;
             m[1]=0;   m[5]=cos(theta);     m[9]=sin(theta);     m[13]=0;
@@ -340,13 +365,13 @@ void special_keyboard(int keyCode, int x, int y){
         break;
 
     case KEY_BEHERA:
-        printf("Behera\n");
         if (_selected_object == NULL){
             printf("Lehenik aukeratu objektu bat.\n");
             break;
         }
 
         if (transformazio_mota == TRANSLAZIOA){
+            //-y
             m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=-1;
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
@@ -354,7 +379,7 @@ void special_keyboard(int keyCode, int x, int y){
 
             transformatu(_selected_object, m);
         }
-        else if (transformazio_mota == ERROTAZIOA){
+        else if (transformazio_mota == BIRAKETA){
             //-x
             m[0]=1;   m[4]=0;              m[8]=0;              m[12]=0;
             m[1]=0;   m[5]=cos(-theta);    m[9]=sin(-theta);    m[13]=0;
@@ -375,13 +400,13 @@ void special_keyboard(int keyCode, int x, int y){
         break;
 
     case KEY_EZKERRA:
-        printf("Ezkerra\n");
         if (_selected_object == NULL){
             printf("Lehenik aukeratu objektu bat.\n");
             break;
         }
 
         if (transformazio_mota == TRANSLAZIOA){
+            //-x
             m[0]=1;   m[4]=0;   m[8]=0;    m[12]=-1;
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
@@ -389,7 +414,7 @@ void special_keyboard(int keyCode, int x, int y){
 
             transformatu(_selected_object, m);
         }
-        else if (transformazio_mota == ERROTAZIOA){
+        else if (transformazio_mota == BIRAKETA){
             //-y
             m[0]=cos(-theta);    m[4]=0;    m[8]=sin(-theta);    m[12]=0;
             m[1]=0;              m[5]=1;    m[9]=0;              m[13]=0;
@@ -410,12 +435,12 @@ void special_keyboard(int keyCode, int x, int y){
         break;
 
     case KEY_ESKUMA:
-        printf("Eskuma\n");
         if (_selected_object == NULL){
             printf("Lehenik aukeratu objektu bat.\n");
             break;
         }
         if (transformazio_mota == TRANSLAZIOA){
+            //+x
             m[0]=1;   m[4]=0;   m[8]=0;    m[12]=1;
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
@@ -423,7 +448,7 @@ void special_keyboard(int keyCode, int x, int y){
 
             transformatu(_selected_object, m);
         }
-        else if (transformazio_mota == ERROTAZIOA){
+        else if (transformazio_mota == BIRAKETA){
             //+y
             m[0]=cos(theta);    m[4]=0;    m[8]=sin(theta);    m[12]=0;
             m[1]=0;             m[5]=1;    m[9]=0;             m[13]=0;
@@ -444,13 +469,13 @@ void special_keyboard(int keyCode, int x, int y){
         break;
 
     case KEY_REPAG:
-        printf("REPAG\n");
         if (_selected_object == NULL){
             printf("Lehenik aukeratu objektu bat.\n");
             break;
         }
 
         if (transformazio_mota == TRANSLAZIOA){
+            //-z
             m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=-1;
@@ -458,10 +483,10 @@ void special_keyboard(int keyCode, int x, int y){
 
             transformatu(_selected_object, m);
         }
-        else if (transformazio_mota == ERROTAZIOA){
+        else if (transformazio_mota == BIRAKETA){
             //-z
-            m[0]=cos(theta);    m[4]=sin(theta);    m[8]=0;    m[12]=0;
-            m[1]=-sin(theta);   m[5]=cos(theta);    m[9]=0;     m[13]=0;
+            m[0]=cos(-theta);    m[4]=sin(-theta);    m[8]=0;    m[12]=0;
+            m[1]=-sin(-theta);   m[5]=cos(-theta);    m[9]=0;     m[13]=0;
             m[2]=0;             m[6]=0;             m[10]=1;   m[14]=0;
             m[3]=0;             m[7]=0;             m[11]=0;   m[15]=1;
 
@@ -479,13 +504,13 @@ void special_keyboard(int keyCode, int x, int y){
         break;
 
     case KEY_AVPAG:
-        printf("AVPAG\n");
         if (_selected_object == NULL){
             printf("Lehenik aukeratu objektu bat.\n");
             break;
         }
 
         if (transformazio_mota == TRANSLAZIOA){
+            //+z
             m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
             m[2]=0;   m[6]=0;   m[10]=1;   m[14]=1;
@@ -493,10 +518,10 @@ void special_keyboard(int keyCode, int x, int y){
 
             transformatu(_selected_object, m);
         }
-        else if (transformazio_mota == ERROTAZIOA){
-            //-z
-            m[0]=cos(-theta);    m[4]=sin(-theta);    m[8]=0;    m[12]=0;
-            m[1]=-sin(-theta);   m[5]=cos(-theta);    m[9]=0;     m[13]=0;
+        else if (transformazio_mota == BIRAKETA){
+            //+z
+            m[0]=cos(theta);    m[4]=sin(theta);    m[8]=0;    m[12]=0;
+            m[1]=-sin(theta);   m[5]=cos(theta);    m[9]=0;     m[13]=0;
             m[2]=0;             m[6]=0;             m[10]=1;   m[14]=0;
             m[3]=0;             m[7]=0;             m[11]=0;   m[15]=1;
 
@@ -524,16 +549,16 @@ void special_keyboard(int keyCode, int x, int y){
 
 
 void transformatu(object3d* obj, GLdouble* transformazio_matrizea){
-  GLdouble* transformatu_gabe = peek(obj->transformazio_pila);
-  GLdouble* tranformatua;
+    GLdouble* transformatu_gabe = peek(obj->transformazio_pila);
+    GLdouble* tranformatua;
 
-  if (erreferentzia_sistema == LOKALA){
-    tranformatua = mult(m, transformatu_gabe);
-  }else{
-    tranformatua = mult(transformatu_gabe, m);
-  }
+    if (erreferentzia_sistema == LOKALA){
+        tranformatua = mult(m, transformatu_gabe);
+    }else{
+        tranformatua = mult(transformatu_gabe, m);
+    }
 
-  push(obj->transformazio_pila, tranformatua);
+    push(obj->transformazio_pila, tranformatua);
 }
 
 GLdouble* mult(GLdouble* a, GLdouble* b){

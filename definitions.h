@@ -60,11 +60,13 @@
 #define PI                                  3.14159265358979323846
 
 
-#define TRANSLAZIOA                          0
-#define ERROTAZIOA                           1
-#define ESKALAKETA                           2
-#define LOKALA                               3
-#define GLOBALA                              4
+#define TRANSLAZIOA                         0
+#define BIRAKETA                            1
+#define ESKALAKETA                          2
+#define ZIZAILAKETA                         3
+
+#define LOKALA                              0
+#define GLOBALA                             1
 
 
 #define KEY_GORA                            101
@@ -75,7 +77,8 @@
 #define KEY_REPAG                           104
 #define KEY_AVPAG                           105
 
-#define KEY_CTRL_Z                              26
+#define KEY_CTRL_Z                          26
+#define KEY_CTRL_S                          19
 
 
 
