@@ -6,7 +6,7 @@
 \usepackage{multirow}
 
 \newcommand{\fitxategi}[1] {\underline{\textit{#1}}}
-\newcommand{\kode}[1] {\textit{#1}}
+\newcommand{\tekla}[1] {\textbf{#1}}
 
 
 \geometry{
@@ -71,12 +71,12 @@ Bai transformazio mota, bai erreferentzia-sistema automata baten bidez kodetuta 
 	\multirow{3}{*}{Tekla}		& \multicolumn{3}{|c|}{Ekintza} 		\\	\cline{2-4}
 	& Translazioaren  & Biraketaren  & Eskalaketaren 					\\ 
 	&  norabidea &  ardatza &  norabidea 								\\	\hline
-	\textbf{Goranzko gezia}		 &  Mugitu +Y & Biratu +X & Txikitu Y	\\	\hline
-	\textbf{Beheranzko gezia}	 &  Mugitu -Y & Biratu -X & Handitu Y	\\	\hline
-	\textbf{Ezkerreranzko gezia}&  Mugitu +X & Biratu +Y & Txikitu X	\\	\hline
-	\textbf{Eskuineranzko gezia}&  Mugitu -X & Biratu -Y & Handitu X	\\	\hline
-	\textbf{REPAG}				 &  Mugitu +Z & Biratu +Z & Txikitu Z	\\	\hline
-	\textbf{AVPAG}				 &  Mugitu -Z & Biratu -Z & Handitu Z	\\	\hline
+	\tekla{Goranzko gezia}		 &  Mugitu +Y & Biratu +X & Txikitu Y	\\	\hline
+	\tekla{Beheranzko gezia}	 &  Mugitu -Y & Biratu -X & Handitu Y	\\	\hline
+	\tekla{Ezkerreranzko gezia}&  Mugitu +X & Biratu +Y & Txikitu X	\\	\hline
+	\tekla{Eskuineranzko gezia}&  Mugitu -X & Biratu -Y & Handitu X	\\	\hline
+	\tekla{REPAG}				 &  Mugitu +Z & Biratu +Z & Txikitu Z	\\	\hline
+	\tekla{AVPAG}				 &  Mugitu -Z & Biratu -Z & Handitu Z	\\	\hline
 \end{tabular}
 
 \vspace{0.3cm}
@@ -84,14 +84,13 @@ Bai transformazio mota, bai erreferentzia-sistema automata baten bidez kodetuta 
 \end{center}
 
 
-Beraz, automata honela geratuko litzaiguke:\\
+Beraz, automata honela geratuko litzaiguke:
 
-SARTU HAMEN IRUDIXEE
-% AUTOMATAN IRUDIXE
-
-%\begin{center}
-%\includegraphics[scale=0.8]{speedups.png}
-%\end{center}
+\begin{center}
+\includegraphics[scale=0.6]{egoeradiagrama.png}\\
+\vspace{0.3cm}
+1. Irudia: Egoera-diagrama
+\end{center}
 
 
 Transformazio-mota eta erreferentzia-sistema aldagai globalak \fitxategi{main.c}-n daude definituta eta hasieratuta translazio lokala burutzeko. Gainontzeko fitxategiek extern moduan erabili behar dituzte. Aldagai hauek hartu ditzaketen balioak \fitxategi{definizioak.h}-n daude definituta horrela:
@@ -99,15 +98,16 @@ Transformazio-mota eta erreferentzia-sistema aldagai globalak \fitxategi{main.c}
 \begin{center}
 	\begin{lstlisting}[language=C, basicstyle=\footnotesize]
 	#define TRANSLAZIOA                          0
-	#define ERROTAZIOA                           1
+	#define BIRAKETA                             1
 	#define ESKALAKETA                           2
-	#define LOKALA                               3
-	#define GLOBALA                              4
+	
+	#define LOKALA                               0
+	#define GLOBALA                              1
 	\end{lstlisting}
 \end{center}
 
 
-Orain, dena teorikoki definituta badaukagula, tekla bakoitza sakatzerakoan exekutatu behar den kodea bete behar da \fitxategi{io.c} fitxategian. 1. taulan jasotako teklek bakarrik esleitzen diote dagokion aldagaiari dagokion balioa, adibidez \textbf{m} teklaren kasuan:
+Orain, dena teorikoki definituta badaukagula, tekla bakoitza sakatzerakoan exekutatu behar den kodea bete behar da \fitxategi{io.c} fitxategian. 1. taulan jasotako teklek bakarrik esleitzen diote dagokion aldagaiari dagokion balioa, adibidez \tekla{m} teklaren kasuan:
 
 \begin{center}
 	\begin{lstlisting}[language=C, basicstyle=\footnotesize]
@@ -128,8 +128,6 @@ Funtzio berri horri specialKeyboard() deitu diogu eta glutSpecialFunc()\cite{glu
 	\end{lstlisting}
 \end{center}
 
-IGUAL HAU GOIKOA KENDU\\
-
 specialKeyboard() funtzioak tekla arruntekin bezala funtzionatuko luke teklaren kodea karaktere batekin konparagarria izango baliteke. Arrazio hau dela-eta \fitxategi{definizioak.h}-n definitu ditugu tekla berezi horien balioak, horrela txukunago geratzen baita kodea.
 
 
@@ -137,26 +135,32 @@ specialKeyboard() funtzioak tekla arruntekin bezala funtzionatuko luke teklaren 
 
 \subsection{Transformazioen desegitea}\label{procedure}
 
-aipatu pilie zelan dauen inplementeta ganetik (doubly linked list)
-aipatu pilien basien identidade matrizie dauela beti ta ezindala kendu
-
+Aldaketak desegiteko \fitxategi{definizioak.h}-n object3d estrukturari atributu bat gehitu diogu: transformazio-pila. Pilari esker, aldaketak desegiteko funtzionalitatea errez egingo da.
+Pilaren erazagupena eta inplementazioa \fitxategi{pila.h} eta \fitxategi{pila.c} fitxategietan egin da.\\\\
+Beraz, aldaketak sartu ahala, pilari push() egingo diogu matrize berriekin. Edozein momentuan aldaketaren bat desegin nahi badugu, \tekla{CTRL+Z} sakatuz aurreko aldaketara pasatuko gara, eta hala egin dezakegu hasierako objektura heldu edo aldaketa berri bat egin arte.
 
 \section{Aldaketak}
 
-Aurreko faseko feedback-ean jaso bezala, orain sareta erreferentzia bezala erabiltzeko balio du. Aurreko fasean objektu bezala ageri zen pantailaren lehenengo koadrantean, orain aldiz, viewport\cite{viewport} osoa zati uniformeetan banatzen du eta kameraren transformatua baino lehen marrazten denez, berdin dio kameraren posizioak edota zoom-ak.
+Aurreko faseko feedback-ean jaso bezala, orain sareta erreferentzia bezala erabiltzeko balio du. Aurreko fasean objektu bezala ageri zen pantailaren lehenengo koadrantean, orain aldiz, viewport\cite{viewport} osoa zati uniformeetan banatzen du eta kameraren transformatua baino lehen marrazten denez, berdin dio kameraren posizioak edota zoom-ak.\\
+Sareta aktibatzeko teklen konbinazioa orain \tekla{CTRL+S} da.
 
 
 \section{Gehikuntzak}
 
+INFORMAZIOAREKIN BATERA, MOMENTUAN DAUKAN TRANSFORMAZIO-MATRIZEA PRINTEATU.
+
 \subsection{Aldaketak berregiteko aukera}
 
-CTRL+SHIFT+Z konbinaketa sakatzerakoan azken transformaziotik aurrera desegindako aldaketak berregin ditzake objektuak. Kontuan hartu transformazio bat desegiterakoan beste bat egiten bada, desegite hori galduko dela.\\
+\tekla{CTRL+SHIFT+Z} konbinaketa sakatzerakoan azken transformaziotik aurrera desegindako aldaketak berregin ditzake objektuak. Kontuan hartu transformazio bat desegiterakoan beste bat egiten bada, desegite hori galduko dela.\\
 Pila inplementatuta daukagun erak erraz ahalbidetu digu aldaketak berregitea. Bakarrik aurreratu behar dugu posizio bat matrizeen zerrenda estekatuan, egin ahal izanez gero.\\
 
 Arazo posible bakarra memoriaren kutsadura da. Lehen esan bezala, desegite baten ostean transformazio berri bat eginez gero, aurretik pilaren gainean egon diren transformazioak galtzen dira. Hala ere ez dira memoriatik kentzen, beraz, memoria erabilezinaren parte osatzen dute, memoria kutsatuz. Oraingoz ez da arazo bat transformazioek memoria gutxi okupatzen baitute eta gure programak ez baitu memoriaren eskaera handirik burutu behar. Hala ere, etorkizunean arazoa izan liteke eta kontutan hartu beharko genukeen arazo bat da.
 
 
 \subsection{Transformazio gehigarriak}
+
+
+shearing, s teklagaz aktibeta
 
 \pagebreak
 
