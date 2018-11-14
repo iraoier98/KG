@@ -8,6 +8,8 @@
 \newcommand{\fitxategi}[1] {\underline{\textit{#1}}}
 \newcommand{\tekla}[1] {\textbf{#1}}
 
+\renewcommand{\refname}{Erreferentziak}
+
 
 \geometry{
  a4paper,
@@ -39,9 +41,9 @@
 
 
 
-\section{Inplementazio berriak}\label{intro}
+\section{Inplementazio berriak}
 
-\subsection{Objektuen transformazioak}
+\subsection{Objektuen transformazioak}\label{transformazioak}
 
 Hiru oinarrizko transformazioak (translazioa, errotazioa eta eskalaketa) inplementatu ditugu, erreferentzia-sistema globala zein lokala izanik.
 Bai transformazio mota, bai erreferentzia-sistema automata baten bidez kodetuta daude. Automataren egoera batetik beste batera mugitzeko taula hauetan jasotako teklak sakatu behar dira:\\
@@ -133,7 +135,7 @@ specialKeyboard() funtzioak tekla arruntekin bezala funtzionatuko luke teklaren 
 
 
 
-\subsection{Transformazioen desegitea}\label{procedure}
+\subsection{Transformazioen desegitea}
 
 Aldaketak desegiteko \fitxategi{definizioak.h}-n object3d estrukturari atributu bat gehitu diogu: transformazio-pila. Pilari esker, aldaketak desegiteko funtzionalitatea errez egingo da.
 Pilaren erazagupena eta inplementazioa \fitxategi{pila.h} eta \fitxategi{pila.c} fitxategietan egin da.\\\\
@@ -141,7 +143,7 @@ Beraz, aldaketak sartu ahala, pilari push() egingo diogu matrize berriekin. Edoz
 
 \section{Aldaketak}
 
-Aurreko faseko feedback-ean jaso bezala, orain sareta erreferentzia bezala erabiltzeko balio du. Aurreko fasean objektu bezala ageri zen pantailaren lehenengo koadrantean, orain aldiz, viewport\cite{viewport} osoa zati uniformeetan banatzen du eta kameraren transformatua baino lehen marrazten denez, berdin dio kameraren posizioak edota zoom-ak.\\
+Aurreko faseko feedback-ean jaso bezala, orain sareta erreferentzia bezala erabiltzeko balio du. Aurreko fasean objektu bezala ageri zen pantailaren lehenengo koadrantean, orain aldiz, viewport\cite{viewport} osoa 10 zati uniformeetan banatzen du eta kameraren transformatua baino lehen marrazten denez, berdin dio kameraren posizioak edota zoom-ak.\\
 Sareta aktibatzeko teklen konbinazioa orain \tekla{CTRL+S} da.
 
 
@@ -157,12 +159,12 @@ Pila inplementatuta daukagun erak erraz ahalbidetu digu aldaketak berregitea. Ba
 Arazo posible bakarra memoriaren kutsadura da. Lehen esan bezala, desegite baten ostean transformazio berri bat eginez gero, aurretik pilaren gainean egon diren transformazioak galtzen dira. Hala ere ez dira memoriatik kentzen, beraz, memoria erabilezinaren parte osatzen dute, memoria kutsatuz. Oraingoz ez da arazo bat transformazioek memoria gutxi okupatzen baitute eta gure programak ez baitu memoriaren eskaera handirik burutu behar. Hala ere, etorkizunean arazoa izan liteke eta kontutan hartu beharko genukeen arazo bat da.
 
 
-\subsection{Transformazio gehigarriak}
+\subsection{Zizailaketa}
 
+\tekla{S} tekla sakatuz gero objektuaren zizailaketa aktibatzen da. Zizailaketa \ref{transformazioak} atalean espezifikatu diren beste transformazioen bezala inplementatu dugu.\\
 
-shearing, s teklagaz aktibeta
+3 dimentsiotako ardatz baten zizailaketan beste bi ardatzek eragin ahal duten arren, gure programan \textbf{x} ardatza \textbf{y}rekin haziko da, \textbf{y} \textbf{z}rekin eta \textbf{z} \textbf{y}rekin. Transformazio hau arrazo irudi dakioke erabiltzaileari, oraingoz kamera otrografikoa erabiltzen baitu programak.\\
 
-\pagebreak
 
 \bibliographystyle{abbrv}
 \bibliography{main}

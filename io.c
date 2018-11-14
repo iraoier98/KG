@@ -18,7 +18,12 @@ extern int erreferentzia_sistema;
 
 GLdouble* m;
 GLdouble* m2;
+
+/* Biraketarako angelua */
 double theta = PI/10;
+
+/* Zizailaketarako aldaketa-faktorea */
+double delta = 0.1;
 
 
 /* a matrizea b-rekin biderkatuta itzultzen du */
@@ -362,6 +367,15 @@ void special_keyboard(int keyCode, int x, int y){
             transformatu(_selected_object, m);
 
         }
+        else if (transformazio_mota == ZIZAILAKETA){
+            //+y
+            m[0]=1;    m[4]=0;    m[8]=0;       m[12]=0;
+            m[1]=0;    m[5]=1;    m[9]=delta;  m[13]=0;
+            m[2]=0;    m[6]=0;    m[10]=1;      m[14]=0;
+            m[3]=0;    m[7]=0;    m[11]=0;      m[15]=1;
+            transformatu(_selected_object, m);
+
+        }
         break;
 
     case KEY_BEHERA:
@@ -397,6 +411,16 @@ void special_keyboard(int keyCode, int x, int y){
 
             transformatu(_selected_object, m);
         }
+        else if (transformazio_mota == ZIZAILAKETA){
+            //-y
+            m[0]=1;    m[4]=0;    m[8]=0;       m[12]=0;
+            m[1]=0;    m[5]=1;    m[9]=-delta;  m[13]=0;
+            m[2]=0;    m[6]=0;    m[10]=1;      m[14]=0;
+            m[3]=0;    m[7]=0;    m[11]=0;      m[15]=1;
+
+            transformatu(_selected_object, m);
+
+        }
         break;
 
     case KEY_EZKERRA:
@@ -431,7 +455,17 @@ void special_keyboard(int keyCode, int x, int y){
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
 
             transformatu(_selected_object, m);
-        };
+        }
+        else if (transformazio_mota == ZIZAILAKETA){
+            //-x
+            m[0]=1;   m[4]=-delta;  m[8]=0;    m[12]=0;
+            m[1]=0;   m[5]=1;       m[9]=0;    m[13]=0;
+            m[2]=0;   m[6]=0;       m[10]=1;   m[14]=0;
+            m[3]=0;   m[7]=0;       m[11]=0;   m[15]=1;
+
+            transformatu(_selected_object, m);
+
+        }
         break;
 
     case KEY_ESKUMA:
@@ -465,6 +499,16 @@ void special_keyboard(int keyCode, int x, int y){
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
 
             transformatu(_selected_object, m);
+        }
+        else if (transformazio_mota == ZIZAILAKETA){
+            //+x
+            m[0]=1;   m[4]=delta;  m[8]=0;    m[12]=0;
+            m[1]=0;   m[5]=1;      m[9]=0;    m[13]=0;
+            m[2]=0;   m[6]=0;      m[10]=1;   m[14]=0;
+            m[3]=0;   m[7]=0;      m[11]=0;   m[15]=1;
+
+            transformatu(_selected_object, m);
+
         }
         break;
 
@@ -501,6 +545,16 @@ void special_keyboard(int keyCode, int x, int y){
 
             transformatu(_selected_object, m);
         }
+        else if (transformazio_mota == ZIZAILAKETA){
+            //-z
+            m[0]=1;       m[4]=0;    m[8]=0;    m[12]=0;
+            m[1]=0;       m[5]=1;    m[9]=0;    m[13]=0;
+            m[2]=-delta;  m[6]=0;    m[10]=1;   m[14]=0;
+            m[3]=0;       m[7]=0;    m[11]=0;   m[15]=1;
+
+            transformatu(_selected_object, m);
+
+        }
         break;
 
     case KEY_AVPAG:
@@ -533,6 +587,15 @@ void special_keyboard(int keyCode, int x, int y){
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
             m[2]=0;   m[6]=0;   m[10]=0.9; m[14]=0;
             m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
+
+            transformatu(_selected_object, m);
+        }
+        else if (transformazio_mota == ZIZAILAKETA){
+            //+z
+            m[0]=1;       m[4]=0;    m[8]=0;    m[12]=0;
+            m[1]=0;       m[5]=1;    m[9]=0;    m[13]=0;
+            m[2]=delta;   m[6]=0;    m[10]=1;   m[14]=0;
+            m[3]=0;       m[7]=0;    m[11]=0;   m[15]=1;
 
             transformatu(_selected_object, m);
         }
