@@ -57,8 +57,8 @@ void print_help(){
     printf("<?>\t\t Laguntza hau bistaratu \n");
     printf("<ESC>\t\t Programatik irten \n");
     printf("<CTRL + ->\t Bistaratze-eremua handitu\n");
-    printf("<CTRL + +>\t Bistaratze-eremua txikitu\n\n");
-    printf("<CTRL + S>\t Sareta erakutsi\n");
+    printf("<CTRL + +>\t Bistaratze-eremua txikitu\n");
+    printf("<CTRL + S>\t Sareta erakutsi\n\n");
 
     printf("<F>\t\t Objektua bat kargatu\n");
     printf("<TAB>\t\t Kargaturiko objektuen artean bat hautatu\n");
