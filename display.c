@@ -137,7 +137,6 @@ void display(void) {
         }
 
         /* Draw the object; for each face create a new polygon with the corresponding vertices */
-        glLoadIdentity();
         glMultMatrixd(peek(aux_obj->transformazio_pila));
         for (f = 0; f < aux_obj->num_faces; f++) {
             glBegin(GL_POLYGON);
@@ -150,6 +149,7 @@ void display(void) {
             }
             glEnd();
         }
+        glLoadIdentity();
         aux_obj = aux_obj->next;
     }
     /*Do the actual drawing*/

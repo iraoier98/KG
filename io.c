@@ -68,6 +68,7 @@ void print_help(){
     printf("<M>\t\t Objektuaren translazioa aktibatu\n");
     printf("<B>\t\t Objektuaren biraketa aktibatu\n");
     printf("<T>\t\t Objektuaren eskalaketa aktibatu\n");
+    printf("<S>\t\t Objektuaren zizailaketa aktibatu\n");
     printf("<L>\t\t Objektuaren transformazioak objektuarekiko erreferentzia_sisteman egin\n");
     printf("<L>\t\t Objektuaren transformazioak erreferentzia_sistema globalean egin\n");
     printf("<->\t\t Objektua ardatz guztietan txikitu\n");
