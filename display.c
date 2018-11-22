@@ -3,6 +3,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <math.h>
+#include <stdio.h>
 
 /** EXTERNAL VARIABLES **/
 
@@ -14,6 +15,9 @@ extern GLdouble _ortho_z_min,_ortho_z_max;
 extern object3d *_first_object;
 extern object3d *_selected_object;
 extern int _saretaErakutsi;
+
+extern int kamera_mota;
+extern point3 kamera_posizioa;
 
 /**
  * @brief Function to draw a line given two 3D points
@@ -102,26 +106,35 @@ void display(void) {
     /* Puntuak kameraren transformazioarekin biderkatu baino lehen, marraztu sareta */
     draw_sareta();
 
-    /*When the window is wider than our original projection plane we extend the plane in the X axis*/
-    if ((_ortho_x_max - _ortho_x_min) / (_ortho_y_max - _ortho_y_min) < _window_ratio) {
-        /* New width */
-        GLdouble wd = (_ortho_y_max - _ortho_y_min) * _window_ratio;
-        /* Midpoint in the X axis */
-        GLdouble midpt = (_ortho_x_min + _ortho_x_max) / 2;
-        /*Definition of the projection*/
-        glOrtho(midpt - (wd / 2), midpt + (wd / 2), _ortho_y_min, _ortho_y_max, _ortho_z_min, _ortho_z_max);
-    } else {/* In the opposite situation we extend the Y axis */
-        /* New height */
-        GLdouble he = (_ortho_x_max - _ortho_x_min) / _window_ratio;
-        /* Midpoint in the Y axis */
-        GLdouble midpt = (_ortho_y_min + _ortho_y_max) / 2;
-        /*Definition of the projection*/
-        glOrtho(_ortho_x_min, _ortho_x_max, midpt - (he / 2), midpt + (he / 2), _ortho_z_min, _ortho_z_max);
+    if (kamera_mota == ORTOGRAFIKOA){
+        /*When the window is wider than our original projection plane we extend the plane in the X axis*/
+        if ((_ortho_x_max - _ortho_x_min) / (_ortho_y_max - _ortho_y_min) < _window_ratio) {
+            /* New width */
+            GLdouble wd = (_ortho_y_max - _ortho_y_min) * _window_ratio;
+            /* Midpoint in the X axis */
+            GLdouble midpt = (_ortho_x_min + _ortho_x_max) / 2;
+            /*Definition of the projection*/
+            glOrtho(midpt - (wd / 2), midpt + (wd / 2), _ortho_y_min, _ortho_y_max, _ortho_z_min, _ortho_z_max);
+        } else {/* In the opposite situation we extend the Y axis */
+            /* New height */
+            GLdouble he = (_ortho_x_max - _ortho_x_min) / _window_ratio;
+            /* Midpoint in the Y axis */
+            GLdouble midpt = (_ortho_y_min + _ortho_y_max) / 2;
+            /*Definition of the projection*/
+            glOrtho(_ortho_x_min, _ortho_x_max, midpt - (he / 2), midpt + (he / 2), _ortho_z_min, _ortho_z_max);
+        }
+    }
+    else if (kamera_mota == PERSPEKTIBAKOA) {
+        gluPerspective(FOV, _window_ratio, ZNEAR, ZFAR);
+    }
+    else {
+        printf("Ibiltaria\n");
     }
 
     /* Now we start drawing the object */
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    gluLookAt(kamera_posizioa.x, kamera_posizioa.y, kamera_posizioa.z + 5, kamera_posizioa.x, kamera_posizioa.y, kamera_posizioa.z, 0, 1, 0);
 
     /*First, we draw the axes*/
     draw_axes();
@@ -137,6 +150,7 @@ void display(void) {
         }
 
         /* Draw the object; for each face create a new polygon with the corresponding vertices */
+        //lookat
         glMultMatrixd(peek(aux_obj->transformazio_pila));
         for (f = 0; f < aux_obj->num_faces; f++) {
             glBegin(GL_POLYGON);

@@ -17,8 +17,12 @@ object3d * _first_object= 0;                /*List of objects*/
 object3d * _selected_object = 0;            /*Object currently selected*/
 int _saretaErakutsi = 0;                    /*Sareta erakusteko "boolearra"  // 1 => erakutsi, 0 => ezkutatu*/
 
-int transformazio_mota = TRANSLAZIOA;                     /*Translazioa, errotazioa edo eskalaketa*/
+int transformazio_mota = TRANSLAZIOA;                /*Translazioa, errotazioa edo eskalaketa*/
+int transformazio_targeta = TRANSFORMATU_OBJEKTUA;     /* Kamera ala aukeratutako objektua */
 int erreferentzia_sistema = LOKALA;                  /*Ĝlobala ala objektuarekiko lokala*/
+
+int kamera_mota = ORTOGRAFIKOA;                      /*Kamera mota, ortografikoa, perspektibaduna edo ibiltaria*/
+point3 kamera_posizioa = {0,0,0};
 
 
 /** GENERAL INITIALIZATION **/

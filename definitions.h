@@ -30,6 +30,10 @@
 #define KG_ORTHO_Z_MIN_INIT                -100
 #define KG_ORTHO_Z_MAX_INIT                 10000
 
+#define FOV                                 100
+#define ZNEAR                               1
+#define ZFAR                                1000
+
 #define KG_COL_BACK_R                       1.00f
 #define KG_COL_BACK_G                       0.00f
 #define KG_COL_BACK_B                       1.00f
@@ -51,8 +55,8 @@
 #define KG_COL_Y_AXIS_G                     1.0f
 #define KG_COL_Y_AXIS_B                     0.5f
 
-#define KG_COL_Z_AXIS_R                     0.0f
-#define KG_COL_Z_AXIS_G                     0.0f
+#define KG_COL_Z_AXIS_R                     1.0f
+#define KG_COL_Z_AXIS_G                     1.0f
 #define KG_COL_Z_AXIS_B                     1.0f
 
 #define KG_MAX_DOUBLE                       10E25
@@ -68,6 +72,8 @@
 #define LOKALA                              0
 #define GLOBALA                             1
 
+#define TRANSFORMATU_OBJEKTUA               0
+#define TRANSFORMATU_KAMERA                 1
 
 #define KEY_GORA                            101
 #define KEY_BEHERA                          103
@@ -79,6 +85,10 @@
 
 #define KEY_CTRL_Z                          26
 #define KEY_CTRL_S                          19
+
+#define ORTOGRAFIKOA                        0
+#define PERSPEKTIBAKOA                      1
+#define IBILTARIA                           2
 
 
 
