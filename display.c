@@ -16,8 +16,9 @@ extern object3d *_first_object;
 extern object3d *_selected_object;
 extern int _saretaErakutsi;
 
-extern int kamera_mota;
-extern point3 kamera_posizioa;
+extern int _kamera_mota;
+extern point3 _kamera_posizioa;
+extern int _fov;
 
 /**
  * @brief Function to draw a line given two 3D points
@@ -82,10 +83,10 @@ void draw_sareta(){
  * @param height New height of the window
  */
 void reshape(int width, int height) {
-    glViewport(0, 0, width, height);
+    glViewport(0, 20, width, height);
     /*  Take care, the width and height are integer numbers, but the ratio is a GLdouble so, in order to avoid
      *  rounding the ratio to integer values we need to cast width and height before computing the ratio */
-    _window_ratio = (GLdouble) width / (GLdouble) height;
+    _window_ratio = (GLdouble) width / (GLdouble) height - 20;
 }
 
 
@@ -96,17 +97,31 @@ void display(void) {
     GLint v_index, v, f;
     object3d *aux_obj = _first_object;
 
-    /* Clear the screen */
-    glClear(GL_COLOR_BUFFER_BIT);
+
 
     /* Define the projection */
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
+
+    /* Clear the screen */
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glRasterPos2f(0, 0);
+    //get the length of the string to display
+    int len = 8;
+
+    //loop to display character by character
+    for (int i = 0; i < len; i++)
+    {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, "Txus feo"[i]);
+    }
     
     /* Puntuak kameraren transformazioarekin biderkatu baino lehen, marraztu sareta */
     draw_sareta();
 
-    if (kamera_mota == ORTOGRAFIKOA){
+
+
+    if (_kamera_mota == KG_ORTOGRAFIKOA){
         /*When the window is wider than our original projection plane we extend the plane in the X axis*/
         if ((_ortho_x_max - _ortho_x_min) / (_ortho_y_max - _ortho_y_min) < _window_ratio) {
             /* New width */
@@ -124,8 +139,8 @@ void display(void) {
             glOrtho(_ortho_x_min, _ortho_x_max, midpt - (he / 2), midpt + (he / 2), _ortho_z_min, _ortho_z_max);
         }
     }
-    else if (kamera_mota == PERSPEKTIBAKOA) {
-        gluPerspective(FOV, _window_ratio, ZNEAR, ZFAR);
+    else if (_kamera_mota == KG_PERSPEKTIBAKOA) {
+        gluPerspective(_fov, _window_ratio, KG_ZNEAR, KG_ZFAR);
     }
     else {
         printf("Ibiltaria\n");
@@ -134,7 +149,7 @@ void display(void) {
     /* Now we start drawing the object */
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(kamera_posizioa.x, kamera_posizioa.y, kamera_posizioa.z + 5, kamera_posizioa.x, kamera_posizioa.y, kamera_posizioa.z, 0, 1, 0);
+    gluLookAt(_kamera_posizioa.x, _kamera_posizioa.y, _kamera_posizioa.z + 5, _kamera_posizioa.x, _kamera_posizioa.y, _kamera_posizioa.z, 0, 1, 0);
 
     /*First, we draw the axes*/
     draw_axes();

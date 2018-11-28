@@ -5,6 +5,19 @@
 #include <stdlib.h>
 #include <math.h>
 
+/* Tekla batzuen int kodeak */
+#define KG_KEY_GORA                         101
+#define KG_KEY_BEHERA                       103
+#define KG_KEY_EZKERRA                      100
+#define KG_KEY_ESKUMA                       102
+
+#define KG_KEY_REPAG                        104
+#define KG_KEY_AVPAG                        105
+
+#define KG_KEY_CTRL_Z                       26
+#define KG_KEY_CTRL_S                       19
+
+
 extern object3d * _first_object;
 extern object3d * _selected_object;
 extern int _saretaErakutsi;
@@ -13,21 +26,23 @@ extern GLdouble _ortho_x_min,_ortho_x_max;
 extern GLdouble _ortho_y_min,_ortho_y_max;
 extern GLdouble _ortho_z_min,_ortho_z_max;
 
-extern int transformazio_mota;
-extern int erreferentzia_sistema;
-extern int transformazio_targeta;
+extern int _transformazio_mota;
+extern int _erreferentzia_sistema;
+extern int _transformazio_targeta;
 
-extern int kamera_mota;
-extern point3 kamera_posizioa;
+extern int _kamera_mota;
+extern point3 _kamera_posizioa;
+extern int _fov;
 
-GLdouble* m;
-GLdouble* m2;
+
+/* transformazioentzako matrizearen erazagupena */
+GLdouble* m = NULL;
 
 /* Biraketarako angelua */
-double theta = PI/10;
+const double _theta = KG_PI/10;
 
 /* Zizailaketarako aldaketa-faktorea */
-double delta = 0.1;
+const double _delta = 0.1;
 
 
 /* a matrizea b-rekin biderkatuta itzultzen du */
@@ -39,7 +54,7 @@ void printMatrix(GLdouble* matrix);
 /* obj objektua tranformatzen du emandako matrizearekin */
 void transformatu(object3d* obj, GLdouble* transformazio_matrizea);
 
-
+/* Transformazio-matrizearen hasieraketa */
 void io_init(){
     m = (GLdouble*) malloc(16 * sizeof(GLdouble));
 }
@@ -58,25 +73,30 @@ void print_help(){
     printf("\n\n");
 
     printf("FUNTZIO NAGUSIAK \n");
-    printf("<?>\t\t Laguntza hau bistaratu \n");
-    printf("<ESC>\t\t Programatik irten \n");
-    printf("<CTRL + ->\t Bistaratze-eremua handitu\n");
-    printf("<CTRL + +>\t Bistaratze-eremua txikitu\n");
-    printf("<CTRL + S>\t Sareta erakutsi\n\n");
+    printf("<?>\t\t\t Laguntza hau bistaratu \n");
+    printf("<ESC>\t\t\t Programatik irten \n");
+    printf("<CTRL + ->\t\t Bistaratze-eremua handitu\n");
+    printf("<CTRL + +>\t\t Bistaratze-eremua txikitu\n");
+    printf("<CTRL + S>\t\t Sareta erakutsi\n\n");
 
-    printf("<F>\t\t Objektua bat kargatu\n");
-    printf("<TAB>\t\t Kargaturiko objektuen artean bat hautatu\n");
-    printf("<SUPR>\t\t Hautatutako objektua ezabatu\n");
-    printf("<I>\t\t Hautatutako objektuari buruzko informazioa pantailaratu\n");
+    printf("<F>\t\t\t Objektua bat kargatu\n");
+    printf("<TAB>\t\t\t Kargaturiko objektuen artean bat hautatu\n");
+    printf("<SUPR>\t\t\t Hautatutako objektua ezabatu\n");
+    printf("<I>\t\t\t Hautatutako objektuari buruzko informazioa pantailaratu\n\n");
 
-    printf("<M>\t\t Objektuaren translazioa aktibatu\n");
-    printf("<B>\t\t Objektuaren biraketa aktibatu\n");
-    printf("<T>\t\t Objektuaren eskalaketa aktibatu\n");
-    printf("<S>\t\t Objektuaren zizailaketa aktibatu\n");
-    printf("<L>\t\t Objektuaren transformazioak objektuarekiko erreferentzia_sisteman egin\n");
-    printf("<L>\t\t Objektuaren transformazioak erreferentzia_sistema globalean egin\n");
-    printf("<->\t\t Objektua ardatz guztietan txikitu\n");
-    printf("<+>\t\t Objektua ardatz guztietan handitu\n");
+    printf("<M>\t\t\t Translazioa aktibatu\n");
+    printf("<B>\t\t\t Biraketa aktibatu\n");
+    printf("<T>\t\t\t Eskalaketa aktibatu\n");
+    printf("<S>\t\t\t Zizailaketa aktibatu\n");
+    printf("<->\t\t\t Objektua ardatz guztietan txikitu\n");
+    printf("<+>\t\t\t Objektua ardatz guztietan handitu\n\n");
+
+    printf("<L>\t\t\t Transformazioak objektuarekiko erreferentzia_sisteman egin\n");
+    printf("<G>\t\t\t Transformazioak _erreferentzia_sistema globalean egin\n");
+    printf("<O>\t\t\t Objektua transformatu\n");
+    printf("<K>\t\t\t Kamera transformatu\n");
+    printf("<CTRL + Z>\t\t Transformazioa desegin\n");
+    printf("<CTRL + SHIFT + Z>\t Transformazioa berregin\n");
     printf("\n\n");
 }
 
@@ -93,67 +113,66 @@ void keyboard(unsigned char key, int x, int y) {
     object3d *auxiliar_object = 0;
     GLdouble wd,he,midx,midy;
 
-
     switch (key) {
 
     case 'm':
     case 'M':
-        transformazio_mota = TRANSLAZIOA;
+        _transformazio_mota = KG_TRANSLAZIOA;
         printf("Translazioa aktibatuta\n");
         break;
 
     case 'b':
     case 'B':
-        transformazio_mota = BIRAKETA;
+        _transformazio_mota = KG_BIRAKETA;
         printf("Biraketa aktibatuta\n");
         break;
 
     case 't':
     case 'T':
-        transformazio_mota = ESKALAKETA;
+        _transformazio_mota = KG_ESKALAKETA;
         printf("Eskalaketa aktibatuta\n");
         break;
 
 
     case 's':
     case 'S':
-        transformazio_mota = ZIZAILAKETA;
+        _transformazio_mota = KG_ZIZAILAKETA;
         printf("Zizailaketa aktibatuta\n");
         break;
 
     case 'g':
     case 'G':
-        erreferentzia_sistema = GLOBALA;
+        _erreferentzia_sistema = KG_GLOBALA;
         printf("Aldaketa globalak aktibatuta\n");
         break;
 
     case 'l':
     case 'L':
-        erreferentzia_sistema = LOKALA;
+        _erreferentzia_sistema = KG_LOKALA;
         printf("Aldaketa lokalak aktibatuta\n");
         break;
 
 
     case 'o':
     case 'O':
-        transformazio_targeta = TRANSFORMATU_OBJEKTUA;
+        _transformazio_targeta = KG_TRANSFORMATU_OBJEKTUA;
         break;
 
 
     case 'k':
     case 'K':
-        transformazio_targeta = TRANSFORMATU_KAMERA;
+        _transformazio_targeta = KG_TRANSFORMATU_KAMERA;
         break;
 
 
     case 'c':
     case 'C':
-        kamera_mota++;
-        kamera_mota %= 2;
+        _kamera_mota++;
+        _kamera_mota %= 2;
         break;
 
 
-    case KEY_CTRL_Z:
+    case KG_KEY_CTRL_Z:
         if (_selected_object == NULL){
             printf("Lehenik aukeratu objektu bat.\n");
             break;
@@ -216,7 +235,7 @@ void keyboard(unsigned char key, int x, int y) {
         printMatrix(peek(_selected_object->transformazio_pila));
         break;
 
-    case KEY_CTRL_S:
+    case KG_KEY_CTRL_S:
         // Sareta erakutsi / ezkutatu
         _saretaErakutsi = (_saretaErakutsi == 1) ? 0 : 1;
         break;
@@ -262,17 +281,24 @@ void keyboard(unsigned char key, int x, int y) {
 
     case '-':
         if (glutGetModifiers() == GLUT_ACTIVE_CTRL){
-            /*Increase the projection plane; compute the new dimensions*/
-            wd=(_ortho_x_max-_ortho_x_min)/KG_STEP_ZOOM;
-            he=(_ortho_y_max-_ortho_y_min)/KG_STEP_ZOOM;
-            /*In order to avoid moving the center of the plane, we get its coordinates*/
-            midx = (_ortho_x_max+_ortho_x_min)/2;
-            midy = (_ortho_y_max+_ortho_y_min)/2;
-            /*The the new limits are set, keeping the center of the plane*/
-            _ortho_x_max = midx + wd/2;
-            _ortho_x_min = midx - wd/2;
-            _ortho_y_max = midy + he/2;
-            _ortho_y_min = midy - he/2;
+            if (_kamera_mota == KG_ORTOGRAFIKOA){
+                /*Increase the projection plane; compute the new dimensions*/
+                wd=(_ortho_x_max-_ortho_x_min)/KG_STEP_ZOOM;
+                he=(_ortho_y_max-_ortho_y_min)/KG_STEP_ZOOM;
+                /*In order to avoid moving the center of the plane, we get its coordinates*/
+                midx = (_ortho_x_max+_ortho_x_min)/2;
+                midy = (_ortho_y_max+_ortho_y_min)/2;
+                /*The the new limits are set, keeping the center of the plane*/
+                _ortho_x_max = midx + wd/2;
+                _ortho_x_min = midx - wd/2;
+                _ortho_y_max = midy + he/2;
+                _ortho_y_min = midy - he/2;
+            }
+            else if (_kamera_mota == KG_PERSPEKTIBAKOA){
+                if (_fov > KG_FOV_MIN){
+                    _fov--;
+                }
+            }
         }
         else{
             /* Objektuaren eskala txikitu ardatz guztietan*/
@@ -295,17 +321,24 @@ void keyboard(unsigned char key, int x, int y) {
 
     case '+':
         if (glutGetModifiers() == GLUT_ACTIVE_CTRL){
-            /*Decrease the projection plane; compute the new dimensions*/
-            wd=(_ortho_x_max - _ortho_x_min)*KG_STEP_ZOOM;
-            he=(_ortho_y_max - _ortho_y_min)*KG_STEP_ZOOM;
-            /*In order to avoid moving the center of the plane, we get its coordinates*/
-            midx = (_ortho_x_max+_ortho_x_min)/2;
-            midy = (_ortho_y_max+_ortho_y_min)/2;
-            /*The the new limits are set, keeping the center of the plane*/
-            _ortho_x_max = midx + wd/2;
-            _ortho_x_min = midx - wd/2;
-            _ortho_y_max = midy + he/2;
-            _ortho_y_min = midy - he/2;
+            if (_kamera_mota == KG_ORTOGRAFIKOA){
+                /*Decrease the projection plane; compute the new dimensions*/
+                wd=(_ortho_x_max - _ortho_x_min)*KG_STEP_ZOOM;
+                he=(_ortho_y_max - _ortho_y_min)*KG_STEP_ZOOM;
+                /*In order to avoid moving the center of the plane, we get its coordinates*/
+                midx = (_ortho_x_max+_ortho_x_min)/2;
+                midy = (_ortho_y_max+_ortho_y_min)/2;
+                /*The the new limits are set, keeping the center of the plane*/
+                _ortho_x_max = midx + wd/2;
+                _ortho_x_min = midx - wd/2;
+                _ortho_y_max = midy + he/2;
+                _ortho_y_min = midy - he/2;
+            }
+            else if (_kamera_mota == KG_PERSPEKTIBAKOA){
+                if (_fov < KG_FOV_MAX){
+                    _fov++;
+                }
+            }
         }
         else{
             if (_selected_object == NULL){
@@ -357,15 +390,15 @@ void special_keyboard(int keyCode, int x, int y){
 
     switch (keyCode) {
 
-    case KEY_GORA:
+    case KG_KEY_GORA:
         if (_selected_object == NULL){
             printf("Lehenik aukeratu objektu bat.\n");
             break;
         }
 
-        if (transformazio_mota == TRANSLAZIOA){
-            if (transformazio_targeta == TRANSFORMATU_KAMERA){
-                kamera_posizioa.y++;
+        if (_transformazio_mota == KG_TRANSLAZIOA){
+            if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
+                _kamera_posizioa.y++;
             }
             else{
                 //+y
@@ -377,16 +410,16 @@ void special_keyboard(int keyCode, int x, int y){
                 transformatu(_selected_object, m);
             }
         }
-        else if (transformazio_mota == BIRAKETA){
+        else if (_transformazio_mota == KG_BIRAKETA){
             //+x
             m[0]=1;   m[4]=0;              m[8]=0;              m[12]=0;
-            m[1]=0;   m[5]=cos(theta);     m[9]=sin(theta);     m[13]=0;
-            m[2]=0;   m[6]=-sin(theta);    m[10]=cos(theta);    m[14]=0;
+            m[1]=0;   m[5]=cos(_theta);     m[9]=sin(_theta);     m[13]=0;
+            m[2]=0;   m[6]=-sin(_theta);    m[10]=cos(_theta);    m[14]=0;
             m[3]=0;   m[7]=0;              m[11]=0;             m[15]=1;
 
             transformatu(_selected_object, m);
         }
-        else if (transformazio_mota == ESKALAKETA){
+        else if (_transformazio_mota == KG_ESKALAKETA){
             //-y
             m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
             m[1]=0;   m[5]=0.9; m[9]=0;    m[13]=0;
@@ -396,10 +429,10 @@ void special_keyboard(int keyCode, int x, int y){
             transformatu(_selected_object, m);
 
         }
-        else if (transformazio_mota == ZIZAILAKETA){
+        else if (_transformazio_mota == KG_ZIZAILAKETA){
             //+y
             m[0]=1;    m[4]=0;    m[8]=0;       m[12]=0;
-            m[1]=0;    m[5]=1;    m[9]=delta;  m[13]=0;
+            m[1]=0;    m[5]=1;    m[9]=_delta;  m[13]=0;
             m[2]=0;    m[6]=0;    m[10]=1;      m[14]=0;
             m[3]=0;    m[7]=0;    m[11]=0;      m[15]=1;
             transformatu(_selected_object, m);
@@ -407,15 +440,15 @@ void special_keyboard(int keyCode, int x, int y){
         }
         break;
 
-    case KEY_BEHERA:
+    case KG_KEY_BEHERA:
         if (_selected_object == NULL){
             printf("Lehenik aukeratu objektu bat.\n");
             break;
         }
 
-        if (transformazio_mota == TRANSLAZIOA){
-            if (transformazio_targeta == TRANSFORMATU_KAMERA){
-                kamera_posizioa.y--;
+        if (_transformazio_mota == KG_TRANSLAZIOA){
+            if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
+                _kamera_posizioa.y--;
             }
             else{
                 //-y
@@ -427,16 +460,16 @@ void special_keyboard(int keyCode, int x, int y){
                 transformatu(_selected_object, m);
             }
         }
-        else if (transformazio_mota == BIRAKETA){
+        else if (_transformazio_mota == KG_BIRAKETA){
             //-x
             m[0]=1;   m[4]=0;              m[8]=0;              m[12]=0;
-            m[1]=0;   m[5]=cos(-theta);    m[9]=sin(-theta);    m[13]=0;
-            m[2]=0;   m[6]=-sin(-theta);   m[10]=cos(-theta);   m[14]=0;
+            m[1]=0;   m[5]=cos(-_theta);    m[9]=sin(-_theta);    m[13]=0;
+            m[2]=0;   m[6]=-sin(-_theta);   m[10]=cos(-_theta);   m[14]=0;
             m[3]=0;   m[7]=0;              m[11]=0;             m[15]=1;
 
             transformatu(_selected_object, m);
         }
-        else if (transformazio_mota == ESKALAKETA){
+        else if (_transformazio_mota == KG_ESKALAKETA){
             //+y
             m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
             m[1]=0;   m[5]=1.1; m[9]=0;    m[13]=0;
@@ -445,10 +478,10 @@ void special_keyboard(int keyCode, int x, int y){
 
             transformatu(_selected_object, m);
         }
-        else if (transformazio_mota == ZIZAILAKETA){
+        else if (_transformazio_mota == KG_ZIZAILAKETA){
             //-y
             m[0]=1;    m[4]=0;    m[8]=0;       m[12]=0;
-            m[1]=0;    m[5]=1;    m[9]=-delta;  m[13]=0;
+            m[1]=0;    m[5]=1;    m[9]=-_delta;  m[13]=0;
             m[2]=0;    m[6]=0;    m[10]=1;      m[14]=0;
             m[3]=0;    m[7]=0;    m[11]=0;      m[15]=1;
 
@@ -457,15 +490,15 @@ void special_keyboard(int keyCode, int x, int y){
         }
         break;
 
-    case KEY_EZKERRA:
+    case KG_KEY_EZKERRA:
         if (_selected_object == NULL){
             printf("Lehenik aukeratu objektu bat.\n");
             break;
         }
 
-        if (transformazio_mota == TRANSLAZIOA){
-            if (transformazio_targeta == TRANSFORMATU_KAMERA){
-                kamera_posizioa.x--;
+        if (_transformazio_mota == KG_TRANSLAZIOA){
+            if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
+                _kamera_posizioa.x--;
             }
             else{
                 //-x
@@ -477,16 +510,16 @@ void special_keyboard(int keyCode, int x, int y){
                 transformatu(_selected_object, m);
             }
         }
-        else if (transformazio_mota == BIRAKETA){
+        else if (_transformazio_mota == KG_BIRAKETA){
             //-y
-            m[0]=cos(-theta);    m[4]=0;    m[8]=sin(-theta);    m[12]=0;
+            m[0]=cos(-_theta);    m[4]=0;    m[8]=sin(-_theta);    m[12]=0;
             m[1]=0;              m[5]=1;    m[9]=0;              m[13]=0;
-            m[2]=-sin(-theta);   m[6]=0;    m[10]=cos(-theta);   m[14]=0;
+            m[2]=-sin(-_theta);   m[6]=0;    m[10]=cos(-_theta);   m[14]=0;
             m[3]=0;              m[7]=0;    m[11]=0;             m[15]=1;
 
             transformatu(_selected_object, m);
         }
-        else if (transformazio_mota == ESKALAKETA){
+        else if (_transformazio_mota == KG_ESKALAKETA){
             //+x
             m[0]=1.1; m[4]=0;   m[8]=0;    m[12]=0;
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
@@ -495,9 +528,9 @@ void special_keyboard(int keyCode, int x, int y){
 
             transformatu(_selected_object, m);
         }
-        else if (transformazio_mota == ZIZAILAKETA){
+        else if (_transformazio_mota == KG_ZIZAILAKETA){
             //-x
-            m[0]=1;   m[4]=-delta;  m[8]=0;    m[12]=0;
+            m[0]=1;   m[4]=-_delta;  m[8]=0;    m[12]=0;
             m[1]=0;   m[5]=1;       m[9]=0;    m[13]=0;
             m[2]=0;   m[6]=0;       m[10]=1;   m[14]=0;
             m[3]=0;   m[7]=0;       m[11]=0;   m[15]=1;
@@ -507,15 +540,15 @@ void special_keyboard(int keyCode, int x, int y){
         }
         break;
 
-    case KEY_ESKUMA:
+    case KG_KEY_ESKUMA:
         if (_selected_object == NULL){
             printf("Lehenik aukeratu objektu bat.\n");
             break;
         }
 
-        if (transformazio_mota == TRANSLAZIOA){
-            if (transformazio_targeta == TRANSFORMATU_KAMERA){
-                kamera_posizioa.x++;
+        if (_transformazio_mota == KG_TRANSLAZIOA){
+            if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
+                _kamera_posizioa.x++;
             }
             else{
                 //+x
@@ -527,16 +560,16 @@ void special_keyboard(int keyCode, int x, int y){
                 transformatu(_selected_object, m);
             }
         }
-        else if (transformazio_mota == BIRAKETA){
+        else if (_transformazio_mota == KG_BIRAKETA){
             //+y
-            m[0]=cos(theta);    m[4]=0;    m[8]=sin(theta);    m[12]=0;
+            m[0]=cos(_theta);    m[4]=0;    m[8]=sin(_theta);    m[12]=0;
             m[1]=0;             m[5]=1;    m[9]=0;             m[13]=0;
-            m[2]=-sin(theta);   m[6]=0;    m[10]=cos(theta);   m[14]=0;
+            m[2]=-sin(_theta);   m[6]=0;    m[10]=cos(_theta);   m[14]=0;
             m[3]=0;             m[7]=0;    m[11]=0;            m[15]=1;
 
             transformatu(_selected_object, m);
         }
-        else if (transformazio_mota == ESKALAKETA){
+        else if (_transformazio_mota == KG_ESKALAKETA){
             //-x
             m[0]=0.9; m[4]=0;   m[8]=0;    m[12]=0;
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
@@ -545,9 +578,9 @@ void special_keyboard(int keyCode, int x, int y){
 
             transformatu(_selected_object, m);
         }
-        else if (transformazio_mota == ZIZAILAKETA){
+        else if (_transformazio_mota == KG_ZIZAILAKETA){
             //+x
-            m[0]=1;   m[4]=delta;  m[8]=0;    m[12]=0;
+            m[0]=1;   m[4]=_delta;  m[8]=0;    m[12]=0;
             m[1]=0;   m[5]=1;      m[9]=0;    m[13]=0;
             m[2]=0;   m[6]=0;      m[10]=1;   m[14]=0;
             m[3]=0;   m[7]=0;      m[11]=0;   m[15]=1;
@@ -557,15 +590,15 @@ void special_keyboard(int keyCode, int x, int y){
         }
         break;
 
-    case KEY_REPAG:
+    case KG_KEY_REPAG:
         if (_selected_object == NULL){
             printf("Lehenik aukeratu objektu bat.\n");
             break;
         }
 
-        if (transformazio_mota == TRANSLAZIOA){
-            if (transformazio_targeta == TRANSFORMATU_KAMERA){
-                kamera_posizioa.z--;
+        if (_transformazio_mota == KG_TRANSLAZIOA){
+            if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
+                _kamera_posizioa.z--;
             }
             else{
                 //-z
@@ -577,16 +610,16 @@ void special_keyboard(int keyCode, int x, int y){
                 transformatu(_selected_object, m);
             }
         }
-        else if (transformazio_mota == BIRAKETA){
+        else if (_transformazio_mota == KG_BIRAKETA){
             //-z
-            m[0]=cos(-theta);    m[4]=sin(-theta);    m[8]=0;    m[12]=0;
-            m[1]=-sin(-theta);   m[5]=cos(-theta);    m[9]=0;     m[13]=0;
+            m[0]=cos(-_theta);    m[4]=sin(-_theta);    m[8]=0;    m[12]=0;
+            m[1]=-sin(-_theta);   m[5]=cos(-_theta);    m[9]=0;     m[13]=0;
             m[2]=0;             m[6]=0;             m[10]=1;   m[14]=0;
             m[3]=0;             m[7]=0;             m[11]=0;   m[15]=1;
 
             transformatu(_selected_object, m);
         }
-        else if (transformazio_mota == ESKALAKETA){
+        else if (_transformazio_mota == KG_ESKALAKETA){
             //+z
             m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
@@ -595,11 +628,11 @@ void special_keyboard(int keyCode, int x, int y){
 
             transformatu(_selected_object, m);
         }
-        else if (transformazio_mota == ZIZAILAKETA){
+        else if (_transformazio_mota == KG_ZIZAILAKETA){
             //-z
             m[0]=1;       m[4]=0;    m[8]=0;    m[12]=0;
             m[1]=0;       m[5]=1;    m[9]=0;    m[13]=0;
-            m[2]=-delta;  m[6]=0;    m[10]=1;   m[14]=0;
+            m[2]=-_delta;  m[6]=0;    m[10]=1;   m[14]=0;
             m[3]=0;       m[7]=0;    m[11]=0;   m[15]=1;
 
             transformatu(_selected_object, m);
@@ -607,15 +640,15 @@ void special_keyboard(int keyCode, int x, int y){
         }
         break;
 
-    case KEY_AVPAG:
+    case KG_KEY_AVPAG:
         if (_selected_object == NULL){
             printf("Lehenik aukeratu objektu bat.\n");
             break;
         }
 
-        if (transformazio_mota == TRANSLAZIOA){
-            if (transformazio_targeta == TRANSFORMATU_KAMERA){
-                kamera_posizioa.z++;
+        if (_transformazio_mota == KG_TRANSLAZIOA){
+            if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
+                _kamera_posizioa.z++;
             }
             else{
                 //+z
@@ -627,16 +660,16 @@ void special_keyboard(int keyCode, int x, int y){
                 transformatu(_selected_object, m);
             }
         }
-        else if (transformazio_mota == BIRAKETA){
+        else if (_transformazio_mota == KG_BIRAKETA){
             //+z
-            m[0]=cos(theta);    m[4]=sin(theta);    m[8]=0;    m[12]=0;
-            m[1]=-sin(theta);   m[5]=cos(theta);    m[9]=0;     m[13]=0;
+            m[0]=cos(_theta);    m[4]=sin(_theta);    m[8]=0;    m[12]=0;
+            m[1]=-sin(_theta);   m[5]=cos(_theta);    m[9]=0;     m[13]=0;
             m[2]=0;             m[6]=0;             m[10]=1;   m[14]=0;
             m[3]=0;             m[7]=0;             m[11]=0;   m[15]=1;
 
             transformatu(_selected_object, m);
         }
-        else if (transformazio_mota == ESKALAKETA){
+        else if (_transformazio_mota == KG_ESKALAKETA){
             //-z
             m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
             m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
@@ -645,11 +678,11 @@ void special_keyboard(int keyCode, int x, int y){
 
             transformatu(_selected_object, m);
         }
-        else if (transformazio_mota == ZIZAILAKETA){
+        else if (_transformazio_mota == KG_ZIZAILAKETA){
             //+z
             m[0]=1;       m[4]=0;    m[8]=0;    m[12]=0;
             m[1]=0;       m[5]=1;    m[9]=0;    m[13]=0;
-            m[2]=delta;   m[6]=0;    m[10]=1;   m[14]=0;
+            m[2]=_delta;   m[6]=0;    m[10]=1;   m[14]=0;
             m[3]=0;       m[7]=0;    m[11]=0;   m[15]=1;
 
             transformatu(_selected_object, m);
@@ -670,7 +703,7 @@ void transformatu(object3d* obj, GLdouble* transformazio_matrizea){
     GLdouble* transformatu_gabe = peek(obj->transformazio_pila);
     GLdouble* tranformatua;
 
-    if (erreferentzia_sistema == LOKALA){
+    if (_erreferentzia_sistema == KG_LOKALA){
         tranformatua = mult(m, transformatu_gabe);
     }else{
         tranformatua = mult(transformatu_gabe, m);

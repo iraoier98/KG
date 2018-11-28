@@ -30,9 +30,11 @@
 #define KG_ORTHO_Z_MIN_INIT                -100
 #define KG_ORTHO_Z_MAX_INIT                 10000
 
-#define FOV                                 100
-#define ZNEAR                               1
-#define ZFAR                                1000
+#define KG_FOV_INIT                         100
+#define KG_FOV_MIN                          20
+#define KG_FOV_MAX                          120
+#define KG_ZNEAR                            0.1
+#define KG_ZFAR                             1000
 
 #define KG_COL_BACK_R                       1.00f
 #define KG_COL_BACK_G                       0.00f
@@ -61,34 +63,23 @@
 
 #define KG_MAX_DOUBLE                       10E25
 
-#define PI                                  3.14159265358979323846
+#define KG_PI                               3.14159265358979323846
 
 
-#define TRANSLAZIOA                         0
-#define BIRAKETA                            1
-#define ESKALAKETA                          2
-#define ZIZAILAKETA                         3
+#define KG_TRANSLAZIOA                      0
+#define KG_BIRAKETA                         1
+#define KG_ESKALAKETA                       2
+#define KG_ZIZAILAKETA                      3
 
-#define LOKALA                              0
-#define GLOBALA                             1
+#define KG_LOKALA                           0
+#define KG_GLOBALA                          1
 
-#define TRANSFORMATU_OBJEKTUA               0
-#define TRANSFORMATU_KAMERA                 1
+#define KG_TRANSFORMATU_OBJEKTUA            0
+#define KG_TRANSFORMATU_KAMERA              1
 
-#define KEY_GORA                            101
-#define KEY_BEHERA                          103
-#define KEY_EZKERRA                         100
-#define KEY_ESKUMA                          102
-
-#define KEY_REPAG                           104
-#define KEY_AVPAG                           105
-
-#define KEY_CTRL_Z                          26
-#define KEY_CTRL_S                          19
-
-#define ORTOGRAFIKOA                        0
-#define PERSPEKTIBAKOA                      1
-#define IBILTARIA                           2
+#define KG_ORTOGRAFIKOA                     0
+#define KG_PERSPEKTIBAKOA                   1
+#define KG_IBILTARIA                        2
 
 
 
