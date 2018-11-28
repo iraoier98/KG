@@ -5,6 +5,7 @@
 #include "display.h"
 #include "io.h"
 #include "definitions.h"
+#include "kamera.h"
 
 /** GLOBAL VARIABLES **/
 
@@ -21,8 +22,7 @@ int transformazio_mota = TRANSLAZIOA;                /*Translazioa, errotazioa e
 int transformazio_targeta = TRANSFORMATU_OBJEKTUA;     /* Kamera ala aukeratutako objektua */
 int erreferentzia_sistema = LOKALA;                  /*Ĝlobala ala objektuarekiko lokala*/
 
-int kamera_mota = ORTOGRAFIKOA;                      /*Kamera mota, ortografikoa, perspektibaduna edo ibiltaria*/
-point3 kamera_posizioa = {0,0,0};
+kamera* k;
 
 
 /** GENERAL INITIALIZATION **/
@@ -43,6 +43,9 @@ void initialization (){
 
     /*Definition of the method to draw the objects*/
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    /*Kamera hasieratu*/
+    k = kamera_sortu(ORTOGRAFIKOA);
 
     io_init();
 }

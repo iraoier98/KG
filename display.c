@@ -4,6 +4,7 @@
 #include <GL/glu.h>
 #include <math.h>
 #include <stdio.h>
+#include "kamera.h"
 
 /** EXTERNAL VARIABLES **/
 
@@ -16,8 +17,7 @@ extern object3d *_first_object;
 extern object3d *_selected_object;
 extern int _saretaErakutsi;
 
-extern int kamera_mota;
-extern point3 kamera_posizioa;
+extern kamera* k;
 
 /**
  * @brief Function to draw a line given two 3D points
@@ -106,7 +106,7 @@ void display(void) {
     /* Puntuak kameraren transformazioarekin biderkatu baino lehen, marraztu sareta */
     draw_sareta();
 
-    if (kamera_mota == ORTOGRAFIKOA){
+    if (k->kamera_mota == ORTOGRAFIKOA){
         /*When the window is wider than our original projection plane we extend the plane in the X axis*/
         if ((_ortho_x_max - _ortho_x_min) / (_ortho_y_max - _ortho_y_min) < _window_ratio) {
             /* New width */
@@ -124,7 +124,7 @@ void display(void) {
             glOrtho(_ortho_x_min, _ortho_x_max, midpt - (he / 2), midpt + (he / 2), _ortho_z_min, _ortho_z_max);
         }
     }
-    else if (kamera_mota == PERSPEKTIBAKOA) {
+    else if (k->kamera_mota == PERSPEKTIBAKOA) {
         gluPerspective(FOV, _window_ratio, ZNEAR, ZFAR);
     }
     else {
@@ -134,7 +134,7 @@ void display(void) {
     /* Now we start drawing the object */
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(kamera_posizioa.x, kamera_posizioa.y, kamera_posizioa.z + 5, kamera_posizioa.x, kamera_posizioa.y, kamera_posizioa.z, 0, 1, 0);
+    kamera_begiratu(k);
 
     /*First, we draw the axes*/
     draw_axes();

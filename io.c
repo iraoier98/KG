@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "kamera.h"
 
 extern object3d * _first_object;
 extern object3d * _selected_object;
@@ -17,8 +18,7 @@ extern int transformazio_mota;
 extern int erreferentzia_sistema;
 extern int transformazio_targeta;
 
-extern int kamera_mota;
-extern point3 kamera_posizioa;
+extern kamera* k;
 
 GLdouble* m;
 GLdouble* m2;
@@ -148,8 +148,7 @@ void keyboard(unsigned char key, int x, int y) {
 
     case 'c':
     case 'C':
-        kamera_mota++;
-        kamera_mota %= 2;
+        kamera_mota_aldatu(k);
         break;
 
 
@@ -365,7 +364,7 @@ void special_keyboard(int keyCode, int x, int y){
 
         if (transformazio_mota == TRANSLAZIOA){
             if (transformazio_targeta == TRANSFORMATU_KAMERA){
-                kamera_posizioa.y++;
+                k->koord.y++;
             }
             else{
                 //+y
@@ -378,15 +377,23 @@ void special_keyboard(int keyCode, int x, int y){
             }
         }
         else if (transformazio_mota == BIRAKETA){
-            //+x
-            m[0]=1;   m[4]=0;              m[8]=0;              m[12]=0;
-            m[1]=0;   m[5]=cos(theta);     m[9]=sin(theta);     m[13]=0;
-            m[2]=0;   m[6]=-sin(theta);    m[10]=cos(theta);    m[14]=0;
-            m[3]=0;   m[7]=0;              m[11]=0;             m[15]=1;
+            if (transformazio_targeta == TRANSFORMATU_KAMERA){
+                k->begirada.y++;
+            }
+            else{
+                //+x
+                m[0]=1;   m[4]=0;              m[8]=0;              m[12]=0;
+                m[1]=0;   m[5]=cos(theta);     m[9]=sin(theta);     m[13]=0;
+                m[2]=0;   m[6]=-sin(theta);    m[10]=cos(theta);    m[14]=0;
+                m[3]=0;   m[7]=0;              m[11]=0;             m[15]=1;
 
-            transformatu(_selected_object, m);
+                transformatu(_selected_object, m);
+            }
         }
         else if (transformazio_mota == ESKALAKETA){
+            if (transformazio_targeta == TRANSFORMATU_KAMERA){
+                break;
+            }
             //-y
             m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
             m[1]=0;   m[5]=0.9; m[9]=0;    m[13]=0;
@@ -397,6 +404,10 @@ void special_keyboard(int keyCode, int x, int y){
 
         }
         else if (transformazio_mota == ZIZAILAKETA){
+            if (transformazio_targeta == TRANSFORMATU_KAMERA){
+                break;
+            }
+            
             //+y
             m[0]=1;    m[4]=0;    m[8]=0;       m[12]=0;
             m[1]=0;    m[5]=1;    m[9]=delta;  m[13]=0;
@@ -415,7 +426,7 @@ void special_keyboard(int keyCode, int x, int y){
 
         if (transformazio_mota == TRANSLAZIOA){
             if (transformazio_targeta == TRANSFORMATU_KAMERA){
-                kamera_posizioa.y--;
+                k->koord.y--;
             }
             else{
                 //-y
@@ -465,7 +476,7 @@ void special_keyboard(int keyCode, int x, int y){
 
         if (transformazio_mota == TRANSLAZIOA){
             if (transformazio_targeta == TRANSFORMATU_KAMERA){
-                kamera_posizioa.x--;
+                k->koord.x--;
             }
             else{
                 //-x
@@ -515,7 +526,7 @@ void special_keyboard(int keyCode, int x, int y){
 
         if (transformazio_mota == TRANSLAZIOA){
             if (transformazio_targeta == TRANSFORMATU_KAMERA){
-                kamera_posizioa.x++;
+                k->koord.x++;;
             }
             else{
                 //+x
@@ -565,7 +576,7 @@ void special_keyboard(int keyCode, int x, int y){
 
         if (transformazio_mota == TRANSLAZIOA){
             if (transformazio_targeta == TRANSFORMATU_KAMERA){
-                kamera_posizioa.z--;
+                k->koord.z--;;
             }
             else{
                 //-z
@@ -615,7 +626,7 @@ void special_keyboard(int keyCode, int x, int y){
 
         if (transformazio_mota == TRANSLAZIOA){
             if (transformazio_targeta == TRANSFORMATU_KAMERA){
-                kamera_posizioa.z++;
+                k->koord.z++;;
             }
             else{
                 //+z
