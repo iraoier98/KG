@@ -153,19 +153,21 @@ void keyboard(unsigned char key, int x, int y) {
 
     case 'o':
     case 'O':
+        printf("Aldaketak objektuei aplikatuko zaizkie\n");
         _transformazio_targeta = KG_TRANSFORMATU_OBJEKTUA;
         break;
 
 
     case 'k':
     case 'K':
+        printf("Aldaketak kamerari aplikatuko zaizkio\n");
         _transformazio_targeta = KG_TRANSFORMATU_KAMERA;
         break;
 
 
     case 'c':
     case 'C':
-        kamera_mota_aldatu(_k);
+        //kamera_mota_aldatu(_k);
         break;
 
 
@@ -395,7 +397,7 @@ void special_keyboard(int keyCode, int x, int y){
 
         if (_transformazio_mota == KG_TRANSLAZIOA){
             if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
-                _k->koord.y++;
+                mugitu_kamera_gora(_k);
             }
             else{
                 //+y
@@ -409,7 +411,7 @@ void special_keyboard(int keyCode, int x, int y){
         }
         else if (_transformazio_mota == KG_BIRAKETA){
             if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
-                _k->begirada.y++;
+                biratu_kamera_gora(_k);
             }
             else{
                 //+x
@@ -457,7 +459,7 @@ void special_keyboard(int keyCode, int x, int y){
 
         if (_transformazio_mota == KG_TRANSLAZIOA){
             if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
-                _k->koord.y--;
+                mugitu_kamera_behera(_k);
             }
             else{
                 //-y
@@ -470,13 +472,18 @@ void special_keyboard(int keyCode, int x, int y){
             }
         }
         else if (_transformazio_mota == KG_BIRAKETA){
-            //-x
-            m[0]=1;   m[4]=0;              m[8]=0;              m[12]=0;
-            m[1]=0;   m[5]=cos(-_theta);    m[9]=sin(-_theta);    m[13]=0;
-            m[2]=0;   m[6]=-sin(-_theta);   m[10]=cos(-_theta);   m[14]=0;
-            m[3]=0;   m[7]=0;              m[11]=0;             m[15]=1;
+            if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
+                biratu_kamera_behera(_k);
+            }
+            else{
+                //-x
+                m[0]=1;   m[4]=0;              m[8]=0;              m[12]=0;
+                m[1]=0;   m[5]=cos(-_theta);    m[9]=sin(-_theta);    m[13]=0;
+                m[2]=0;   m[6]=-sin(-_theta);   m[10]=cos(-_theta);   m[14]=0;
+                m[3]=0;   m[7]=0;              m[11]=0;             m[15]=1;
 
-            transformatu(_selected_object, m);
+                transformatu(_selected_object, m);
+            }
         }
         else if (_transformazio_mota == KG_ESKALAKETA){
             //+y
@@ -507,7 +514,7 @@ void special_keyboard(int keyCode, int x, int y){
 
         if (_transformazio_mota == KG_TRANSLAZIOA){
             if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
-                _k->koord.x--;
+                mugitu_kamera_ezkerretara(_k);
             }
             else{
                 //-x
@@ -520,13 +527,18 @@ void special_keyboard(int keyCode, int x, int y){
             }
         }
         else if (_transformazio_mota == KG_BIRAKETA){
-            //-y
-            m[0]=cos(-_theta);    m[4]=0;    m[8]=sin(-_theta);    m[12]=0;
-            m[1]=0;              m[5]=1;    m[9]=0;              m[13]=0;
-            m[2]=-sin(-_theta);   m[6]=0;    m[10]=cos(-_theta);   m[14]=0;
-            m[3]=0;              m[7]=0;    m[11]=0;             m[15]=1;
+            if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
+                biratu_kamera_ezkerretara(_k);
+            }
+            else{
+                //-y
+                m[0]=cos(-_theta);    m[4]=0;    m[8]=sin(-_theta);    m[12]=0;
+                m[1]=0;              m[5]=1;    m[9]=0;              m[13]=0;
+                m[2]=-sin(-_theta);   m[6]=0;    m[10]=cos(-_theta);   m[14]=0;
+                m[3]=0;              m[7]=0;    m[11]=0;             m[15]=1;
 
-            transformatu(_selected_object, m);
+                transformatu(_selected_object, m);
+            }
         }
         else if (_transformazio_mota == KG_ESKALAKETA){
             //+x
@@ -557,7 +569,7 @@ void special_keyboard(int keyCode, int x, int y){
 
         if (_transformazio_mota == KG_TRANSLAZIOA){
             if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
-                _k->koord.x++;;
+                mugitu_kamera_eskuinetara(_k);
             }
             else{
                 //+x
@@ -570,13 +582,18 @@ void special_keyboard(int keyCode, int x, int y){
             }
         }
         else if (_transformazio_mota == KG_BIRAKETA){
-            //+y
-            m[0]=cos(_theta);    m[4]=0;    m[8]=sin(_theta);    m[12]=0;
-            m[1]=0;             m[5]=1;    m[9]=0;             m[13]=0;
-            m[2]=-sin(_theta);   m[6]=0;    m[10]=cos(_theta);   m[14]=0;
-            m[3]=0;             m[7]=0;    m[11]=0;            m[15]=1;
+            if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
+                biratu_kamera_eskuinetara(_k);
+            }
+            else{
+                //+y
+                m[0]=cos(_theta);    m[4]=0;    m[8]=sin(_theta);    m[12]=0;
+                m[1]=0;             m[5]=1;    m[9]=0;             m[13]=0;
+                m[2]=-sin(_theta);   m[6]=0;    m[10]=cos(_theta);   m[14]=0;
+                m[3]=0;             m[7]=0;    m[11]=0;            m[15]=1;
 
             transformatu(_selected_object, m);
+            }
         }
         else if (_transformazio_mota == KG_ESKALAKETA){
             //-x
@@ -607,7 +624,7 @@ void special_keyboard(int keyCode, int x, int y){
 
         if (_transformazio_mota == KG_TRANSLAZIOA){
             if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
-                _k->koord.z--;;
+                mugitu_kamera_atzera(_k);
             }
             else{
                 //-z
@@ -657,7 +674,7 @@ void special_keyboard(int keyCode, int x, int y){
 
         if (_transformazio_mota == KG_TRANSLAZIOA){
             if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
-                _k->koord.z++;;
+                mugitu_kamera_aurrera(_k);
             }
             else{
                 //+z
