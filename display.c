@@ -118,30 +118,30 @@ void display(void) {
     /* Puntuak kameraren transformazioarekin biderkatu baino lehen, marraztu sareta */
     draw_sareta();
 
-    // if (_k->kamera_mota == KG_ORTOGRAFIKOA){
-    //     /*When the window is wider than our original projection plane we extend the plane in the X axis*/
-    //     if ((_ortho_x_max - _ortho_x_min) / (_ortho_y_max - _ortho_y_min) < _window_ratio) {
-    //         /* New width */
-    //         GLdouble wd = (_ortho_y_max - _ortho_y_min) * _window_ratio;
-    //         /* Midpoint in the X axis */
-    //         GLdouble midpt = (_ortho_x_min + _ortho_x_max) / 2;
-    //         /*Definition of the projection*/
-    //         glOrtho(midpt - (wd / 2), midpt + (wd / 2), _ortho_y_min, _ortho_y_max, _ortho_z_min, _ortho_z_max);
-    //     } else {/* In the opposite situation we extend the Y axis */
-    //         /* New height */
-    //         GLdouble he = (_ortho_x_max - _ortho_x_min) / _window_ratio;
-    //         /* Midpoint in the Y axis */
-    //         GLdouble midpt = (_ortho_y_min + _ortho_y_max) / 2;
-    //         /*Definition of the projection*/
-    //         glOrtho(_ortho_x_min, _ortho_x_max, midpt - (he / 2), midpt + (he / 2), _ortho_z_min, _ortho_z_max);
-    //     }
-    // }
-    // else if (_k->kamera_mota == KG_PERSPEKTIBAKOA) {
-        gluPerspective(_k->fov, _window_ratio, KG_ZNEAR, KG_ZFAR);
-    // }
-    // else {
-    //     printf("Ibiltaria\n");
-    // }
+    if (_k->kamera_mota == KG_ORTOGRAFIKOA){
+        /*When the window is wider than our original projection plane we extend the plane in the X axis*/
+        if ((_ortho_x_max - _ortho_x_min) / (_ortho_y_max - _ortho_y_min) < _window_ratio) {
+            /* New width */
+            GLdouble wd = (_ortho_y_max - _ortho_y_min) * _window_ratio;
+            /* Midpoint in the X axis */
+            GLdouble midpt = (_ortho_x_min + _ortho_x_max) / 2;
+            /*Definition of the projection*/
+            glOrtho(midpt - (wd / 2), midpt + (wd / 2), _ortho_y_min, _ortho_y_max, _ortho_z_min, _ortho_z_max);
+        } else {/* In the opposite situation we extend the Y axis */
+            /* New height */
+            GLdouble he = (_ortho_x_max - _ortho_x_min) / _window_ratio;
+            /* Midpoint in the Y axis */
+            GLdouble midpt = (_ortho_y_min + _ortho_y_max) / 2;
+            /*Definition of the projection*/
+            glOrtho(_ortho_x_min, _ortho_x_max, midpt - (he / 2), midpt + (he / 2), _ortho_z_min, _ortho_z_max);
+        }
+    }
+    else if (_k->kamera_mota == KG_PERSPEKTIBAKOA) {
+        gluPerspective(_k->per_fov, _window_ratio, KG_ZNEAR, KG_ZFAR);
+    }
+    else {
+        printf("Ibiltaria\n");
+    }
 
     /* Now we start drawing the object */
     glMatrixMode(GL_MODELVIEW);

@@ -1,108 +1,67 @@
 #include "kamera.h"
 #include <stdlib.h>
+#include <stdio.h>
 #include <GL/glut.h>
 #include <math.h>
 
+#define DISTANTZIA 5
+
+
+vector3 bektore_unitarioa(vector3 bektorea){
+    double modulua = sqrt(pow(bektorea.x, 2) + pow(bektorea.y, 2) + pow(bektorea.z, 2));
+    vector3 emaitza = {bektorea.x / modulua, bektorea.y / modulua, bektorea.z / modulua};
+    return emaitza;
+}
+
+
+
 /**
  * @brief Kamera objektua sortzen du.
- * @param mota Kamera mota definitzeko balio du. 1 = ORTOGRAFIKOA, 2 = PERSPEKTIBADUNA, 3 = IBILTARIA
+ * @param mota Kamera mota definitzeko balio du. 1 = ORTOGRAFIKOA, 2 = KG_PERSPEKTIBAKOA, 3 = IBILTARIA
  * @return Kamera objektua bueltatzen du.
  */
-kamera* kamera_sortu(int mota){
-    //Kamerarako memoria eskatu eta kamararen atributu bakoitza hasieratu.
+kamera* kamera_sortu(int kamera_mota){
     kamera* k = (kamera*) malloc(sizeof(kamera));
-    
-    // k->kamera_mota = mota;
+    k->kamera_mota = kamera_mota;
 
-    // point3 kamera_posizioa = {0,0,5};
-    // k->koord = kamera_posizioa;
+    point3 kamera_posizioa = {0, 0, 10};
+    vector3 angle = {0, 0, 0};//{0, KG_PI * 3 / 2, KG_PI / 2};
 
-    // point3 begirada = {0,0,0};
-    // k->begirada = begirada;
-    
-    // vector3 up = {0,1,0};
-    // k->up = up;
+    // Perspektibakoa
+    k->per_pos = kamera_posizioa;
+    k->per_angle = angle;
+    k->per_fov = 90;
 
-    // k->fov = 90;
-
-    point3 kamera_posizioa = {0, 0, 0};
-    k->pos = kamera_posizioa;
-
-
-    point3 begirada_posizioa = {0, 0, -5};
-    k->begirada = begirada_posizioa;
-
-    point3 up_bektorea = {0, 1, 0};
-    k->up = up_bektorea;
-
-    point3 angle = {0, 0, 0};
-    k->angle = angle;
-
-    k->distantzia = 5;
-
-    k->kamera_mota = 1;
-
-    k->fov = 90;
-
-
-    
     return k;
 }
 
 
-void mugitu_kamera_eskuinetara(kamera* k){
-    k->pos.x += 1;
-    k->begirada.x += 1;
-}
-
-void mugitu_kamera_ezkerretara(kamera* k){
-    k->pos.x -= 1;
-    k->begirada.x -= 1;
-}
-
-void mugitu_kamera_gora(kamera* k){
-    k->pos.y += 1;
-    k->begirada.y += 1;
-}
-
-void mugitu_kamera_behera(kamera* k){
-    k->pos.y -= 1;
-    k->begirada.y -= 1;
-}
-
-void mugitu_kamera_aurrera(kamera* k){
-    k->pos.z += 1;
-    k->begirada.z += 1;
-}
-
-void mugitu_kamera_atzera(kamera* k){
-    k->pos.z -= 1;
-    k->begirada.z -= 1;
+void kamera_mugitu(kamera* k, double delta_x, double delta_y, double delta_z){
+    if (k->kamera_mota == KG_PERSPEKTIBAKOA){
+        k->per_pos.x += delta_x;
+        k->per_pos.y += delta_y;
+        k->per_pos.z += delta_z;
+    }
 }
 
 
-void biratu_kamera_gora(kamera* k){
-    k->angle.x += 0.314;
-    k->begirada.y = sin(k->angle.x);
-    k->begirada.z = cos(k->angle.x);
-}
+void kamera_biratu(kamera* k, double delta_x, double delta_y, double delta_z){
+    if (k->kamera_mota == KG_PERSPEKTIBAKOA){
+        k->per_angle.x += delta_x * 360 / (2*KG_PI);
+        k->per_angle.y += delta_y * 360 / (2*KG_PI);
+        k->per_angle.z += delta_z * 360 / (2*KG_PI);
 
-void biratu_kamera_behera(kamera* k){
-    k->angle.x -= 0.314;
-    k->begirada.y = sin(k->angle.x);
-    k->begirada.z = cos(k->angle.x);
-}
+        // printf("%f %f %f\n", k->per_angle.x, k->per_angle.y, k->per_angle.z);
 
-void biratu_kamera_ezkerretara(kamera* k){
-    k->angle.y += 0.314;
-    k->begirada.x = sin(k->angle.y);
-    k->begirada.z = cos(k->angle.y);
-}
+        // printf("(%f %f) (%f %f) (%f %f)\n", 
+        //     k->per_pos.x, k->per_pos.x + DISTANTZIA * (-sin(k->per_angle.y) - sin(k->per_angle.z)),
+        //     k->per_pos.y, k->per_pos.y + DISTANTZIA * (sin(k->per_angle.x) + cos(k->per_angle.z)),
+        //     k->per_pos.z, k->per_pos.z + DISTANTZIA * (-cos(k->per_angle.x) - cos(k->per_angle.y)));
 
-void biratu_kamera_eskuinetara(kamera* k){
-    k->angle.y -= 0.314;
-    k->begirada.x = sin(k->angle.y);
-    k->begirada.z = cos(k->angle.y);
+        // printf("Distantzia: %f\n", sqrt(pow(k->per_pos.x - (k->per_pos.x + DISTANTZIA * (-sin(k->per_angle.y) - sin(k->per_angle.z))), 2) + 
+        //     pow(k->per_pos.y - (k->per_pos.y + DISTANTZIA * (sin(k->per_angle.x) + cos(k->per_angle.z))), 2) + 
+        //     pow(k->per_pos.z - (k->per_pos.z + DISTANTZIA * (-cos(k->per_angle.x) - cos(k->per_angle.y))), 2)));
+    }
 }
 
 
@@ -110,16 +69,43 @@ void biratu_kamera_eskuinetara(kamera* k){
  * @brief Kamera mota aldatzen du.
  * @param k Mota aldatu nahi diogun kamera.
  */
-// void kamera_mota_aldatu(kamera* k){
-//     k->kamera_mota++;
-//     k->kamera_mota %= 2;
-// }
+void kamera_mota_aldatu(kamera* k){
+    k->kamera_mota++;
+    k->kamera_mota %= 2;
+
+
+    // vector3 begirada = {-sin(k->per_angle.y) - sin(k->per_angle.z), sin(k->per_angle.x) + cos(k->per_angle.z), -cos(k->per_angle.x) - cos(k->per_angle.y)};
+
+    // printf("%f %f %f\n", begirada.x, begirada.y, begirada.z);
+
+    // printf("(%f %f) (%f %f) (%f %f)\n", 
+    //     k->per_pos.x, k->per_pos.x + DISTANTZIA * (-sin(k->per_angle.y) - sin(k->per_angle.z)),
+    //     k->per_pos.y, k->per_pos.y + DISTANTZIA * (sin(k->per_angle.x) + cos(k->per_angle.z)),
+    //     k->per_pos.z, k->per_pos.z + DISTANTZIA * (-cos(k->per_angle.x) - cos(k->per_angle.y)));
+
+    // printf("Distantzia: %f\n", sqrt(pow(k->per_pos.x - (k->per_pos.x + DISTANTZIA * (-sin(k->per_angle.y) - sin(k->per_angle.z))), 2) + 
+    //     pow(k->per_pos.y - (k->per_pos.y + DISTANTZIA * (sin(k->per_angle.x) + cos(k->per_angle.z))), 2) + 
+    //     pow(k->per_pos.z - (k->per_pos.z + DISTANTZIA * (-cos(k->per_angle.x) - cos(k->per_angle.y))), 2)));
+}
 
 /**
  * @brief Kamera kokatzen du.
  * @param k Kokatu nahi dugun kamera.
  */
 void aplikatu_kameraren_transformazioa(kamera* k){
-    gluLookAt(k->pos.x, k->pos.y, k->pos.z, k->pos.x + k->distantzia * sin(k->angle.y), k->pos.y + k->distantzia * (sin(k->angle.x)), k->pos.z + k->distantzia * (cos(k->angle.x) + cos(k->angle.y)), 0, 1, 0);
+    if (k->kamera_mota == KG_PERSPEKTIBAKOA){
+        //vector3 begirada = {-sin(k->per_angle.y) - sin(k->per_angle.z), sin(k->per_angle.x) + cos(k->per_angle.z), -cos(k->per_angle.x) - cos(k->per_angle.y)};
+        //begirada = bektore_unitarioa(begirada);
+        //gluLookAt(k->per_pos.x, k->per_pos.y, k->per_pos.z, k->per_pos.x + DISTANTZIA * begirada.x, k->per_pos.y + DISTANTZIA * begirada.y, k->per_pos.z + DISTANTZIA * begirada.z, 0, 1, 0);
+        // glPushMatrix();
+        glRotated(-k->per_angle.x, 1, 0, 0);
+        glRotated(-k->per_angle.y, 0, 1, 0);
+        glRotated(-k->per_angle.z, 0, 0, 1);
+        glTranslated(-k->per_pos.x, -k->per_pos.y, -k->per_pos.z);
+        // glPopMatrix();
+
+    }
 }
+
+
 
