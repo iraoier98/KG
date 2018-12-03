@@ -38,20 +38,20 @@ void draw_axes()
     /*Draw X axis*/
     glColor3f(KG_COL_X_AXIS_R,KG_COL_X_AXIS_G,KG_COL_X_AXIS_B);
     glBegin(GL_LINES);
-    glVertex3d(KG_MAX_DOUBLE,0,0);
-    glVertex3d(-1*KG_MAX_DOUBLE,0,0);
+    glVertex3d(-1 * KG_MAX_DOUBLE, 0, 0);
+    glVertex3d(KG_MAX_DOUBLE, 0, 0);
     glEnd();
     /*Draw Y axis*/
     glColor3f(KG_COL_Y_AXIS_R,KG_COL_Y_AXIS_G,KG_COL_Y_AXIS_B);
     glBegin(GL_LINES);
-    glVertex3d(0,KG_MAX_DOUBLE,0);
-    glVertex3d(0,-1*KG_MAX_DOUBLE,0);
+    glVertex3d(0,-1 * KG_MAX_DOUBLE, 0);
+    glVertex3d(0, KG_MAX_DOUBLE, 0);
     glEnd();
     /*Draw Z axis*/
     glColor3f(KG_COL_Z_AXIS_R,KG_COL_Z_AXIS_G,KG_COL_Z_AXIS_B);
     glBegin(GL_LINES);
-    glVertex3d(0,0,KG_MAX_DOUBLE);
-    glVertex3d(0,0,-1*KG_MAX_DOUBLE);
+    glVertex3d(0, 0, -1 * KG_MAX_DOUBLE);
+    glVertex3d(0, 0, KG_MAX_DOUBLE);
     glEnd();
 }
 
@@ -61,15 +61,15 @@ void draw_axes()
 void draw_sareta(){
     if (_saretaErakutsi){
         glColor3f(0, 0, 0);
-        for (float i = -0.8 ; i < 1; i += 0.2){
+        for (float i = -8 ; i < 10; i += 2){
             glBegin(GL_LINES);
-            glVertex3d(i, -1, 0);
-            glVertex3d(i, 1, 0);
+            glVertex3d(i, 0, -i);
+            glVertex3d(i, 0, i);
             glEnd();
 
             glBegin(GL_LINES);
-            glVertex3d(-1, i, 0);
-            glVertex3d(1, i, 0);
+            glVertex3d(-i, 0, i);
+            glVertex3d(i, 0, i);
             glEnd();
         }
     }
@@ -115,8 +115,6 @@ void display(void) {
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, "Txus feo"[i]);
     }
     
-    /* Puntuak kameraren transformazioarekin biderkatu baino lehen, marraztu sareta */
-    draw_sareta();
 
     if (_k->kamera_mota == KG_ORTOGRAFIKOA){
         /*When the window is wider than our original projection plane we extend the plane in the X axis*/
@@ -147,6 +145,9 @@ void display(void) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     aplikatu_kameraren_transformazioa(_k);
+    
+    /* Puntuak kameraren transformazioarekin biderkatu baino lehen, marraztu sareta */
+    draw_sareta();
 
     /*First, we draw the axes*/
     draw_axes();

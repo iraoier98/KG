@@ -396,29 +396,29 @@ void special_keyboard(int keyCode, int x, int y){
         }
 
         if (_transformazio_mota == KG_TRANSLAZIOA){
+            //+y
+            m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
+            m[1]=0;   m[5]=1;   m[9]=0;    m[13]=1;
+            m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
+            m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
             if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
-                kamera_mugitu(_k, 0, 1, 0);
+                kamera_mugitu(_k, m);
             }
             else{
-                //+y
-                m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
-                m[1]=0;   m[5]=1;   m[9]=0;    m[13]=1;
-                m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
-                m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
 
                 transformatu(_selected_object, m);
             }
         }
         else if (_transformazio_mota == KG_BIRAKETA){
+            //+x
+            m[0]=1;   m[4]=0;              m[8]=0;              m[12]=0;
+            m[1]=0;   m[5]=cos(THETA);     m[9]=sin(THETA);     m[13]=0;
+            m[2]=0;   m[6]=-sin(THETA);    m[10]=cos(THETA);    m[14]=0;
+            m[3]=0;   m[7]=0;              m[11]=0;             m[15]=1;
             if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
-                kamera_biratu(_k, THETA, 0, 0);
+                kamera_biratu(_k, m);
             }
             else{
-                //+x
-                m[0]=1;   m[4]=0;              m[8]=0;              m[12]=0;
-                m[1]=0;   m[5]=cos(THETA);     m[9]=sin(THETA);     m[13]=0;
-                m[2]=0;   m[6]=-sin(THETA);    m[10]=cos(THETA);    m[14]=0;
-                m[3]=0;   m[7]=0;              m[11]=0;             m[15]=1;
 
                 transformatu(_selected_object, m);
             }
@@ -458,29 +458,29 @@ void special_keyboard(int keyCode, int x, int y){
         }
 
         if (_transformazio_mota == KG_TRANSLAZIOA){
+            //-y
+            m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
+            m[1]=0;   m[5]=1;   m[9]=0;    m[13]=-1;
+            m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
+            m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
             if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
-                kamera_mugitu(_k, 0, -1, 0);
+                kamera_mugitu(_k, m);
             }
             else{
-                //-y
-                m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
-                m[1]=0;   m[5]=1;   m[9]=0;    m[13]=-1;
-                m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
-                m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
 
                 transformatu(_selected_object, m);
             }
         }
         else if (_transformazio_mota == KG_BIRAKETA){
+            //-x
+            m[0]=1;   m[4]=0;              m[8]=0;              m[12]=0;
+            m[1]=0;   m[5]=cos(-THETA);    m[9]=sin(-THETA);    m[13]=0;
+            m[2]=0;   m[6]=-sin(-THETA);   m[10]=cos(-THETA);   m[14]=0;
+            m[3]=0;   m[7]=0;              m[11]=0;             m[15]=1;
             if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
-                kamera_biratu(_k, -THETA, 0, 0);
+                kamera_biratu(_k, m);
             }
             else{
-                //-x
-                m[0]=1;   m[4]=0;              m[8]=0;              m[12]=0;
-                m[1]=0;   m[5]=cos(-THETA);    m[9]=sin(-THETA);    m[13]=0;
-                m[2]=0;   m[6]=-sin(-THETA);   m[10]=cos(-THETA);   m[14]=0;
-                m[3]=0;   m[7]=0;              m[11]=0;             m[15]=1;
 
                 transformatu(_selected_object, m);
             }
@@ -513,29 +513,29 @@ void special_keyboard(int keyCode, int x, int y){
         }
 
         if (_transformazio_mota == KG_TRANSLAZIOA){
+            //-x
+            m[0]=1;   m[4]=0;   m[8]=0;    m[12]=-1;
+            m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
+            m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
+            m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
             if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
-                kamera_mugitu(_k, -1, 0, 0);
+                kamera_mugitu(_k, m);
             }
             else{
-                //-x
-                m[0]=1;   m[4]=0;   m[8]=0;    m[12]=-1;
-                m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
-                m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
-                m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
 
                 transformatu(_selected_object, m);
             }
         }
         else if (_transformazio_mota == KG_BIRAKETA){
+            //-y
+            m[0]=cos(-THETA);    m[4]=0;    m[8]=sin(-THETA);    m[12]=0;
+            m[1]=0;              m[5]=1;    m[9]=0;              m[13]=0;
+            m[2]=-sin(-THETA);   m[6]=0;    m[10]=cos(-THETA);   m[14]=0;
+            m[3]=0;              m[7]=0;    m[11]=0;             m[15]=1;
             if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
-                kamera_biratu(_k, 0, THETA, 0);
+                kamera_mugitu(_k, m);
             }
             else{
-                //-y
-                m[0]=cos(-THETA);    m[4]=0;    m[8]=sin(-THETA);    m[12]=0;
-                m[1]=0;              m[5]=1;    m[9]=0;              m[13]=0;
-                m[2]=-sin(-THETA);   m[6]=0;    m[10]=cos(-THETA);   m[14]=0;
-                m[3]=0;              m[7]=0;    m[11]=0;             m[15]=1;
 
                 transformatu(_selected_object, m);
             }
@@ -568,29 +568,29 @@ void special_keyboard(int keyCode, int x, int y){
         }
 
         if (_transformazio_mota == KG_TRANSLAZIOA){
+            //+x
+            m[0]=1;   m[4]=0;   m[8]=0;    m[12]=1;
+            m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
+            m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
+            m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
             if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
-                kamera_mugitu(_k, 1, 0, 0);
+                kamera_mugitu(_k, m);
             }
             else{
-                //+x
-                m[0]=1;   m[4]=0;   m[8]=0;    m[12]=1;
-                m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
-                m[2]=0;   m[6]=0;   m[10]=1;   m[14]=0;
-                m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
 
                 transformatu(_selected_object, m);
             }
         }
         else if (_transformazio_mota == KG_BIRAKETA){
+            //+y
+            m[0]=cos(THETA);    m[4]=0;    m[8]=sin(THETA);    m[12]=0;
+            m[1]=0;             m[5]=1;    m[9]=0;             m[13]=0;
+            m[2]=-sin(THETA);   m[6]=0;    m[10]=cos(THETA);   m[14]=0;
+            m[3]=0;             m[7]=0;    m[11]=0;            m[15]=1;
             if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
-                kamera_biratu(_k, 0, -THETA, 0);
+                kamera_mugitu(_k, m);
             }
             else{
-                //+y
-                m[0]=cos(THETA);    m[4]=0;    m[8]=sin(THETA);    m[12]=0;
-                m[1]=0;             m[5]=1;    m[9]=0;             m[13]=0;
-                m[2]=-sin(THETA);   m[6]=0;    m[10]=cos(THETA);   m[14]=0;
-                m[3]=0;             m[7]=0;    m[11]=0;            m[15]=1;
 
             transformatu(_selected_object, m);
             }
@@ -623,30 +623,29 @@ void special_keyboard(int keyCode, int x, int y){
         }
 
         if (_transformazio_mota == KG_TRANSLAZIOA){
+            //-z
+            m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
+            m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
+            m[2]=0;   m[6]=0;   m[10]=1;   m[14]=-1;
+            m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
             if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
-                kamera_mugitu(_k, 0, 0, -1);
+                kamera_mugitu(_k, m);
             }
             else{
-                //-z
-                m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
-                m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
-                m[2]=0;   m[6]=0;   m[10]=1;   m[14]=-1;
-                m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
 
                 transformatu(_selected_object, m);
             }
         }
         else if (_transformazio_mota == KG_BIRAKETA){
+            //-z
+            m[0]=cos(-THETA);    m[4]=sin(-THETA);    m[8]=0;    m[12]=0;
+            m[1]=-sin(-THETA);   m[5]=cos(-THETA);    m[9]=0;     m[13]=0;
+            m[2]=0;              m[6]=0;             m[10]=1;   m[14]=0;
+            m[3]=0;              m[7]=0;             m[11]=0;   m[15]=1;
             if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
-                kamera_biratu(_k, 0, 0, THETA);
+                kamera_mugitu(_k, m);
             }
-                else{
-                //-z
-                m[0]=cos(-THETA);    m[4]=sin(-THETA);    m[8]=0;    m[12]=0;
-                m[1]=-sin(-THETA);   m[5]=cos(-THETA);    m[9]=0;     m[13]=0;
-                m[2]=0;              m[6]=0;             m[10]=1;   m[14]=0;
-                m[3]=0;              m[7]=0;             m[11]=0;   m[15]=1;
-
+            else{
                 transformatu(_selected_object, m);
             }
         }
@@ -678,30 +677,29 @@ void special_keyboard(int keyCode, int x, int y){
         }
 
         if (_transformazio_mota == KG_TRANSLAZIOA){
+            //+z
+            m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
+            m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
+            m[2]=0;   m[6]=0;   m[10]=1;   m[14]=1;
+            m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
             if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
-                kamera_mugitu(_k, 0, 0, 1);
+                kamera_mugitu(_k, m);
             }
             else{
-                //+z
-                m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
-                m[1]=0;   m[5]=1;   m[9]=0;    m[13]=0;
-                m[2]=0;   m[6]=0;   m[10]=1;   m[14]=1;
-                m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
 
                 transformatu(_selected_object, m);
             }
         }
         else if (_transformazio_mota == KG_BIRAKETA){
+            //+z
+            m[0]=cos(THETA);    m[4]=sin(THETA);    m[8]=0;    m[12]=0;
+            m[1]=-sin(THETA);   m[5]=cos(THETA);    m[9]=0;    m[13]=0;
+            m[2]=0;             m[6]=0;             m[10]=1;   m[14]=0;
+            m[3]=0;             m[7]=0;             m[11]=0;   m[15]=1;
             if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
-                kamera_biratu(_k, 0, 0, -THETA);
+                kamera_mugitu(_k, m);
             }
             else{
-                //+z
-                m[0]=cos(THETA);    m[4]=sin(THETA);    m[8]=0;    m[12]=0;
-                m[1]=-sin(THETA);   m[5]=cos(THETA);    m[9]=0;    m[13]=0;
-                m[2]=0;             m[6]=0;             m[10]=1;   m[14]=0;
-                m[3]=0;             m[7]=0;             m[11]=0;   m[15]=1;
-
                 transformatu(_selected_object, m);
             }
         }
