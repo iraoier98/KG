@@ -1,13 +1,11 @@
 #include "kamera.h"
+#include "transformazioak.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <GL/glut.h>
 #include <math.h>
 
-#define DISTANTZIA 5
-
-
-void transformatuu(GLdouble* matrizea, point3* p1, point3* p2);
 
 /**
  * @brief Kamera objektua sortzen du.
@@ -17,22 +15,51 @@ void transformatuu(GLdouble* matrizea, point3* p1, point3* p2);
 kamera* kamera_sortu(int kamera_mota){
     kamera* k = (kamera*) malloc(sizeof(kamera));
     k->kamera_mota = kamera_mota;
+    k->fov = 90;
 
-    point3 kamera_posizioa = {0, 0, -10};
+    point3 kamera_posizioa = {0, 0, 10};
     point3 origin = {0, 0, 0};
 
     // Perspektibakoa
-    k->per_pos = origin;
-    k->per_look = kamera_posizioa;
-    k->per_fov = 90;
+    k->per_pos = kamera_posizioa;
+    k->per_look = origin;
+
+    // Ibiltaria
+    k->ibil_pos = kamera_posizioa;
+    k->ibil_look = origin;
 
     return k;
 }
 
 
-void kamera_mugitu(kamera* k, GLdouble* transf){
+void kamera_mugitu(kamera* k, double x, double y, double z){
     if (k->kamera_mota == KG_PERSPEKTIBAKOA){
-        transformatuu(transf, &k->per_pos, &k->per_look);
+        // printf("%f %f %f %f %f %f\n", k->per_pos.x, k->per_pos.y, k->per_pos.z, k->per_look.x, k->per_look.y, k->per_look.z);
+        // printf("%f\n", sqrt(pow(k->per_pos.x - k->per_look.x, 2) + pow(k->per_pos.y - k->per_look.y, 2) + pow(k->per_pos.z - k->per_look.z, 2)));
+    }
+    else if (k->kamera_mota == KG_IBILTARIA){
+        // printf("%f %f %f %f %f %f\n", k->ibil_pos.x, k->ibil_pos.y, k->ibil_pos.z, k->ibil_look.x, k->ibil_look.y, k->ibil_look.z);
+    }
+}
+
+
+
+void kamera_biratu(kamera* k, double x, double y, double z){
+    if (k->kamera_mota == KG_PERSPEKTIBAKOA){
+        translate(&k->per_look, -k->per_pos.x, -k->per_pos.y, -k->per_pos.z);
+        rotate(&k->per_look, -x, -y, -z);
+        translate(&k->per_look, k->per_pos.x, k->per_pos.y, k->per_pos.z);
+
+        printf("%f %f %f %f %f %f\n", k->per_pos.x, k->per_pos.y, k->per_pos.z, k->per_look.x, k->per_look.y, k->per_look.z);
+        printf("%f\n", sqrt(pow(k->per_pos.x - k->per_look.x, 2) + pow(k->per_pos.y - k->per_look.y, 2) + pow(k->per_pos.z - k->per_look.z, 2)));
+    }
+    else if (k->kamera_mota == KG_IBILTARIA){
+        translate(&k->ibil_look, -k->ibil_pos.x, -k->ibil_pos.y, -k->ibil_pos.z);
+        rotate(&k->ibil_look, -x, -y, -z);
+        translate(&k->ibil_look, k->ibil_pos.x, k->ibil_pos.y, k->ibil_pos.z);
+
+        printf("%f %f %f %f %f %f\n", k->ibil_pos.x, k->ibil_pos.y, k->ibil_pos.z, k->ibil_look.x, k->ibil_look.y, k->ibil_look.z);
+        printf("%f\n", sqrt(pow(k->ibil_pos.x - k->ibil_look.x, 2) + pow(k->ibil_pos.y - k->ibil_look.y, 2) + pow(k->ibil_pos.z - k->ibil_look.z, 2)));
     }
 }
 
@@ -43,7 +70,7 @@ void kamera_mugitu(kamera* k, GLdouble* transf){
  */
 void kamera_mota_aldatu(kamera* k){
     k->kamera_mota++;
-    k->kamera_mota %= 2;
+    k->kamera_mota %= 3;
 }
 
 /**
@@ -54,41 +81,44 @@ void aplikatu_kameraren_transformazioa(kamera* k){
     if (k->kamera_mota == KG_PERSPEKTIBAKOA){
         gluLookAt(k->per_pos.x, k->per_pos.y, k->per_pos.z, k->per_look.x, k->per_look.y, k->per_look.z, 0, 1, 0);
     }
+    else if (k->kamera_mota == KG_IBILTARIA){
+        gluLookAt(k->ibil_pos.x, k->ibil_pos.y, k->ibil_pos.z, k->ibil_look.x, k->ibil_look.y, k->ibil_look.z, 0, 1, 0);
+    }
 }
 
 
 
-void transformatuu(GLdouble* matrizea, point3* p1, point3* p2){
-    point3 lag1 = {p1->x, p1->y, p1->z};
-    p1->x = lag1.x * matrizea[0] + lag1.y * matrizea[4] + lag1.z * matrizea[8] + matrizea[12];
-    p1->y = lag1.x * matrizea[1] + lag1.y * matrizea[5] + lag1.z * matrizea[9] + matrizea[13];
-    p1->z = lag1.x * matrizea[2] + lag1.y * matrizea[6] + lag1.z * matrizea[10] + matrizea[14];
 
-    if (p2 == NULL) return;
-    point3 lag2 = {p2->x, p2->y, p2->z};
-    p2->x = lag2.x * matrizea[0] + lag2.y * matrizea[4] + lag2.z * matrizea[8] + matrizea[12];
-    p2->y = lag2.x * matrizea[1] + lag2.y * matrizea[5] + lag2.z * matrizea[9] + matrizea[13];
-    p2->z = lag2.x * matrizea[2] + lag2.y * matrizea[6] + lag2.z * matrizea[10] + matrizea[14];
-}
+void kamera_transformatu(kamera* k, int transformazio_mota, double x, double y, double z){
+    if (k->kamera_mota == KG_IBILTARIA){
+        if (y != 0){
+            double dx = k->ibil_look.x - k->ibil_pos.x;
+            double dz = k->ibil_look.z - k->ibil_pos.z;
+            double ratio_x = dx / (abs(dx) + abs(dz));
+            double ratio_z = dz / (abs(dx) + abs(dz));
 
-
-void biratu2(GLdouble* matrizea, point3* orig, point3* p);
-void kamera_biratu(kamera* k, GLdouble* transf){
-    biratu2(transf, &k->per_pos, &k->per_look);
-}
-
-
-void biratu2(GLdouble* matrizea, point3* orig, point3* p){
-    GLdouble m[16];
-    m[0]=1;   m[4]=0;   m[8]=0;    m[12]=-orig->x;
-    m[1]=0;   m[5]=1;   m[9]=0;    m[13]=-orig->y;
-    m[2]=0;   m[6]=0;   m[10]=1;   m[14]=-orig->z;
-    m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
-    transformatuu(m, p, NULL);
-    transformatuu(matrizea, p, NULL);
-    m[0]=1;   m[4]=0;   m[8]=0;    m[12]=orig->x;
-    m[1]=0;   m[5]=1;   m[9]=0;    m[13]=orig->y;
-    m[2]=0;   m[6]=0;   m[10]=1;   m[14]=orig->z;
-    m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
-    transformatuu(m, p, NULL);
+            translate(&k->ibil_pos, y * ratio_x, 0, y * ratio_z);
+            translate(&k->ibil_look, y * ratio_x, 0, y * ratio_z);
+        }else {
+            x *= KG_THETA;
+            z *= KG_THETA;
+            translate(&k->ibil_look, -k->ibil_pos.x, -k->ibil_pos.y, -k->ibil_pos.z);
+            rotate(&k->ibil_look, z, -x, 0);
+            translate(&k->ibil_look, k->ibil_pos.x, k->ibil_pos.y, k->ibil_pos.z);
+        }
+    }
+    else if (k->kamera_mota == KG_PERSPEKTIBAKOA){
+        if (transformazio_mota == KG_TRANSLAZIOA){
+            translate(&k->per_pos, x, y, z);
+            translate(&k->per_look, x, y, z);
+        }
+        else if (transformazio_mota == KG_BIRAKETA){
+            x *= KG_THETA;
+            y *= KG_THETA;
+            z *= KG_THETA;
+            translate(&k->per_look, -k->per_pos.x, -k->per_pos.y, -k->per_pos.z);
+            rotate(&k->per_look, -y, -x, -z);
+            translate(&k->per_look, k->per_pos.x, k->per_pos.y, k->per_pos.z);
+        }
+    }
 }

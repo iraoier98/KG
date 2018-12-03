@@ -9,13 +9,16 @@
 typedef struct kamera{
 
     int kamera_mota;
+    int fov;
 
     // Perspektibakoa
     point3 per_pos;
     point3 per_look;
-    int per_fov;
 
     // Ibiltaria
+    point3 ibil_pos;
+    point3 ibil_look;
+
     // TODO
 
 } kamera;
@@ -33,8 +36,11 @@ void kamera_mota_aldatu(kamera* k);
 void aplikatu_kameraren_transformazioa(kamera* k);
 
 /* Kameraren translazioa */
-void kamera_mugitu(kamera* k, GLdouble* transf);
-void kamera_biratu(kamera* k, GLdouble* transf);
+void kamera_mugitu(kamera* k, double x, double y, double z);
+void kamera_biratu(kamera* k, double x, double y, double z);
+
+
+void kamera_transformatu(kamera* k, int transformazio_mota, double x, double y, double z);
 
 
 

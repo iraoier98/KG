@@ -134,11 +134,8 @@ void display(void) {
             glOrtho(_ortho_x_min, _ortho_x_max, midpt - (he / 2), midpt + (he / 2), _ortho_z_min, _ortho_z_max);
         }
     }
-    else if (_k->kamera_mota == KG_PERSPEKTIBAKOA) {
-        gluPerspective(_k->per_fov, _window_ratio, KG_ZNEAR, KG_ZFAR);
-    }
     else {
-        printf("Ibiltaria\n");
+        gluPerspective(_k->fov, _window_ratio, KG_ZNEAR, KG_ZFAR);
     }
 
     /* Now we start drawing the object */
