@@ -28,9 +28,7 @@ void scale(point3* p, double x, double y, double z);
 
 //void scale(point3* p, double factor);
 
-/*	GLOBAL TRANSFORM if global == 1
-	LOCAL TRANSFORM if global == 0 */
-void transform_object(object3d* obj, GLdouble* transf, int global);
+void transform_object(object3d* obj, GLdouble* transf, int erreferentzia_sistema);
 
 
 

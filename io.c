@@ -303,7 +303,7 @@ void keyboard(unsigned char key, int x, int y) {
             }
             else{
                 m = scale_matrix(0.9, 0.9, 0.9);
-                transformatu_objektua(_selected_object, m);
+                transform_object(_selected_object, m, _erreferentzia_sistema);
             }
 
 
@@ -339,7 +339,7 @@ void keyboard(unsigned char key, int x, int y) {
 
             else{
                 m = scale_matrix(1.1, 1.1, 1.1);
-                transformatu_objektua(_selected_object, m);
+                transform_object(_selected_object, m, _erreferentzia_sistema);
             }
         }
         break;
@@ -404,27 +404,38 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
         switch (_transformazio_mota){
             case KG_TRANSLAZIOA:
                 m = translation_matrix(x, y, z);
-                transformatu_objektua(_selected_object, m);
+                transform_object(_selected_object, m, _erreferentzia_sistema);
                 break;
             case KG_BIRAKETA:
                 x *= KG_THETA;
                 y *= KG_THETA;
                 z *= KG_THETA;
                 m = rotation_matrix(y, x, z);
-                transformatu_objektua(_selected_object, m);
+                transform_object(_selected_object, m, _erreferentzia_sistema);
                 break;
             case KG_ESKALAKETA:
                 if (x != 0){
                     x = 1 + x / 10;
+                    y = 1;
+                    z = 1;
                 }
-                if (y != 0){
+                else if (y != 0){
                     y = 1 + y / 10;
+                    x = 1;
+                    z = 1;
+
                 }
-                if (z != 0){
+                else if (z != 0){
                     z = 1 + z / 10;
+                    x = 1;
+                    y = 1;
+
                 }
                 m = scale_matrix(x, y, z);
-                transformatu_objektua(_selected_object, m);
+                transform_object(_selected_object, m, _erreferentzia_sistema);
+                break;
+            case KG_ZIZAILAKETA:
+                //TODO:
                 break;
         }
 
@@ -437,21 +448,6 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
     /*In case we have do any modification affecting the displaying of the object, we redraw them*/
     glutPostRedisplay();
 
-}
-
-
-
-void transformatu_objektua(object3d* obj, GLdouble* transformazio_matrizea){
-    GLdouble* transformatu_gabe = peek(obj->transformazio_pila);
-    GLdouble* tranformatua;
-
-    if (_erreferentzia_sistema == KG_LOKALA){
-        tranformatua = matrix_dot_matrix(m, transformatu_gabe);
-    }else{
-        tranformatua = matrix_dot_matrix(transformatu_gabe, m);
-    }
-
-    push(obj->transformazio_pila, tranformatua);
 }
 
 void printMatrix(GLdouble* matrix){

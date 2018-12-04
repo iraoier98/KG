@@ -1,6 +1,5 @@
 #include "transformazioak.h"
 
-//#include <GL/glut.h>
 #include <stdlib.h>
 #include <math.h>
 
@@ -12,8 +11,6 @@ GLdouble* identity(){
     m[3]=0;   m[7]=0;   m[11]=0;   m[15]=1;
     return m;
 }
-
-
 
 GLdouble* translation_matrix(double x, double y, double z){
     GLdouble* m = identity();
@@ -100,8 +97,15 @@ void scale(point3* p, double x, double y, double z){
 // }
 
 
-void transform_object(object3d* obj, GLdouble* transf, int global){
-	// TODO
+void transform_object(object3d* obj, GLdouble* transf, int erreferentzia_sistema){
+    GLdouble* aurreko_transformazioa = peek(obj->transformazio_pila);
+    GLdouble* transformatua;
+    if (erreferentzia_sistema == KG_LOKALA){
+        transformatua = matrix_dot_matrix(transf, aurreko_transformazioa);
+    }else{
+        transformatua = matrix_dot_matrix(aurreko_transformazioa, transf);
+    }
+    push(obj->transformazio_pila, transformatua);
 }
 
 

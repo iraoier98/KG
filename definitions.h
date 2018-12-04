@@ -64,7 +64,7 @@
 #define KG_MAX_DOUBLE                       10E10
 
 #define KG_PI                               3.14159265358979323846
-#define KG_THETA                            KG_PI / 10
+#define KG_THETA                            KG_PI / 20
 #define KG_DELTA                            0.1
 
 #define KG_TRANSLAZIOA                      0
