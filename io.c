@@ -168,18 +168,31 @@ void keyboard(unsigned char key, int x, int y) {
 
 
     case KG_KEY_CTRL_Z:
-        if (_selected_object == NULL){
-            printf("Lehenik aukeratu objektu bat.\n");
-            break;
-        }
 
-        if (glutGetModifiers() & GLUT_ACTIVE_SHIFT){
-            /* Transformazioak berregin */
-            depop(_selected_object->transformazio_pila);
+        if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
+            if (glutGetModifiers() & GLUT_ACTIVE_SHIFT){
+                /* Transformazioak berregin */
+                berregin_transformazioa(_k);
+            }
+            else{
+                /* Transformazioak desegin */
+                desegin_transformazioa(_k);
+            }
         }
-        else{
-            /* Transformazioak desegin */
-            pop(_selected_object->transformazio_pila);
+        else{ 
+            if (_selected_object == NULL){
+                printf("Lehenik aukeratu objektu bat.\n");
+                break;
+            }
+
+            if (glutGetModifiers() & GLUT_ACTIVE_SHIFT){
+                /* Transformazioak berregin */
+                depop(_selected_object->transformazio_pila);
+            }
+            else{
+                /* Transformazioak desegin */
+                pop(_selected_object->transformazio_pila);
+            }
         }
         break;
 
@@ -370,11 +383,17 @@ void keyboard(unsigned char key, int x, int y) {
  */
 void special_keyboard(int keyCode, int mouse_x, int mouse_y){
 
+    printf("%d\n", keyCode);
+
     double x = 0;
     double y = 0;
     double z = 0;
 
     switch (keyCode) {
+
+        case 114:
+            printf("GTFO\n");
+            return;
         case KG_KEY_GORA:
             y++;
             break;

@@ -36,9 +36,11 @@ void kamera_mota_aldatu(kamera* k);
 /* Kameraren koordenatuak zehazteko. */
 void aplikatu_kameraren_transformazioa(kamera* k);
 
-
 void kamera_transformatu(kamera* k, int transformazio_mota, double x, double y, double z);
 
+void desegin_transformazioa(kamera* k);
+
+void berregin_transformazioa(kamera* k);
 
 
 #endif // KAMERA_H

@@ -123,3 +123,23 @@ void kamera_transformatu(kamera* k, int transformazio_mota, double x, double y, 
         }
     }
 }
+
+
+void desegin_transformazioa(kamera* k){
+    if (k->kamera_mota == KG_PERSPEKTIBAKOA){
+        pop(k->per_transf_pila);
+    }else if (k->kamera_mota == KG_IBILTARIA){
+        pop(k->ibil_transf_pila);
+    }
+}
+
+void berregin_transformazioa(kamera* k){
+    printf("depop ");
+    if (k->kamera_mota == KG_PERSPEKTIBAKOA){
+    printf("per\n");
+        depop(k->per_transf_pila);
+    }else if (k->kamera_mota == KG_IBILTARIA){
+    printf("ibil\n");
+        depop(k->ibil_transf_pila);
+    }
+}
