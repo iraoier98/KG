@@ -3,6 +3,15 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include <stdio.h>
+void printMatrixxx(GLdouble* matrix){
+    int c, d;
+    for (c = 0; c < 4; c++) {
+        printf("%f %f %f %f\n", matrix[c], matrix[c+4], matrix[c+8], matrix[c+12]);
+    }
+    printf("\n");
+}
+
 GLdouble* identity(){
     GLdouble* m = (GLdouble*) malloc(16 * sizeof(GLdouble));
     m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
@@ -114,6 +123,14 @@ point3 matrix_dot_point(GLdouble* mat, point3 vec){
     result.x = vec.x * mat[0] + vec.y * mat[4] + vec.z * mat[8] + mat[12];
     result.y = vec.x * mat[1] + vec.y * mat[5] + vec.z * mat[9] + mat[13];
     result.z = vec.x * mat[2] + vec.y * mat[6] + vec.z * mat[10] + mat[14];
+    return result;
+}
+
+point3 matrix_dot_vector(GLdouble* mat, vector3 vec){
+    point3 result;
+    result.x = vec.x * mat[0] + vec.y * mat[4] + vec.z * mat[8];
+    result.y = vec.x * mat[1] + vec.y * mat[5] + vec.z * mat[9];
+    result.z = vec.x * mat[2] + vec.y * mat[6] + vec.z * mat[10];
     return result;
 }
 

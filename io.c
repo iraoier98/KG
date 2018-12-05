@@ -392,6 +392,7 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
     switch (keyCode) {
 
         case 114:
+        case 112:
             printf("GTFO\n");
             return;
         case KG_KEY_GORA:
@@ -417,6 +418,8 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
         case KG_KEY_AVPAG:
             z++;
             break;
+        default:
+            return;
     }
 
     if (_transformazio_targeta == KG_TRANSFORMATU_OBJEKTUA){
@@ -460,7 +463,7 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
 
     }
     else {
-        kamera_transformatu(_k, _transformazio_mota, x, y, z);
+        kamera_transformatu(_k, _transformazio_mota, _erreferentzia_sistema, x, y, z);
     }
 
     

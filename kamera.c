@@ -9,6 +9,8 @@
 
 point3 hasierako_pos = {0, 0, 0};
 point3 hasierako_look = {0, 0, -1};
+vector3 hasierako_up = {0, 1, 0};
+int max_tortikolis = 8;
 
 
 /**
@@ -23,6 +25,7 @@ kamera* kamera_sortu(int kamera_mota){
     k->fov = 90;
     k->per_transf_pila = pila_sortu();
     k->ibil_transf_pila = pila_sortu();
+    k->tortikolis = 0;
 
     return k;
 }
@@ -45,12 +48,14 @@ void aplikatu_kameraren_transformazioa(kamera* k){
     if (k->kamera_mota == KG_PERSPEKTIBAKOA){
         point3 eye = matrix_dot_point(peek(k->per_transf_pila), hasierako_pos);
         point3 look = matrix_dot_point(peek(k->per_transf_pila), hasierako_look);
-        gluLookAt(eye.x, eye.y, eye.z, look.x, look.y, look.z, 0, 1, 0);
+        point3 up = matrix_dot_vector(peek(k->per_transf_pila), hasierako_up);
+        gluLookAt(eye.x, eye.y, eye.z, look.x, look.y, look.z, up.x, up.y, up.z);
     }
     else if (k->kamera_mota == KG_IBILTARIA){
         point3 eye = matrix_dot_point(peek(k->ibil_transf_pila), hasierako_pos);
         point3 look = matrix_dot_point(peek(k->ibil_transf_pila), hasierako_look);
-        gluLookAt(eye.x, eye.y, eye.z, look.x, look.y, look.z, 0, 1, 0);
+        point3 up = matrix_dot_vector(peek(k->ibil_transf_pila), hasierako_up);
+        gluLookAt(eye.x, eye.y, eye.z, look.x, look.y, look.z, up.x, up.y, up.z);
     }
 }
 
@@ -68,8 +73,8 @@ void printPoint(point3 p){
     printf("%f %f %f\n", p.x, p.y, p.z);
 }
 
-double distance(double x1, double x2, double y1, double y2){
-    return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
+double distance(double x1, double x2, double y1, double y2, double z1, double z2){
+    return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2) + pow(z2 - z1, 2));
 }
 
 double sign(double x){
@@ -85,43 +90,73 @@ double sign(double x){
 }
 
 
-void kamera_transformatu(kamera* k, int transformazio_mota, double x, double y, double z){
-    if (k->kamera_mota == KG_IBILTARIA){
+void kamera_transformatu(kamera* k, int transformazio_mota, int erreferentzia_sistema, double x, double y, double z){
+
+    if (k->kamera_mota == KG_IBILTARIA){ /* Aldaketa lokalak beti */
+        GLdouble* aurreko_transformazioa = peek(k->ibil_transf_pila);
         if (y != 0){
 
-            GLdouble* transformatu_gabe = peek(k->ibil_transf_pila);
-            point3 pos_transformatua = matrix_dot_point(transformatu_gabe, hasierako_pos);
-            point3 look_transformatua = matrix_dot_point(transformatu_gabe, hasierako_look);
+            point3 pos_transformatua = matrix_dot_point(aurreko_transformazioa, hasierako_pos);
+            point3 look_transformatua = matrix_dot_point(aurreko_transformazioa, hasierako_look);
+
+            double dy = look_transformatua.y - pos_transformatua.y;
+
+        
+            GLdouble* transformazio_berria = matrix_dot_matrix(aurreko_transformazioa, translation_matrix(0, -y * dy, 0));
+            transformazio_berria = matrix_dot_matrix(translation_matrix(0, 0, -y), transformazio_berria);
+            push(k->ibil_transf_pila, transformazio_berria);
+        }else {
+            
+            if (sign(z) * k->tortikolis < max_tortikolis){
+                k->tortikolis += z;
+            }
+            else{
+                return;
+            }
+            point3 pos_transformatua = matrix_dot_point(aurreko_transformazioa, hasierako_pos);
+            point3 look_transformatua = matrix_dot_point(aurreko_transformazioa, hasierako_look);
 
             double dx = look_transformatua.x - pos_transformatua.x;
+            double dy = look_transformatua.y - pos_transformatua.y;
             double dz = look_transformatua.z - pos_transformatua.z;
 
-            printf("%f %f\n", dx, dz);
-            printMatrixx(translation_matrix(y * dx, 0, y * dz));
-            //printf("%f\n", distance(look_transformatua.x, pos_transformatua.x, look_transformatua.z, pos_transformatua.z));
+            //printf("%f %f %f\n", dx, dy, dz);
+            //printMatrixx(translation_matrix(y * dx, -dy, y * dz));
+            //printf("%f\n", distance(look_transformatua.x, pos_transformatua.x, look_transformatua.y, pos_transformatua.y, look_transformatua.z, pos_transformatua.z));
 
-            GLdouble* transf_berria = matrix_dot_matrix(translation_matrix(y * dx, 0, y * dz), transformatu_gabe);
-            push(k->ibil_transf_pila, transf_berria);
-        }else {
             x *= KG_THETA;
             z *= KG_THETA;
-            GLdouble* transf_berria = matrix_dot_matrix(rotation_matrix(z, -x, 0), peek(k->ibil_transf_pila));
-            push(k->ibil_transf_pila, transf_berria);
+            GLdouble* transformazio_berria = matrix_dot_matrix(rotation_matrix(z, -x, 0), aurreko_transformazioa);
+            push(k->ibil_transf_pila, transformazio_berria);
         }
     }
+
     else if (k->kamera_mota == KG_PERSPEKTIBAKOA){
+        GLdouble* aurreko_transformazioa = peek(k->per_transf_pila);
+        GLdouble* uneko_transformazioa = NULL;
+
         if (transformazio_mota == KG_TRANSLAZIOA){
-            GLdouble* transf_berria = matrix_dot_matrix(peek(k->per_transf_pila), translation_matrix(x, y, z));
-            push(k->per_transf_pila, transf_berria);
+            uneko_transformazioa = translation_matrix(x, y, z);
         }
         else if (transformazio_mota == KG_BIRAKETA){
             x *= KG_THETA;
             y *= KG_THETA;
             z *= KG_THETA;
-            GLdouble* transf_berria = matrix_dot_matrix(peek(k->per_transf_pila), rotation_matrix(y, x, z));
-            push(k->per_transf_pila, transf_berria);
+            uneko_transformazioa = rotation_matrix(-y, -x, -z);
+        }
+
+        if (uneko_transformazioa != NULL){
+            GLdouble* transformazio_berria = NULL;
+            if (erreferentzia_sistema == KG_LOKALA){
+                transformazio_berria = matrix_dot_matrix(uneko_transformazioa, aurreko_transformazioa);
+            }
+            else{
+                transformazio_berria = matrix_dot_matrix(aurreko_transformazioa, uneko_transformazioa);
+            }
+            push(k->per_transf_pila, transformazio_berria);
         }
     }
+
 }
 
 
@@ -134,12 +169,9 @@ void desegin_transformazioa(kamera* k){
 }
 
 void berregin_transformazioa(kamera* k){
-    printf("depop ");
     if (k->kamera_mota == KG_PERSPEKTIBAKOA){
-    printf("per\n");
         depop(k->per_transf_pila);
     }else if (k->kamera_mota == KG_IBILTARIA){
-    printf("ibil\n");
         depop(k->ibil_transf_pila);
     }
 }

@@ -61,7 +61,7 @@ void draw_axes()
 void draw_sareta(){
     if (_saretaErakutsi){
         glColor3f(0, 0, 0);
-        for (float i = -8 ; i < 10; i += 2){
+        for (float i = -99 ; i < 100; i += 1){
             glBegin(GL_LINES);
             glVertex3d(i, 0, -i);
             glVertex3d(i, 0, i);

@@ -34,6 +34,8 @@ void transform_object(object3d* obj, GLdouble* transf, int erreferentzia_sistema
 
 point3 matrix_dot_point(GLdouble* mat, point3 vec);
 
+point3 matrix_dot_vector(GLdouble* mat, vector3 vec);
+
 GLdouble* matrix_dot_matrix(GLdouble* mat1, GLdouble* mat2);
 
 
