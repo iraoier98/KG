@@ -138,7 +138,7 @@ void display(void) {
         gluPerspective(_k->fov, _window_ratio, KG_ZNEAR, KG_ZFAR);
     }
 
-    /* Now we start drawing the object */
+    /* Now we start drawing the objects */
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     aplikatu_kameraren_transformazioa(_k);

@@ -3,25 +3,18 @@
 
 #include "definitions.h"
 
-// DATU-EGITURAK:
-
-/* Perspektiba kamararen inplementazioa */
 typedef struct kamera{
 
     int kamera_mota;
     int fov;
 
     // Perspektibakoa
-    point3 per_pos;
-    point3 per_look;
     pila* per_transf_pila;
 
     // Ibiltaria
     pila* ibil_transf_pila;
     int tortikolis;
-
-    // TODO
-
+    
 } kamera;
 
 

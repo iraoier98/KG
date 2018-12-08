@@ -6,7 +6,10 @@
 \usepackage{multirow}
 
 \newcommand{\fitxategi}[1] {\underline{\textit{#1}}}
+\newcommand{\metodo}[1] {\textit{#1}}
+\newcommand{\aldagai}[1] {\textit{#1}}
 \newcommand{\tekla}[1] {\textbf{#1}}
+\newcommand{\erref}[1] {\textbf{\ref{#1}}}
 
 \renewcommand{\contentsname}{Edukiak}
 \renewcommand{\refname}{Erreferentziak}
@@ -40,140 +43,148 @@
 
 \vspace{2cm}
 \begin{center}
-\includegraphics[scale=0.35]{kaizo.png}\\
+%\includegraphics[scale=0.35]{kaizo.png}\\
 \end{center}
 
 \pagebreak
 
+\section{Kamera}
 
+Fase honetan lortutako inplementazioa bi kamera motaren txertaketa izan da. Orain arte ingurunearen ikuspegi finko eta ez-fidela genuen. Proiekzioa ortografikoa zen; hau da, argi-izpiak Z ardatzarekiko paraleloak ziren, sakoneraren nozioa galduz. Gainera, kamera jatorrian geldi zegoen, objektuak izanik mugitu ZIRENTEKETEN bakarrak.\\
 
-\section{Inplementazio berriak}
+Orain, bi kamera mota berri aukera daitezke: libreki mugi daitekeen perspektibazkoa, eta ibiltaria. \tekla{C} tekla sakatuz gero, kamera-motaz aldatzen da. Kamera hautatzeko gai izateaz gain, kamera transformatu ahal izateko, \tekla{K} tekla sakatzea dago, aukeratutako transformazioa kamerari aplikatzeko eta ez objektuari. Aitzitik, objektuak transformatzeko berriz, \tekla{O} tekla sakatu behar da.\\
 
-\subsection{Objektuen transformazioak}\label{transformazioak}
-
-Hiru oinarrizko transformazioak (translazioa, errotazioa eta eskalaketa) inplementatu ditugu, erreferentzia-sistema globala zein lokala izanik.
-Bai transformazio mota, bai erreferentzia-sistema automata baten bidez kodetuta daude. Automataren egoera batetik beste batera mugitzeko taula hauetan jasotako teklak sakatu behar dira:\\
-
-\begin{center}
-
-\begin{tabular}{|c|c|}
-																				\hline
-	Tekla							& Ekintza									\\	\hline
-	\textbf{M} edo \textbf{m}		& Translazioa aktibatu						\\	\hline
-	\textbf{B} edo \textbf{b}		& Biraketa aktibatu							\\	\hline
-	\textbf{T} edo \textbf{t}		& Tamaina aldaketa aktibatu					\\	\hline
-	\textbf{L} edo \textbf{l}		& Erreferentzia-sistema lokala aktibatu	\\	\hline
-	\textbf{G} edo \textbf{g}		& Erreferentzia-sistema globala aktibatu	\\	\hline
-	\textbf{+}						& Ardatz guztietan handitu objektua		\\	\hline
-	\textbf{-}						& Ardatz guztietan handitu objektua		\\	\hline
-\end{tabular}
-
-\vspace{0.3cm}
-1. Taula: Tekla arrunten taula
-\end{center}
+Ideia teorikoak finkatu ditugu, baina nola lor daitezke orain arte aipatutako emaitza guztiak? Zerk osatzen du kamera bat?
+Alde batetik, zein kamera motarekin ari garen hartu behar da kontutan, bestetik proiekzio motaz aldatu behar da hautatutako kameraren arabera, eta azkenik kameraren mugimendua eta biraketa simulatu behar dira. Horretarako hurrengo datu-egitura erabiliko dugu:
 
 \begin{center}
+\includegraphics[scale=1]{kamera_struct.png}
 
-\begin{tabular}{|c|c|c|c|}
-																			\hline
-	\multirow{3}{*}{Tekla}		& \multicolumn{3}{|c|}{Ekintza} 		\\	\cline{2-4}
-	& Translazioaren  & Biraketaren  & Eskalaketaren 					\\ 
-	&  norabidea &  ardatza &  norabidea 								\\	\hline
-	\tekla{Goranzko gezia}		 &  Mugitu +Y & Biratu +X & Txikitu Y	\\	\hline
-	\tekla{Beheranzko gezia}	 &  Mugitu -Y & Biratu -X & Handitu Y	\\	\hline
-	\tekla{Ezkerreranzko gezia}&  Mugitu +X & Biratu +Y & Txikitu X	\\	\hline
-	\tekla{Eskuineranzko gezia}&  Mugitu -X & Biratu -Y & Handitu X	\\	\hline
-	\tekla{REPAG}				 &  Mugitu +Z & Biratu +Z & Txikitu Z	\\	\hline
-	\tekla{AVPAG}				 &  Mugitu -Z & Biratu -Z & Handitu Z	\\	\hline
-\end{tabular}
-
-\vspace{0.3cm}
-2. Taula: Tekla berezien taula
+\textbf{1. irudia}: kamera datu-egitura
 \end{center}
 
 
-Beraz, automata honela geratuko litzaiguke:
+Egiturako kideen azalpenak:
+
+\begin{itemize}
+\item \aldagai{kamera\_mota}: kamera ortografikoa, perspektibazkoa edo ibiltaria den adierazten du (ikus \erref{def_kam} atala)
+\item \aldagai{fov}: Field Of View\cite{fov}, \erref{per_proj} atalean azaldua.
+\item \aldagai{per\_transf\_pila}: perspektibazko kamera transformatzeko erabiltzen den aldaketa-pila, \erref{kam_sim} atalean azaldua.
+\item \aldagai{ibil\_transf\_pila}: kamera ibiltaria transformatzeko erabiltzen den aldaketa-pila, \erref{kam_sim} atalean azaldua.
+\item \aldagai{tortikolis}: kamera ibiltariak plano horizontalarekiko daukan angeluarekiko proportzionala den balio bat. Bertikalki bira daitekeen eremua mugatzeko balio du.
+\end{itemize}
+
+\textbf{Oharra}: pila hauek objektuek erabiltzen dutenaren bera dira.\\
+
+Kamerarekin zerikusia duten metodo edo egitura guztiak \fitxategi{kamera.c} eta \fitxategi{kamera.h} fitxategietan daude.
+Bestalde, \textbf{\_k} aldagaia \fitxategi{main.c} fitxategian definitzen eta hasieratzen da aldagai global bezala, kamera bakar bat erabiltzen duelako aplikazioak oraingoz.
+
+
+\subsection{Perspektibazko proiekzioa}\label{per_proj}
+Orain arte \fitxategi{display.c} fitxategiko \metodo{display()} metodoan, \metodo{glOrtho()} metodoa erabiltzen genuen proiekzio ortografikoa lortzeko. Hala ere, orain txertatutako beste bi kamera motek ez dute proiekzio bera erabiltzen, perspektibazkoa baizik. Beraz, proiekzio mota kamera motaren menpe geratuko da eta kamera ortografikoaz beste, \metodo{gluPerspective()}\cite{glu_perspective} izaneko metodoa erabiliko dugu proiekzio mota berria lortzeko.\\
+Hona hemen pausu hau azaltzeko sasikodea:
 
 \begin{center}
-\includegraphics[scale=0.6]{egoeradiagrama.png}\\
-\vspace{0.3cm}
-1. Irudia: Egoera-diagrama
+\includegraphics[scale=1]{kamera_projection.png}
+
+\textbf{2. irudia}: Proiekzioa burutzeko sasikodea
 \end{center}
 
-
-Transformazio-mota eta erreferentzia-sistema aldagai globalak \fitxategi{main.c}-n daude definituta eta hasieratuta translazio lokala burutzeko. Gainontzeko fitxategiek extern moduan erabili behar dituzte. Aldagai hauek hartu ditzaketen balioak \fitxategi{definizioak.h}-n daude definituta horrela:
+Metodo berri honek lau argumentu hartzen ditu: \textit{FOV}, leihoaren aspektuaren erlazioa (aspect ratio)\cite{aspect_ratio} eta \textit{near} eta \textit{far} Z-planoak\cite{near_far}. Lau argumentuek \textit{frustum}\cite{frustum} izeneko bistaratze-eremua mugatuko dute. Irudi honek erakusten du \textit{frustum}-a nola mugatzen duten parametroek:
 
 \begin{center}
-	\begin{lstlisting}[language=C, basicstyle=\footnotesize]
-	#define TRANSLAZIOA                          0
-	#define BIRAKETA                             1
-	#define ESKALAKETA                           2
-	
-	#define LOKALA                               0
-	#define GLOBALA                              1
-	\end{lstlisting}
+\includegraphics[scale=0.8]{kamera_frustum.jpg}
+
+\textbf{3. irudia}: Kameraren \textit{frustum}-a
 \end{center}
 
+AZALDU PARAMETROAK\\
 
-Orain, dena teorikoki definituta badaukagula, tekla bakoitza sakatzerakoan exekutatu behar den kodea bete behar da \fitxategi{io.c} fitxategian. 1. taulan jasotako teklek bakarrik esleitzen diote dagokion aldagaiari dagokion balioa, adibidez \tekla{m} teklaren kasuan:
+\textit{near} eta \textit{far} planoaren balioak eta \textit{FOV}-aren hasierako balioa, minimoa eta maximoa \fitxategi{definitions.h} fitxategian definituta daude, lehenengo biak konstateak izanik (ikus \erref{def_kam} atala). \textit{FOV}-a kontrolatzeko kameraren egiturako \aldagai{fov} kidea erabiltzen da. Aldagai honek kamerak zenbat ikus dezakeen kontrolatzen duenez, zoom egitea ahalbidetzen digu kamera ortografikoaren moduan (\tekla{CTRL +} eta \tekla{CTRL -} teklen konbinaketekin). Azkenik, aspektuaren erlazioa \fitxategi{display.c} fitxategiko \metodo{reshape()} metodoak kontrolatzen du, leihoaren dimentsioak aldatzea posible baita. Balioa \aldagai{\_window\_ratio} aldagai globalean gordetzen da.
+
+
+\subsection{Kameraren efektua}\label{kam_sim}
+
+Transformazioak objektuei aplikatzen zaizkie. Kontraesana dirudien arren, izatez kameraren kontzeptua ez da existitzen ordenagailu bidezko grafikoetan. Kamera ezkerretara mugitzea simulatu nahi izanez gero, mundu guztia eskuinetarantz mugitu beharko da proportzio berean, ilusio hori lortzeko. Hau esanda, ondoriozta daiteke kamera simulatzeko objektu guztien transformazioa kargatu baino lehen kamerarena kargatu beharko dela.
 
 \begin{center}
-	\begin{lstlisting}[language=C, basicstyle=\footnotesize]
-	case 'm':
-	case 'M':
-		transformazio_mota = TRANSLAZIOA;
-		break;
-	\end{lstlisting}
+\includegraphics[scale=1]{kamera_transform.png}
+
+\textbf{4. irudia}: kameraren transformazioaren aplikazioa
 \end{center}
 
+\textbf{Oharra}: Objektuak marrazteko begiztaren amaieran, identitate matrizea kargatu ostean, berriro aplikatu behar da kameraren transformazioa.\\
 
-2. taulako teklak inplementatzeko funtzio berri bat definitu behar dugu, orain arte erabilitakoak bakarrik ASCII karaktereak erregistratzen baititu (a-tik z-rako karaktereak CTRL-ekin sakatuz gero ere detektatzen ditu tekla desberdin moduan).
-Funtzio berri horri specialKeyboard() deitu diogu eta glutSpecialFunc()\cite{glutSpecialFunc} funtzioaren callback funtzioa\cite{callback} izango da.
+Kameraren transformazioa burutzeko \metodo{gluLookAt()}\cite{glu_lookat} metodoa erabiltzen dugu. Funtzio honek kameraren posizioa, begira dagoen puntuaren posizioa eta goranzko norabidea adierazten duen bektorea emanik, uneko matrizea (gure kasuan MODELVIEW) aldatzen du kameraren transformazioa simulatzeko. Datu hauek lortzeko, hasierako \aldagai{eye}, \aldagai{look} eta \aldagai{up} balioak (\metodo{gluLookAt()} funtzioaren parametroak hurrenez hurren) finkatuko ditugu, eta horien aldaketak ahalbidetzeko transformazio-matrizeen pila bat erabiliko dugu, non hasierako aldagaiak transformazioarekin biderkatuta, kameraren uneko posizioa eta errotazioa kalkulatu ahalko dugun. HOBETO ESPLIKE BIKO DA IGUAL. ZUZENDU UP EZ IZETIE POINT3, VECTOR3 BAIO!
 
 \begin{center}
-	\begin{lstlisting}[language=C, basicstyle=\footnotesize]
-	glutSpecialFunc(special_keyboard);
-	\end{lstlisting}
+\includegraphics[scale=0.8]{kamera_lookat.png}
+
+\textbf{5. irudia}: \metodo{gluLookAt()}-en erabilpena
 \end{center}
 
-specialKeyboard() funtzioak tekla arruntekin bezala funtzionatuko luke teklaren kodea karaktere batekin konparagarria izango baliteke. Arrazio hau dela-eta \fitxategi{definizioak.h}-n definitu ditugu tekla berezi horien balioak, horrela txukunago geratzen baita kodea.
+\begin{center}
+\includegraphics[scale=1]{kamera_hasierako_balioak.png}
+
+\textbf{6. irudia}: hasierako balioak
+\end{center}
+
+Kalkuluak egiteko erabilitako bi biderketen metodoak \erref{transformazioak} atalean daude azalduta.
 
 
+\subsection{Perspektibazko kamera}
+
+Kamera hau libreki mugi eta bira daiteke espazioan, oso erabilgarria izanik ingurunea ikuspuntu askotatik aztertu ahal izateko. Adibidez, Blender\cite{blender} eta itxura horretako aplikazioek aukera hau eskaintzen dute.
+
+\subsubsection{Transformazioak}
+
+Kamerak translatzeko eta biratzeko aukera du, eskalatzea eta zizailatzeak zentzurik ez baitaukate. Bi aldaketa hauek lokalean zein globalean egin daitezke.\\
+
+OINARTE EINDDOT, HAMENDIK BERA GEHIXEN BAT ZE AZALDU DINOEN NOTATXUEK DIE:\\
+
+mobidu, lokal zein global, azaldu bixek
+
+gireu global origenan ingeruen edo lokal kamarie geldi ta giretan.
+
+beste transformak ezteke zentzurik
+
+\subsubsection{Aldaketak desegitea eta berregitea}
+
+Objetuen moduen aldaketa pila bat deko
+
+\subsection{Kamera ibiltaria}
+
+Pertsona bat simuletan daben kamarie. Lurrera inketa dau.
+
+\subsubsection{Transformazioak}
+
+Diferentie, ezta mobitzen ta rotetan ardatz danatak ta global ta lokalien.
+
+Bakarrik eurrea ta atzea mobidulei. Mobidu ezker-eskuma ta gora-bera baia hau azkena limiteta dau.
+
+Zelan lortzen da lurrera inketa egotie? Ba ezker-eskumagaz eztau arazorik, baia gora-bera beittutetakoan ta mobitzerakoan, kalkuletan da ze alturan geratuko zna ta transform global bat eitten da Y ardatzien kontrara kontrarrestetako ta lurrien inketa geatzeko.
+
+\subsubsection{Aldaketak desegitea eta berregitea}
+
+Perspektibako kamarien moduen bere pila independientie deko.
 
 
-\subsection{Transformazioen desegitea}
+\section{transformazioak.c}\label{transformazioak}
 
-Aldaketak desegiteko \fitxategi{definizioak.h}-n object3d estrukturari atributu bat gehitu diogu: transformazio-pila. Pilari esker, aldaketak desegiteko funtzionalitatea errez egingo da.
-Pilaren erazagupena eta inplementazioa \fitxategi{pila.h} eta \fitxategi{pila.c} fitxategietan egin da.\\\\
-Beraz, aldaketak sartu ahala, pilari push() egingo diogu matrize berriekin. Edozein momentuan aldaketaren bat desegin nahi badugu, \tekla{CTRL+Z} sakatuz aurreko aldaketara pasatuko gara, eta hala egin dezakegu hasierako objektura heldu edo aldaketa berri bat egin arte.
-
-\section{Aldaketak}
-
-Aurreko faseko feedback-ean jaso bezala, orain sareta erreferentzia bezala erabiltzeko balio du. Aurreko fasean objektu bezala ageri zen pantailaren lehenengo koadrantean, orain aldiz, viewport\cite{viewport} osoa 10 zati uniformeetan banatzen du eta kameraren transformatua baino lehen marrazten denez, berdin dio kameraren posizioak edota zoom-ak.\\
-Sareta aktibatzeko teklen konbinazioa orain \tekla{CTRL+S} da.
+oin klase batera mobidugu transformazinoakaz relacioneta dauena. bebai matriziek matriziekaz, puntoakaz ta bektorakaz biderkatzeko metodoak.
 
 
-\section{Gehikuntzak}
+\section{Konstante berriak}
 
-\subsection{Aldaketak berregiteko aukera}
+\subsection{Kamera}\label{def_kam}
 
-\tekla{CTRL+SHIFT+Z} konbinaketa sakatzerakoan azken transformaziotik aurrera desegindako aldaketak berregin ditzake objektuak. Kontuan hartu transformazio bat desegiterakoan beste bat egiten bada, desegite hori galduko dela.\\
-Pila inplementatuta daukagun erak erraz ahalbidetu digu aldaketak berregitea. Bakarrik aurreratu behar dugu posizio bat matrizeen zerrenda estekatuan, egin ahal izanez gero.\\
+ortografikoa, ...
 
-Arazo posible bakarra memoriaren kutsadura da. Lehen esan bezala, desegite baten ostean transformazio berri bat eginez gero, aurretik pilaren gainean egon diren transformazioak galtzen dira. Hala ere ez dira memoriatik kentzen, beraz, memoria erabilezinaren parte osatzen dute, memoria kutsatuz. Oraingoz ez da arazo bat transformazioek memoria gutxi okupatzen baitute eta gure programak ez baitu memoriaren eskaera handirik burutu behar. Hala ere, etorkizunean arazoa izan liteke eta kontutan hartu beharko genukeen arazo bat da.
+aldaketak ia objetoari ala kamarieri
 
+hasierako fov, near ta far planoak
 
-\subsection{Zizailaketa}
-
-\tekla{S} tekla sakatuz gero objektuaren zizailaketa aktibatzen da. Zizailaketa \ref{transformazioak} atalean espezifikatu diren beste transformazioen bezala inplementatu dugu.\\
-
-3 dimentsiotako ardatz baten zizailaketan beste bi ardatzek eragin ahal duten arren, gure programan \textbf{x} ardatza \textbf{y}rekin haziko da, \textbf{y} \textbf{z}rekin eta \textbf{z} \textbf{y}rekin. Transformazio hau arrazo irudi dakioke erabiltzaileari, oraingoz kamera otrografikoa erabiltzen baitu programak.\\
-
-
-\subsection{Objektuaren transformazio-matrizearen pantailaraketa}
-
-Orain arte, \tekla{I} tekla sakatzean, objektuaren fitxategiaren izena , erpin-kopurua eta aurpegi-kopurura pantailaratzen zen. Fase honetan, informazio horrekin batera, tekla sakatzeko momentuan, hautatutako objektuak daukan transformazio-matrizea ere pantailaratzen da.\\
-
+...
 
 \bibliographystyle{abbrv}
 \bibliography{main}
@@ -184,13 +195,7 @@ Orain arte, \tekla{I} tekla sakatzean, objektuaren fitxategiaren izena , erpin-k
 \underline{glutSpecialFunc()}:\\
 \url{https://www.opengl.org/resources/libraries/glut/spec3/node54.html}
 
-\bibitem{callback} 
-\underline{callback funtzioa}:\\
-\url{https://en.wikipedia.org/wiki/Callback_%28computer_programming%29}
-
-\bibitem{viewport} 
-\underline{viewport}:\\
-\url{https://en.wikipedia.org/wiki/Viewport}
+% KENDU HAU (ARINAUKO REFERNTZIXE) TA SARTU BARRIXEK MODU COPYPASTE EITTEN
 
 \end{thebibliography}
 
