@@ -23,7 +23,7 @@
  }
 
 
-\title{KbG proiektua: 2. fasea}
+\title{KbG proiektua: 3. fasea}
 \author{
         Oier Irazabal\\
         Jesus Calleja
@@ -67,7 +67,7 @@ Alde batetik, zein kamera motarekin ari garen hartu behar da kontutan, bestetik 
 Egiturako kideen azalpenak:
 
 \begin{itemize}
-\item \aldagai{kamera\_mota}: kamera ortografikoa, perspektibazkoa edo ibiltaria den adierazten du (ikus \erref{def_kam} atala)
+\item \aldagai{kamera\_mota}: kamera ortografikoa, perspektibazkoa edo ibiltaria den adierazten du (ikus \erref{constants} atala)
 \item \aldagai{fov}: Field Of View\cite{fov}, \erref{per_proj} atalean azaldua.
 \item \aldagai{per\_transf\_pila}: perspektibazko kamera transformatzeko erabiltzen den aldaketa-pila, \erref{kam_sim} atalean azaldua.
 \item \aldagai{ibil\_transf\_pila}: kamera ibiltaria transformatzeko erabiltzen den aldaketa-pila, \erref{kam_sim} atalean azaldua.
@@ -100,7 +100,7 @@ Metodo berri honek lau argumentu hartzen ditu: \textit{FOV}, leihoaren aspektuar
 
 AZALDU PARAMETROAK\\
 
-\textit{near} eta \textit{far} planoaren balioak eta \textit{FOV}-aren hasierako balioa, minimoa eta maximoa \fitxategi{definitions.h} fitxategian definituta daude, lehenengo biak konstateak izanik (ikus \erref{def_kam} atala). \textit{FOV}-a kontrolatzeko kameraren egiturako \aldagai{fov} kidea erabiltzen da. Aldagai honek kamerak zenbat ikus dezakeen kontrolatzen duenez, zoom egitea ahalbidetzen digu kamera ortografikoaren moduan (\tekla{CTRL +} eta \tekla{CTRL -} teklen konbinaketekin). Azkenik, aspektuaren erlazioa \fitxategi{display.c} fitxategiko \metodo{reshape()} metodoak kontrolatzen du, leihoaren dimentsioak aldatzea posible baita. Balioa \aldagai{\_window\_ratio} aldagai globalean gordetzen da.
+\textit{near} eta \textit{far} planoaren balioak eta \textit{FOV}-aren hasierako balioa, minimoa eta maximoa \fitxategi{definitions.h} fitxategian definituta daude, lehenengo biak konstateak izanik (ikus \erref{constants} atala). \textit{FOV}-a kontrolatzeko kameraren egiturako \aldagai{fov} kidea erabiltzen da. Aldagai honek kamerak zenbat ikus dezakeen kontrolatzen duenez, zoom egitea ahalbidetzen digu kamera ortografikoaren moduan (\tekla{CTRL +} eta \tekla{CTRL -} teklen konbinaketekin). Azkenik, aspektuaren erlazioa \fitxategi{display.c} fitxategiko \metodo{reshape()} metodoak kontrolatzen du, leihoaren dimentsioak aldatzea posible baita. Balioa \aldagai{\_window\_ratio} aldagai globalean gordetzen da.
 
 
 \subsection{Kameraren efektua}\label{kam_sim}
@@ -129,7 +129,7 @@ Kameraren transformazioa burutzeko \metodo{gluLookAt()}\cite{glu_lookat} metodoa
 \textbf{6. irudia}: hasierako balioak
 \end{center}
 
-Kalkuluak egiteko erabilitako bi biderketen metodoak \erref{transformazioak} atalean daude azalduta.
+Kalkuluak egiteko erabilitako bi biderketen metodoak \erref{transformazioak}. atalean daude azalduta.
 
 
 \subsection{Perspektibazko kamera}
@@ -138,7 +138,7 @@ Kamera hau libreki mugi eta bira daiteke espazioan, oso erabilgarria izanik ingu
 
 \subsubsection{Transformazioak}
 
-Kamerak translatzeko eta biratzeko aukera du, eskalatzea eta zizailatzeak zentzurik ez baitaukate. Bi aldaketa hauek lokalean zein globalean egin daitezke.\\
+Kamerak translatzeko eta biratzeko aukera du, eskalatzea eta zizailatzeak zentzurik ez baitaukate. Bi aldaketa hauek lokalean zein globalean egin daitezke. Mugimendua globala denean, munduko X, Y eta Z ardatzetan emango da translazioa, lokalean aldiz, uneko begiradaren norabidearen araberakoa izango da. Biraketa globala denean, kamerak jatorriaren inguruan biratuko du hautatutako ardatzean, lokalean aldiz, kamera geldi geratuko da, begiradaren norabidea aldatuz.\\
 
 OINARTE EINDDOT, HAMENDIK BERA GEHIXEN BAT ZE AZALDU DINOEN NOTATXUEK DIE:\\
 
@@ -147,10 +147,6 @@ mobidu, lokal zein global, azaldu bixek
 gireu global origenan ingeruen edo lokal kamarie geldi ta giretan.
 
 beste transformak ezteke zentzurik
-
-\subsubsection{Aldaketak desegitea eta berregitea}
-
-Objetuen moduen aldaketa pila bat deko
 
 \subsection{Kamera ibiltaria}
 
@@ -164,9 +160,54 @@ Bakarrik eurrea ta atzea mobidulei. Mobidu ezker-eskuma ta gora-bera baia hau az
 
 Zelan lortzen da lurrera inketa egotie? Ba ezker-eskumagaz eztau arazorik, baia gora-bera beittutetakoan ta mobitzerakoan, kalkuletan da ze alturan geratuko zna ta transform global bat eitten da Y ardatzien kontrara kontrarrestetako ta lurrien inketa geatzeko.
 
-\subsubsection{Aldaketak desegitea eta berregitea}
+\subsection{Aldaketak desegitea eta berregitea}
 
-Perspektibako kamarien moduen bere pila independientie deko.
+INTRODUCIDU ALDAKETAK EITTIE ZER DAN, PILA BAT ZEAITTIK ETAB... BAIA EZ ESAN ZELAN DAUEN INPLEMENTETA
+
+Objektuekin bezala, kamerari aplikatutako transformazioak desegitea eta berregitea badago, pila mota berdinak baitira. Kamera mota bakoitza bata-bestearekiko independentea izatea nahi dugunez, perspektibazko kamerarentzako pila bat eta ibiltariarentzako beste bat sortuko ditugu (ikus 1. irudia). Demagun perspektibazko kamerari edozein hiru transformazio lokal aplikatzen dioguzela, orduan pilaren egoera hurrengoa izango zen:\\
+transformazioen ordena lehenik \textbf{M1}, gero \textbf{M2} eta azkenik \textbf{M3} izanik eta \textbf{I} identitate matrizea,
+
+\begin{center}
+\begin{tabular}{r|r|r}
+ \cline{2-2}
+ $top \rightarrow$ & $\textbf{M3} \cdot \textbf{M2} \cdot \textbf{M1}$ & \\
+ \cline{2-2}
+ & $\textbf{M2} \cdot \textbf{M1}$ & \\
+ \cline{2-2}
+ & $\textbf{M1}$ & \hspace{0.5cm} ($\textbf{M1} \cdot \textbf{I} = \textbf{M1}$) \\
+ \cline{2-2}
+ & $\textbf{I}$ & \\
+ \cline{2-2}
+\end{tabular}
+
+\textbf{1. diagrama}: Pilaren erabilpena.
+\end{center}
+
+Pilaren erabilera lau ekintzetan banatzen da:
+
+\begin{itemize}
+\item \textbf{Pila sortzea}. Identitate matrizea gordetzen duen pila bat itzultzen du \metodo{pila\_sortu()} metodoa erabiliz.
+
+\item \textbf{Pilaratzea}. Matrize berri bat pilaratzen du. Orokorrean matrize hau aurreko matrizearen transformazio bat izango da, \metodo{peek()} (pilaren gaineko matrizea lortzeko) eta \metodo{push} (matrizea pilaratzeko) konbinatuz.
+
+\item \textbf{Aldaketak desegitea}. Metodo honek azkenengo matrizea apuntatzen duen \textit{pointer}-a\cite{pointer} aurreko matrizera mugitzen du azkenengo posizioko elementua ezabatu gabe, azken aurreko aldaketa erakutsiz. Ekintza hau \metodo{pop()} metodoak burutzen du.
+
+\item \textbf{Aldaketak berregitea}. Aurreko ekintzaren kontrakoa da, \textit{pointer}-a elementu bat aurrerago eramanez, \metodo{depop()} metodoak burutzen duena. 
+\end{itemize}
+
+Funtsean, pila bi zentzutara lotutako lista estekatu bat da. Datu egitura honek bi propietate garrantzitsu ematen dizkigu: pila nahi beste hazi ahal izatea (memoriarik gabe geratu arte) eta bi noranzko nabigagarritasuna, pilaren azken elementua bi aldeetara mugitzea ahalbidetzen duena (\metodo{pop()} eta \metodo{depop()}).\\
+Hona hemen datu-egituraren diagrama bat:
+
+\begin{center}
+
+\fbox{\textbf{I}} $\leftrightarrow$ \fbox{\textbf{M1}} $\leftrightarrow$ \fbox{\textbf{M2} $\cdot$ \textbf{M1}} $\leftrightarrow$ \fbox{\textbf{M3} $\cdot$ \textbf{M2} $\cdot$ \textbf{M1}}
+
+\hspace{5.5cm} $\uparrow$
+
+\hspace{5.5cm} top
+
+\textbf{2. diagrama}: Pilaren elementuen arteko lotura.
+\end{center}
 
 
 \section{transformazioak.c}\label{transformazioak}
@@ -174,15 +215,17 @@ Perspektibako kamarien moduen bere pila independientie deko.
 oin klase batera mobidugu transformazinoakaz relacioneta dauena. bebai matriziek matriziekaz, puntoakaz ta bektorakaz biderkatzeko metodoak.
 
 
-\section{Konstante berriak}
+\section{Konstante berriak}\label{constants}
 
-\subsection{Kamera}\label{def_kam}
+Sartuniko konstantiek kamarientzako die bakarrik.
 
 ortografikoa, ...
 
 aldaketak ia objetoari ala kamarieri
 
 hasierako fov, near ta far planoak
+
+kamara motie
 
 ...
 
