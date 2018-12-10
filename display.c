@@ -97,23 +97,12 @@ void display(void) {
     object3d *aux_obj = _first_object;
 
 
-
     /* Define the projection */
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
     /* Clear the screen */
     glClear(GL_COLOR_BUFFER_BIT);
-
-    glRasterPos2f(0, 0);
-    //get the length of the string to display
-    int len = 8;
-
-    //loop to display character by character
-    for (int i = 0; i < len; i++)
-    {
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, "Txus feo"[i]);
-    }
     
 
     if (_k->kamera_mota == KG_ORTOGRAFIKOA){
@@ -143,11 +132,10 @@ void display(void) {
     glLoadIdentity();
     aplikatu_kameraren_transformazioa(_k);
     
-    /* Puntuak kameraren transformazioarekin biderkatu baino lehen, marraztu sareta */
-    draw_sareta();
 
-    /*First, we draw the axes*/
+    /*Ardatzak eta sareta marraztu*/
     draw_axes();
+    draw_sareta();
 
     /*Now each of the objects in the list*/
     while (aux_obj != 0) {

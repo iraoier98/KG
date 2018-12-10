@@ -72,8 +72,8 @@
 #define KG_ESKALAKETA                       2
 #define KG_ZIZAILAKETA                      3
 
-#define KG_LOKALA                           0
-#define KG_GLOBALA                          1
+#define KG_TRANSFORMAZIO_LOKALA             0
+#define KG_TRANSFORMAZIO_GLOBALA            1
 
 #define KG_TRANSFORMATU_OBJEKTUA            0
 #define KG_TRANSFORMATU_KAMERA              1

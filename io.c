@@ -1,12 +1,12 @@
 #include "definitions.h"
 #include "kamera.h"
-#include "transformazioak.h"
+#include "matematikak.h"
 #include "load_obj.h"
 
 #include <GL/glut.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
+
 
 /* Tekla batzuen int kodeak */
 #define KG_KEY_GORA                         101
@@ -29,17 +29,14 @@ extern GLdouble _ortho_x_min,_ortho_x_max;
 extern GLdouble _ortho_y_min,_ortho_y_max;
 extern GLdouble _ortho_z_min,_ortho_z_max;
 
-extern int _transformazio_mota;
-extern int _erreferentzia_sistema;
-extern int _transformazio_targeta;
+int _transformazio_mota;
+int _erreferentzia_sistema;
+int _zer_transformatu;
 
 extern kamera* _k;
 
 /* transformazioentzako matrizearen erazagupena */
 GLdouble* m = NULL;
-
-/* matrix matrizea pantailaratzen du iraulita*/
-void printMatrix(GLdouble* matrix);
 
 /* obj objektua tranformatzen du emandako matrizearekin */
 void transformatu_objektua(object3d* obj, GLdouble* transformazio_matrizea);
@@ -136,13 +133,13 @@ void keyboard(unsigned char key, int x, int y) {
 
     case 'g':
     case 'G':
-        _erreferentzia_sistema = KG_GLOBALA;
+        _erreferentzia_sistema = KG_TRANSFORMAZIO_GLOBALA;
         printf("Aldaketa globalak aktibatuta\n");
         break;
 
     case 'l':
     case 'L':
-        _erreferentzia_sistema = KG_LOKALA;
+        _erreferentzia_sistema = KG_TRANSFORMAZIO_LOKALA;
         printf("Aldaketa lokalak aktibatuta\n");
         break;
 
@@ -150,14 +147,14 @@ void keyboard(unsigned char key, int x, int y) {
     case 'o':
     case 'O':
         printf("Aldaketak objektuei aplikatuko zaizkie\n");
-        _transformazio_targeta = KG_TRANSFORMATU_OBJEKTUA;
+        _zer_transformatu = KG_TRANSFORMATU_OBJEKTUA;
         break;
 
 
     case 'k':
     case 'K':
         printf("Aldaketak kamerari aplikatuko zaizkio\n");
-        _transformazio_targeta = KG_TRANSFORMATU_KAMERA;
+        _zer_transformatu = KG_TRANSFORMATU_KAMERA;
         break;
 
 
@@ -169,7 +166,7 @@ void keyboard(unsigned char key, int x, int y) {
 
     case KG_KEY_CTRL_Z:
 
-        if (_transformazio_targeta == KG_TRANSFORMATU_KAMERA){
+        if (_zer_transformatu == KG_TRANSFORMATU_KAMERA){
             if (glutGetModifiers() & GLUT_ACTIVE_SHIFT){
                 /* Transformazioak berregin */
                 berregin_transformazioa(_k);
@@ -422,7 +419,7 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
             return;
     }
 
-    if (_transformazio_targeta == KG_TRANSFORMATU_OBJEKTUA){
+    if (_zer_transformatu == KG_TRANSFORMATU_OBJEKTUA){
         switch (_transformazio_mota){
             case KG_TRANSLAZIOA:
                 m = translation_matrix(x, y, z);
@@ -470,12 +467,4 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
     /*In case we have do any modification affecting the displaying of the object, we redraw them*/
     glutPostRedisplay();
 
-}
-
-void printMatrix(GLdouble* matrix){
-    int c, d;
-    for (c = 0; c < 4; c++) {
-        printf("%f %f %f %f\n", matrix[c], matrix[c+4], matrix[c+8], matrix[c+12]);
-    }
-    printf("\n");
 }

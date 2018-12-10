@@ -24,16 +24,19 @@ typedef struct kamera{
 /* Pila berri bat sortzeko funtzioa, identitate matrizea sartuko du pilan. */
 kamera* kamera_sortu(int mota);
 
-/* Kamera mota aldatzeko. */
+/* Kamera mota aldatzen du. */
 void kamera_mota_aldatu(kamera* k);
 
-/* Kameraren koordenatuak zehazteko. */
+/* Kameraren transformatua aplikatzen zaio "bindetatutako" matrizeari (MODELVIEW). */
 void aplikatu_kameraren_transformazioa(kamera* k);
 
+/* Erreferentzia-sistema, transformazio mota eta aldaketaren (x, y, z) balioak emanda, kamera transformatzen du */
 void kamera_transformatu(kamera* k, int transformazio_mota, int erreferentzia_sistema, double x, double y, double z);
 
+/* Uneko transformazioa desediten du. */
 void desegin_transformazioa(kamera* k);
 
+/* Desegindako transformazioak egonez gero, bat berregiten du */
 void berregin_transformazioa(kamera* k);
 
 

@@ -1,16 +1,31 @@
-#include "transformazioak.h"
+#include "matematikak.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 
-#include <stdio.h>
-void printMatrixxx(GLdouble* matrix){
-    int c, d;
-    for (c = 0; c < 4; c++) {
-        printf("%f %f %f %f\n", matrix[c], matrix[c+4], matrix[c+8], matrix[c+12]);
+
+/* ESKALARRAK */
+
+double zeinua(double x){
+    if (x > 0){
+        return 1;
     }
-    printf("\n");
+    else if (x == 0){
+        return 0;
+    }
+    else {
+        return -1;
+    }
 }
+
+
+/* BEKTOREAK */
+
+
+
+/* MATRIZEAK */
+
 
 GLdouble* identity(){
     GLdouble* m = (GLdouble*) malloc(16 * sizeof(GLdouble));
@@ -54,67 +69,12 @@ GLdouble* rotation_matrix(double x, double y, double z){
     return m1;
 }
 
-// GLdouble* rotation_matrix(double factor){
-// 	return rotation_matrix(factor, factor, factor);
-// }
-
-
 GLdouble* scale_matrix(double x, double y, double z){
     GLdouble* m = identity();
     m[0] = x;
     m[5] = y;
     m[10] = z;
     return m;
-}
-
-// GLdouble* scale_matrix(double factor){
-// 	return scale_matrix(factor, factor, factor);
-// }
-
-
-
-void translate(point3* p, double x, double y, double z){
-	GLdouble* mat = translation_matrix(x, y, z);
-	point3 translated = matrix_dot_point(mat, *p);
-	p->x = translated.x;
-	p->y = translated.y;
-	p->z = translated.z;
-}
-
-void rotate(point3* p, double x, double y, double z){
-	GLdouble* mat = rotation_matrix(x, y, z);
-	point3 rotated = matrix_dot_point(mat, *p);
-	p->x = rotated.x;
-	p->y = rotated.y;
-	p->z = rotated.z;
-}
-
-// void rotate(point3* p, double factor){
-// 	rotate(p, factor, factor, factor);
-// }
-
-void scale(point3* p, double x, double y, double z){
-	GLdouble* mat = scale_matrix(x, y, z);
-	point3 scaled = matrix_dot_point(mat, *p);
-	p->x = scaled.x;
-	p->y = scaled.y;
-	p->z = scaled.z;
-}
-
-// void scale(point3* p, double factor){
-// 	scale(p, factor, factor, factor);
-// }
-
-
-void transform_object(object3d* obj, GLdouble* transf, int erreferentzia_sistema){
-    GLdouble* aurreko_transformazioa = peek(obj->transformazio_pila);
-    GLdouble* transformatua;
-    if (erreferentzia_sistema == KG_LOKALA){
-        transformatua = matrix_dot_matrix(transf, aurreko_transformazioa);
-    }else{
-        transformatua = matrix_dot_matrix(aurreko_transformazioa, transf);
-    }
-    push(obj->transformazio_pila, transformatua);
 }
 
 
@@ -126,8 +86,8 @@ point3 matrix_dot_point(GLdouble* mat, point3 vec){
     return result;
 }
 
-point3 matrix_dot_vector(GLdouble* mat, vector3 vec){
-    point3 result;
+vector3 matrix_dot_vector(GLdouble* mat, vector3 vec){
+    vector3 result;
     result.x = vec.x * mat[0] + vec.y * mat[4] + vec.z * mat[8];
     result.y = vec.x * mat[1] + vec.y * mat[5] + vec.z * mat[9];
     result.z = vec.x * mat[2] + vec.y * mat[6] + vec.z * mat[10];
@@ -150,3 +110,28 @@ GLdouble* matrix_dot_matrix(GLdouble* mat1, GLdouble* mat2){
     }
     return result;
 }
+
+
+void printMatrix(GLdouble* matrix){
+    int c, d;
+    for (c = 0; c < 4; c++) {
+        printf("%f %f %f %f\n", matrix[c], matrix[c+4], matrix[c+8], matrix[c+12]);
+    }
+    printf("\n");
+}
+
+
+
+/* BESTETARIKOAK */
+
+void transform_object(object3d* obj, GLdouble* transf, int erreferentzia_sistema){
+    GLdouble* aurreko_transformazioa = peek(obj->transformazio_pila);
+    GLdouble* transformatua;
+    if (erreferentzia_sistema == KG_TRANSFORMAZIO_LOKALA){
+        transformatua = matrix_dot_matrix(transf, aurreko_transformazioa);
+    }else{
+        transformatua = matrix_dot_matrix(aurreko_transformazioa, transf);
+    }
+    push(obj->transformazio_pila, transformatua);
+}
+
