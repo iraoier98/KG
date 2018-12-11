@@ -50,7 +50,7 @@
 
 \section{Kamera}
 
-Fase honetan lortutako inplementazioa bi kamera motaren txertaketa izan da. Orain arte ingurunearen ikuspegi finko eta ez-fidela genuen. Proiekzioa ortografikoa zen; hau da, argi-izpiak Z ardatzarekiko paraleloak ziren, sakoneraren nozioa galduz. Gainera, kamera jatorrian geldi zegoen, objektuak izanik mugitu ZIRENTEKETEN bakarrak.\\
+Fase honetan lortutako inplementazioa bi kamera motaren txertaketa izan da. Orain arte ingurunearen ikuspegi finko eta ez-fidela genuen. Proiekzioa ortografikoa zen; hau da, argi-izpiak Z ardatzarekiko paraleloak ziren, sakoneraren nozioa galduz. Gainera, kamera jatorrian geldi zegoen, objektuak izanik mugitu daitezken bakarrak.\\
 
 Orain, bi kamera mota berri aukera daitezke: libreki mugi daitekeen perspektibazkoa, eta ibiltaria. \tekla{C} tekla sakatuz gero, kamera-motaz aldatzen da. Kamera hautatzeko gai izateaz gain, kamera transformatu ahal izateko, \tekla{K} tekla sakatzea dago, aukeratutako transformazioa kamerari aplikatzeko eta ez objektuari. Aitzitik, objektuak transformatzeko berriz, \tekla{O} tekla sakatu behar da.\\
 
@@ -63,6 +63,8 @@ Alde batetik, zein kamera motarekin ari garen hartu behar da kontutan, bestetik 
 \textbf{1. irudia}: kamera datu-egitura
 \end{center}
 
+ALDATU IRUDIXE
+
 
 Egiturako kideen azalpenak:
 
@@ -71,10 +73,10 @@ Egiturako kideen azalpenak:
 \item \aldagai{fov}: Field Of View\cite{fov}, \erref{per_proj} atalean azaldua.
 \item \aldagai{per\_transf\_pila}: perspektibazko kamera transformatzeko erabiltzen den aldaketa-pila, \erref{kam_sim} atalean azaldua.
 \item \aldagai{ibil\_transf\_pila}: kamera ibiltaria transformatzeko erabiltzen den aldaketa-pila, \erref{kam_sim} atalean azaldua.
-\item \aldagai{tortikolis}: kamera ibiltariak plano horizontalarekiko daukan angeluarekiko proportzionala den balio bat. Bertikalki bira daitekeen eremua mugatzeko balio du.
+\item \aldagai{ibil\_gorabehera}: kamera ibiltariak plano horizontalarekiko daukan angeluarekiko proportzionala den balio bat. Bertikalki bira daitekeen eremua mugatzeko balio du.
 \end{itemize}
 
-\textbf{Oharra}: pila hauek objektuek erabiltzen dutenaren bera dira.\\
+\textbf{Oharra}: pila hauek objektuek erabiltzen duten bera dira.\\
 
 Kamerarekin zerikusia duten metodo edo egitura guztiak \fitxategi{kamera.c} eta \fitxategi{kamera.h} fitxategietan daude.
 Bestalde, \textbf{\_k} aldagaia \fitxategi{main.c} fitxategian definitzen eta hasieratzen da aldagai global bezala, kamera bakar bat erabiltzen duelako aplikazioak oraingoz.
@@ -98,9 +100,9 @@ Metodo berri honek lau argumentu hartzen ditu: \textit{FOV}, leihoaren aspektuar
 \textbf{3. irudia}: Kameraren \textit{frustum}-a
 \end{center}
 
-AZALDU PARAMETROAK\\
+\textit{near} eta \textit{far} planoak kamerak sakoneran ikus dezakeen distantzia mugatzen dute. Aspektuaren erlazioak bistaratze-eremuaren proportzioa adierazten du, gure kasuan leihoaren bera izanik. Aldagai hau \fitxategi{display.c} fitxategiko \metodo{reshape()} metodoak kontrolatzen du, leihoaren dimentsioak aldatzea posible baita eta \aldagai{\_window\_ratio} aldagai globalean gordetzen da. Azkenik, \textit{FOV}ak kamerak zenbat ikus dezaken kontrolatzen du eta balioa kontrolatzeko kameraren egiturako \aldagai{fov} kidea erabiltzen da. \textit{FOV}a handiagoatuz, inguru handiago bat ikusi ahalko dugu, zoom efektua lortuz eta kamera ortografikoaren moduan \tekla{CTRL +} eta \tekla{CTRL -} teklen konbinaketekin kontrolatu ahal izango da.\\
 
-\textit{near} eta \textit{far} planoaren balioak eta \textit{FOV}-aren hasierako balioa, minimoa eta maximoa \fitxategi{definitions.h} fitxategian definituta daude, lehenengo biak konstateak izanik (ikus \erref{constants} atala). \textit{FOV}-a kontrolatzeko kameraren egiturako \aldagai{fov} kidea erabiltzen da. Aldagai honek kamerak zenbat ikus dezakeen kontrolatzen duenez, zoom egitea ahalbidetzen digu kamera ortografikoaren moduan (\tekla{CTRL +} eta \tekla{CTRL -} teklen konbinaketekin). Azkenik, aspektuaren erlazioa \fitxategi{display.c} fitxategiko \metodo{reshape()} metodoak kontrolatzen du, leihoaren dimentsioak aldatzea posible baita. Balioa \aldagai{\_window\_ratio} aldagai globalean gordetzen da.
+\textit{near} eta \textit{far} planoaren balioak eta \textit{FOV}-aren hasierako balioa, minimoa eta maximoa \fitxategi{definitions.h} fitxategian definituta daude, lehenengo biak konstateak izanik (ikus \erref{constants} atala).
 
 
 \subsection{Kameraren efektua}\label{kam_sim}
@@ -115,7 +117,9 @@ Transformazioak objektuei aplikatzen zaizkie. Kontraesana dirudien arren, izatez
 
 \textbf{Oharra}: Objektuak marrazteko begiztaren amaieran, identitate matrizea kargatu ostean, berriro aplikatu behar da kameraren transformazioa.\\
 
-Kameraren transformazioa burutzeko \metodo{gluLookAt()}\cite{glu_lookat} metodoa erabiltzen dugu. Funtzio honek kameraren posizioa, begira dagoen puntuaren posizioa eta goranzko norabidea adierazten duen bektorea emanik, uneko matrizea (gure kasuan MODELVIEW) aldatzen du kameraren transformazioa simulatzeko. Datu hauek lortzeko, hasierako \aldagai{eye}, \aldagai{look} eta \aldagai{up} balioak (\metodo{gluLookAt()} funtzioaren parametroak hurrenez hurren) finkatuko ditugu, eta horien aldaketak ahalbidetzeko transformazio-matrizeen pila bat erabiliko dugu, non hasierako aldagaiak transformazioarekin biderkatuta, kameraren uneko posizioa eta errotazioa kalkulatu ahalko dugun. HOBETO ESPLIKE BIKO DA IGUAL. ZUZENDU UP EZ IZETIE POINT3, VECTOR3 BAIO!
+Kameraren transformazioa burutzeko \metodo{gluLookAt()}\cite{glu_lookat} metodoa erabiltzen dugu. Funtzio honek kameraren posizioa, begira dagoen puntuaren posizioa eta goranzko norabidea adierazten duen bektorea emanik, uneko matrizea (gure kasuan MODELVIEW) aldatzen du kameraren transformazioa simulatzeko. Datu hauek lortzeko, hasierako \aldagai{eye}, \aldagai{look} eta \aldagai{up} balioak (\metodo{gluLookAt()} funtzioaren parametroak hurrenez hurren) transformatko ditugu kameraren uneko posizioa eta errotazioa kalkulatzeko.
+
+ALDATU IRUDIXE
 
 \begin{center}
 \includegraphics[scale=0.8]{kamera_lookat.png}
@@ -138,31 +142,32 @@ Kamera hau libreki mugi eta bira daiteke espazioan, oso erabilgarria izanik ingu
 
 \subsubsection{Transformazioak}
 
-Kamerak translatzeko eta biratzeko aukera du, eskalatzea eta zizailatzeak zentzurik ez baitaukate. Bi aldaketa hauek lokalean zein globalean egin daitezke. Mugimendua globala denean, munduko X, Y eta Z ardatzetan emango da translazioa, lokalean aldiz, uneko begiradaren norabidearen araberakoa izango da. Biraketa globala denean, kamerak jatorriaren inguruan biratuko du hautatutako ardatzean, lokalean aldiz, kamera geldi geratuko da, begiradaren norabidea aldatuz.\\
+Kamerak translatzeko eta biratzeko aukera du, eskalatzea eta zizailatzeak zentzurik ez baitaukate. Bi aldaketa hauek lokalean zein globalean egin daitezke. Mugimendua globala denean, munduko X, Y eta Z ardatzetan emango da translazioa, lokalean aldiz, uneko begiradaren norabidearen araberakoa izango da. Biraketa globala denean, kamerak jatorriaren inguruan biratuko du hautatutako ardatzean, lokalean aldiz, kamera geldi geratuko da, begiradaren norabidea aldatuz.
 
-OINARTE EINDDOT, HAMENDIK BERA GEHIXEN BAT ZE AZALDU DINOEN NOTATXUEK DIE:\\
-
-mobidu, lokal zein global, azaldu bixek
-
-gireu global origenan ingeruen edo lokal kamarie geldi ta giretan.
-
-beste transformak ezteke zentzurik
+ESPLIKE BIDE GLOBAL ETA LOKALAN ARTEKO DESBERDINTASUNE? ZELAN LORTU TA HORI OSTIXE?
 
 \subsection{Kamera ibiltaria}
 
-Pertsona bat simuletan daben kamarie. Lurrera inketa dau.
+Pertsona baten mugimendua simulatzen duen kamera da. Perspektibazko kamerarekin alderatuta askatasun gutxiago dauka, alde batetik kamera $Y=0$ planoan zehar mugi daitekelako bakarrik eta mugitzeko eta biraketzeko aukera gutxiago dituelako. Gora eta behera geziekin aurrera eta atzera mugitzen da, ezker-eskuin geziekin alboetara biratzen du begirada eta \tekla{REPAG}-\tekla{AVPAG} teklekin gora eta beherantz biratzen du begirada. Azken biraketa hau mugatuta dago, ez baitauka zentzurik pertsona batek burua bertikalki edozein angelurekin biratu ahal izateak.
+
 
 \subsubsection{Transformazioak}
 
-Diferentie, ezta mobitzen ta rotetan ardatz danatak ta global ta lokalien.
+Transform danak lokalien, mobidu begiradien direkzinoan menpe nahigu ta rotetie kamarie geldi ta begiradie mobitzie gureu.
 
-Bakarrik eurrea ta atzea mobidulei. Mobidu ezker-eskuma ta gora-bera baia hau azkena limiteta dau.
+Transformazio hauek kalkulu konplexuago bat eskatzen dute, ez baita bakarrik matrizeak aurretik edo atzetik biderkatzea bezain sinplea.\\
+Arazoetariko bat kamera $Y=0$ planoan mantentzea da. Biraketa horizontalak ez dio honi trabarik egiten, baina bai bertikalak, lurrarekiko angelua aldatzen duenez, kameraren "aurrera" bektorea  biratzen duelako berarekin, $Y=0$ planoaren paralelo izateari utziz. Horretarako, kalkula dezakegu kamerak zein posiziotan bukatuko duen transformazioa burutzean, gero posizioaren altuerarekin translazio global bat aplikatzeko kontrako norabidean.\\
 
-Zelan lortzen da lurrera inketa egotie? Ba ezker-eskumagaz eztau arazorik, baia gora-bera beittutetakoan ta mobitzerakoan, kalkuletan da ze alturan geratuko zna ta transform global bat eitten da Y ardatzien kontrara kontrarrestetako ta lurrien inketa geatzeko.
+SARTU HAMEN IRUDIXE, ARAZOA EZKERRIEN TA SOLUZINOA ESKUMIEN\\
+
+Hala ere, konponketa honek albo-ondorio bat dakar. Goiko eskuineko irudian ikus daitekenez, plano horizontalean aurreratutako distantzia ez da 1ekoa, bektorearen plano horizontalarekiko duen proiekzioaren luzera baino, $\cos(\theta)$ = $\cos$(KG\_THETA $\cdot$ k-$>$ibil\_gorabehera) zuzenki. Beraz, zenbat eta angelu bertikal handiagoa, hainbat eta pausu txikiagoa aurreratuko dugu, efektu errealistagoa emanez kamera ibiltariari eta albo-ondorioaz aprobetxatuz.\\
+
+Bigarren arazoa lehenengoarekin lotuta dago. Kamera bertikalean biratu ondoren, horizontalean biratuz gero, kameraren posizioa geldi geratzen den arren, begirada ez da horizontalean biratzen, beste plano batekiko baino. Arazoa konpontzeko kameraren biraketa bertikala desegin behar da lehen, gero biratu horizontalean eta azkenik berregin biraketa bertikala, desio den transformazioa lortzeko. Konponketa honek ez dauka albo-ondoriorik.\\
+
+SARTU HAMEN IRUDIXE, ARAZOA EZKERRIEN TA SOLUZINOA ESKUMIEN\\
+
 
 \subsection{Aldaketak desegitea eta berregitea}
-
-INTRODUCIDU ALDAKETAK EITTIE ZER DAN, PILA BAT ZEAITTIK ETAB... BAIA EZ ESAN ZELAN DAUEN INPLEMENTETA
 
 Objektuekin bezala, kamerari aplikatutako transformazioak desegitea eta berregitea badago, pila mota berdinak baitira. Kamera mota bakoitza bata-bestearekiko independentea izatea nahi dugunez, perspektibazko kamerarentzako pila bat eta ibiltariarentzako beste bat sortuko ditugu (ikus 1. irudia). Demagun perspektibazko kamerari edozein hiru transformazio lokal aplikatzen dioguzela, orduan pilaren egoera hurrengoa izango zen:\\
 transformazioen ordena lehenik \textbf{M1}, gero \textbf{M2} eta azkenik \textbf{M3} izanik eta \textbf{I} identitate matrizea,
@@ -195,7 +200,7 @@ Pilaren erabilera lau ekintzetan banatzen da:
 \item \textbf{Aldaketak berregitea}. Aurreko ekintzaren kontrakoa da, \textit{pointer}-a elementu bat aurrerago eramanez, \metodo{depop()} metodoak burutzen duena. 
 \end{itemize}
 
-Funtsean, pila bi zentzutara lotutako lista estekatu bat da. Datu egitura honek bi propietate garrantzitsu ematen dizkigu: pila nahi beste hazi ahal izatea (memoriarik gabe geratu arte) eta bi noranzko nabigagarritasuna, pilaren azken elementua bi aldeetara mugitzea ahalbidetzen duena (\metodo{pop()} eta \metodo{depop()}).\\
+Funtsean, pila bi zentzutara lotutako lista estekatu bat da. Datu egitura honek bi propietate garrantzitsu ematen dizkigu: pila nahi beste hazi ahal izatea (memoriarik gabe geratu arte) eta bi noranzko nabigagarritasuna, pilaren azken elementuari apuntatzen dion \textit{pointer}-a bi aldeetara mugitzea ahalbidetzen duena (\metodo{pop()} eta \metodo{depop()}).\\
 Hona hemen datu-egituraren diagrama bat:
 
 \begin{center}

@@ -176,7 +176,7 @@ void keyboard(unsigned char key, int x, int y) {
                 desegin_transformazioa(_k);
             }
         }
-        else{ 
+        else{
             if (_selected_object == NULL){
                 printf("Lehenik aukeratu objektu bat.\n");
                 break;
@@ -380,18 +380,29 @@ void keyboard(unsigned char key, int x, int y) {
  */
 void special_keyboard(int keyCode, int mouse_x, int mouse_y){
 
-    printf("%d\n", keyCode);
+    //printf("%d\n", keyCode);
 
+    /*
+        Oharra: x y eta z aldagaiek zein tekla sakatu den markatzen dute! 
+        ezkerra => x = -1
+        eskuina => x =  1
+
+        gora    => y =  1
+        behera  => y = -1
+
+        repag   => z = -1
+        avpag   => z =  1
+
+        Hau dela-eta, aldagai hauek desberdin egongo dira routeatuta transformazioen kalkuluetan. Adibidez:
+        biraketan Y ardatza ezker-eskuin teklek kontrolatzen dutenez, eta X ardatza gora-behera teklek,
+        transformazioa kalkulatzerakoan (x, y, z)ren ordez, (y, x, z) routing-a egongo da.
+    */
     double x = 0;
     double y = 0;
     double z = 0;
 
     switch (keyCode) {
 
-        case 114:
-        case 112:
-            printf("GTFO\n");
-            return;
         case KG_KEY_GORA:
             y++;
             break;
@@ -416,10 +427,17 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
             z++;
             break;
         default:
+            /* Beste teklaren bat ikutuz gero, bukatu. */
             return;
     }
 
     if (_zer_transformatu == KG_TRANSFORMATU_OBJEKTUA){
+
+        if (_selected_object == NULL){
+            printf("Lehenik aukeratu objektu bat.\n");
+            return;
+        }
+
         switch (_transformazio_mota){
             case KG_TRANSLAZIOA:
                 m = translation_matrix(x, y, z);
@@ -439,22 +457,24 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
                     z = 1;
                 }
                 else if (y != 0){
-                    y = 1 + y / 10;
                     x = 1;
+                    y = 1 + y / 10;
                     z = 1;
-
                 }
                 else if (z != 0){
-                    z = 1 + z / 10;
                     x = 1;
                     y = 1;
-
+                    z = 1 + z / 10;
                 }
                 m = scale_matrix(x, y, z);
                 transform_object(_selected_object, m, _erreferentzia_sistema);
                 break;
             case KG_ZIZAILAKETA:
-                //TODO:
+                x *= KG_DELTA;
+                y *= KG_DELTA;
+                z *= KG_DELTA;
+                m = shearing_matrix(x, y, z);
+                transform_object(_selected_object, m, _erreferentzia_sistema);
                 break;
         }
 

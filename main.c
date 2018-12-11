@@ -9,14 +9,14 @@
 
 /** GLOBAL VARIABLES **/
 
-GLdouble _window_ratio;                     /*Control of window's proportions */
-GLdouble _ortho_x_min,_ortho_x_max;         /*Variables for the control of the orthographic projection*/
-GLdouble _ortho_y_min ,_ortho_y_max;        /*Variables for the control of the orthographic projection*/
-GLdouble _ortho_z_min,_ortho_z_max;         /*Variables for the control of the orthographic projection*/
+GLdouble _window_ratio;                     /* Control of window's proportions */
+GLdouble _ortho_x_min,_ortho_x_max;         /* Variables for the control of the orthographic projection*/
+GLdouble _ortho_y_min ,_ortho_y_max;        /* Variables for the control of the orthographic projection*/
+GLdouble _ortho_z_min,_ortho_z_max;         /* Variables for the control of the orthographic projection*/
 
-object3d * _first_object= 0;                /*List of objects*/
-object3d * _selected_object = 0;            /*Object currently selected*/
-int _saretaErakutsi = 0;                    /*Sareta erakusteko "boolearra"  // 1 => erakutsi, 0 => ezkutatu*/
+object3d * _first_object= 0;                /* List of objects*/
+object3d * _selected_object = 0;            /* Object currently selected*/
+int _saretaErakutsi = 0;                    /* Sareta erakusteko "boolearra"  // 1 => erakutsi, 0 => ezkutatu*/
 
 kamera* _k;
 
@@ -40,9 +40,10 @@ void initialization (){
     /*Definition of the method to draw the objects*/
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-    /*Kamera hasieratu*/
-    _k = kamera_sortu(KG_ORTOGRAFIKOA);
+    /* Kamera hasieratu */
+    _k = kamera_sortu();
 
+    /* IO-ko beharrezko hasieraketak burutu */
     io_init();
 }
 

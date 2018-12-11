@@ -77,6 +77,15 @@ GLdouble* scale_matrix(double x, double y, double z){
     return m;
 }
 
+GLdouble* shearing_matrix(double x, double y, double z){
+    GLdouble* m = identity();
+    m[4]=x;
+    m[9]=y;
+    m[2]=z;
+    return m;
+}
+
+
 
 point3 matrix_dot_point(GLdouble* mat, point3 vec){
     point3 result;

@@ -5,24 +5,19 @@
 
 typedef struct kamera{
 
-    int kamera_mota;
+    int kamera_mota;				/* ortografikoa, perspektibazioa ala ibiltaria */
     int fov;
 
-    // Perspektibakoa
-    pila* per_transf_pila;
+    pila* per_pila;
 
-    // Ibiltaria
-    pila* ibil_transf_pila;
-    int tortikolis;
+    pila* ibil_pila;
+    int ibil_gorabehera;			/* Kamera ibiltariak betikalean biratu duen pausu (step) kopurua gordetzen du */
     
 } kamera;
 
 
-
-//  FUNTZIOAK:
-
-/* Pila berri bat sortzeko funtzioa, identitate matrizea sartuko du pilan. */
-kamera* kamera_sortu(int mota);
+/* Kamera berri bat hasieratzen eta itzultzen du. */
+kamera* kamera_sortu();
 
 /* Kamera mota aldatzen du. */
 void kamera_mota_aldatu(kamera* k);
