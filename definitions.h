@@ -61,7 +61,7 @@
 #define KG_COL_Z_AXIS_G                     0.5f
 #define KG_COL_Z_AXIS_B                     0.0f
 
-#define KG_MAX_DOUBLE                       10E25
+#define KG_MAX_DOUBLE                       10E5
 
 #define KG_PI                               3.14159265358979323846
 #define KG_THETA                            KG_PI / 20

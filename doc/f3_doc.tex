@@ -13,6 +13,7 @@
 
 \renewcommand{\contentsname}{Edukiak}
 \renewcommand{\refname}{Erreferentziak}
+\renewcommand{\abstractname}{Laburpena}
 
 
 \geometry{
@@ -58,12 +59,10 @@ Ideia teorikoak finkatu ditugu, baina nola lor daitezke orain arte aipatutako em
 Alde batetik, zein kamera motarekin ari garen hartu behar da kontutan, bestetik proiekzio motaz aldatu behar da hautatutako kameraren arabera, eta azkenik kameraren mugimendua eta biraketa simulatu behar dira. Horretarako hurrengo datu-egitura erabiliko dugu:
 
 \begin{center}
-\includegraphics[scale=1]{kamera_struct.png}
+\includegraphics[scale=0.7]{kamera_struct.png}
 
 \textbf{1. irudia}: kamera datu-egitura
 \end{center}
-
-ALDATU IRUDIXE
 
 
 Egiturako kideen azalpenak:
@@ -92,7 +91,7 @@ Hona hemen pausu hau azaltzeko sasikodea:
 \textbf{2. irudia}: Proiekzioa burutzeko sasikodea
 \end{center}
 
-Metodo berri honek lau argumentu hartzen ditu: \textit{FOV}, leihoaren aspektuaren erlazioa (aspect ratio)\cite{aspect_ratio} eta \textit{near} eta \textit{far} Z-planoak\cite{near_far}. Lau argumentuek \textit{frustum}\cite{frustum} izeneko bistaratze-eremua mugatuko dute. Irudi honek erakusten du \textit{frustum}-a nola mugatzen duten parametroek:
+Metodo berri honek lau argumentu hartzen ditu: \textit{FOV}, leihoaren aspektuaren erlazioa (aspect ratio)\cite{aspect_ratio} eta \textit{near} eta \textit{far} Z-planoak. Lau argumentuek \textit{frustum}\cite{frustum} izeneko bistaratze-eremua mugatuko dute. Irudi honek erakusten du \textit{frustum}-a nola mugatzen duten parametroek:
 
 \begin{center}
 \includegraphics[scale=0.8]{kamera_frustum.jpg}
@@ -110,7 +109,7 @@ Metodo berri honek lau argumentu hartzen ditu: \textit{FOV}, leihoaren aspektuar
 Transformazioak objektuei aplikatzen zaizkie. Kontraesana dirudien arren, izatez kameraren kontzeptua ez da existitzen ordenagailu bidezko grafikoetan. Kamera ezkerretara mugitzea simulatu nahi izanez gero, mundu guztia eskuinetarantz mugitu beharko da proportzio berean, ilusio hori lortzeko. Hau esanda, ondoriozta daiteke kamera simulatzeko objektu guztien transformazioa kargatu baino lehen kamerarena kargatu beharko dela.
 
 \begin{center}
-\includegraphics[scale=1]{kamera_transform.png}
+\includegraphics[scale=0.7]{kamera_transform.png}
 
 \textbf{4. irudia}: kameraren transformazioaren aplikazioa
 \end{center}
@@ -119,21 +118,19 @@ Transformazioak objektuei aplikatzen zaizkie. Kontraesana dirudien arren, izatez
 
 Kameraren transformazioa burutzeko \metodo{gluLookAt()}\cite{glu_lookat} metodoa erabiltzen dugu. Funtzio honek kameraren posizioa, begira dagoen puntuaren posizioa eta goranzko norabidea adierazten duen bektorea emanik, uneko matrizea (gure kasuan MODELVIEW) aldatzen du kameraren transformazioa simulatzeko. Datu hauek lortzeko, hasierako \aldagai{eye}, \aldagai{look} eta \aldagai{up} balioak (\metodo{gluLookAt()} funtzioaren parametroak hurrenez hurren) transformatko ditugu kameraren uneko posizioa eta errotazioa kalkulatzeko.
 
-ALDATU IRUDIXE
-
 \begin{center}
-\includegraphics[scale=0.8]{kamera_lookat.png}
+\includegraphics[scale=0.6]{kamera_lookat.png}
 
 \textbf{5. irudia}: \metodo{gluLookAt()}-en erabilpena
 \end{center}
 
 \begin{center}
-\includegraphics[scale=1]{kamera_hasierako_balioak.png}
+\includegraphics[scale=0.65]{kamera_hasierako_balioak.png}
 
 \textbf{6. irudia}: hasierako balioak
 \end{center}
 
-Kalkuluak egiteko erabilitako bi biderketen metodoak \erref{transformazioak}. atalean daude azalduta.
+Kalkuluak egiteko erabilitako bi biderketen metodoak \erref{matematikak}. atalean daude azalduta.
 
 
 \subsection{Perspektibazko kamera}
@@ -143,8 +140,6 @@ Kamera hau libreki mugi eta bira daiteke espazioan, oso erabilgarria izanik ingu
 \subsubsection{Transformazioak}
 
 Kamerak translatzeko eta biratzeko aukera du, eskalatzea eta zizailatzeak zentzurik ez baitaukate. Bi aldaketa hauek lokalean zein globalean egin daitezke. Mugimendua globala denean, munduko X, Y eta Z ardatzetan emango da translazioa, lokalean aldiz, uneko begiradaren norabidearen araberakoa izango da. Biraketa globala denean, kamerak jatorriaren inguruan biratuko du hautatutako ardatzean, lokalean aldiz, kamera geldi geratuko da, begiradaren norabidea aldatuz.
-
-ESPLIKE BIDE GLOBAL ETA LOKALAN ARTEKO DESBERDINTASUNE? ZELAN LORTU TA HORI OSTIXE?
 
 \subsection{Kamera ibiltaria}
 
@@ -169,7 +164,7 @@ SARTU HAMEN IRUDIXE, ARAZOA EZKERRIEN TA SOLUZINOA ESKUMIEN\\
 
 \subsection{Aldaketak desegitea eta berregitea}
 
-Objektuekin bezala, kamerari aplikatutako transformazioak desegitea eta berregitea badago, pila mota berdinak baitira. Kamera mota bakoitza bata-bestearekiko independentea izatea nahi dugunez, perspektibazko kamerarentzako pila bat eta ibiltariarentzako beste bat sortuko ditugu (ikus 1. irudia). Demagun perspektibazko kamerari edozein hiru transformazio lokal aplikatzen dioguzela, orduan pilaren egoera hurrengoa izango zen:\\
+Objektuekin bezala, kamerari aplikatutako transformazioak desegitea eta berregitea badago, pila mota berdinak baitira. Kamera mota bakoitza bata-bestearekiko independentea izatea nahi dugunez, perspektibazko kamerarentzako pila bat eta ibiltariarentzako beste bat sortuko ditugu (ikus \textbf{1. irudia}). Demagun perspektibazko kamerari edozein hiru transformazio lokal aplikatzen dioguzela, orduan pilaren egoera hurrengoa izango zen:\\
 transformazioen ordena lehenik \textbf{M1}, gero \textbf{M2} eta azkenik \textbf{M3} izanik eta \textbf{I} identitate matrizea,
 
 \begin{center}
@@ -215,22 +210,48 @@ Hona hemen datu-egituraren diagrama bat:
 \end{center}
 
 
-\section{transformazioak.c}\label{transformazioak}
+\section{matematikak.c}\label{matematikak}
 
-oin klase batera mobidugu transformazinoakaz relacioneta dauena. bebai matriziek matriziekaz, puntoakaz ta bektorakaz biderkatzeko metodoak.
+Kalkulu matematikoak fitxategi bat baino gehiagotik burutzen zirenez eta metodo berak behar zirenez, gure programak behar dituen kalkulu matematiko gutziak \fitxategi{matematikak.c} fitxategian gorde ditugu. Gehien bat matrizeak kudeatzen dituen arren, badauka eskalarrekin eta bektoreekin operatzen dituzten funtzioak.\\
+
+Fitxategi honen abantailarik handiena transformazio-matrizeak sortzeko eta biderkatzeko ahalmena da. Horrela, fitxategi hau erabiltzen duten beste fitxategietan kode txukunagoa dute eta gainera, inplementazioa aldatu nahi badugu, bakarrik metodo bat aldatzea izango da, dena zentralizatuta baitago orain.\\
+
+4. FASIERI BURUZ ZOZE ESAN?
 
 
 \section{Konstante berriak}\label{constants}
 
-Sartuniko konstantiek kamarientzako die bakarrik.
+Kameraren funtzionamendurako sartutako konstanteak hurrengoak dira:
 
-ortografikoa, ...
+\begin{itemize}
+\item Kamera mota:
+\begin{itemize}
+\item KG\_ORTOGRAFIKOA
+\item KG\_PERSPEKTIBAZKOA
+\item KG\_IBILTARIA
+\end{itemize}
 
-aldaketak ia objetoari ala kamarieri
+\item Transformazioak zeini aplikatuko:
+\begin{itemize}
+\item KG\_TRANSFORMATU\_OBJEKTUA
+\item KG\_TRANSFORMATU\_KAMERA
+\end{itemize}
 
-hasierako fov, near ta far planoak
+\item Kameraren proiekzioaren balioak:
+\begin{itemize}
+\item KG\_ZNEAR
+\item KG\_ZFAR
+\item KG\_FOV\_INIT
+\item KG\_FOV\_MIN
+\item KG\_FOV\_MAX
+\end{itemize}
 
-kamara motie
+\item (\fitxategi{kamera.c} fitxategian) Kamera ibiltariaren biraketa bertikalaren \textit{step} maximoa:
+\begin{itemize}
+\item IBIL\_MAX\_GORA\_BEHERA
+\end{itemize}
+
+\end{itemize}
 
 ...
 
@@ -239,9 +260,38 @@ kamara motie
 
 \begin{thebibliography}{9}
 
-\bibitem{glutSpecialFunc} 
-\underline{glutSpecialFunc()}:\\
-\url{https://www.opengl.org/resources/libraries/glut/spec3/node54.html}
+\bibitem{fov} 
+\underline{Field Of View}:\\
+\url{https://en.wikipedia.org/wiki/Field_of_view}
+
+\bibitem{glu_perspective} 
+\underline{gluPerspective()}:\\
+\url{https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml}
+
+\bibitem{aspect_ratio} 
+\underline{Aspect Ratio}:\\
+\url{https://en.wikipedia.org/wiki/Aspect_ratio_(image)}
+
+\bibitem{frustum} 
+\underline{Frustum}:\\
+\url{https://en.wikipedia.org/wiki/Viewing_frustum}
+
+\bibitem{glu_lookat} 
+\underline{gluLookAt()}:\\
+\url{https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml}
+
+\bibitem{blender} 
+\underline{Blender}:\\
+\url{https://www.blender.org/}
+
+\bibitem{pointer} 
+\underline{Pointer}:\\
+\url{https://www.programiz.com/c-programming/c-pointers}
+
+
+
+
+
 
 % KENDU HAU (ARINAUKO REFERNTZIXE) TA SARTU BARRIXEK MODU COPYPASTE EITTEN
 
