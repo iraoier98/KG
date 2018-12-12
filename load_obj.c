@@ -48,6 +48,7 @@ printf("%d numbers in the line\n",kont);
  */
 int read_wavefront(char * file_name, object3d * object_ptr) {
     vertex *vertex_table;
+    vector3 *normal_table;
     face *face_table;
     int num_vertices = -1, num_faces = -1, count_vertices = 0, count_faces = 0;
     FILE *obj_file;
@@ -111,6 +112,7 @@ int read_wavefront(char * file_name, object3d * object_ptr) {
     num_faces = count_faces;
 
     vertex_table = (vertex *) malloc(num_vertices * sizeof (vertex));
+    normal_table = (vector3 *) malloc(num_vertices * sizeof (vector3));
     face_table = (face *) malloc(num_faces * sizeof (face));
 
     obj_file = fopen(file_name, "r");
@@ -164,6 +166,7 @@ int read_wavefront(char * file_name, object3d * object_ptr) {
     object_ptr->num_faces = num_faces;
     object_ptr->filename = file_name;
     object_ptr->transformazio_pila = pila_sortu();
+    object_ptr->normal_table = normal_table;
 
 
 

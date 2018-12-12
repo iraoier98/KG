@@ -102,7 +102,7 @@ void display(void) {
     glLoadIdentity();
 
     /* Clear the screen */
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
 
     if (_k->kamera_mota == KG_ORTOGRAFIKOA){
@@ -154,6 +154,9 @@ void display(void) {
             glBegin(GL_POLYGON);
             for (v = 0; v < aux_obj->face_table[f].num_vertices; v++) {
                 v_index = aux_obj->face_table[f].vertex_table[v];
+                glNormal3d(aux_obj->normal_table[v_index].x,
+                        aux_obj->normal_table[v_index].y,
+                        aux_obj->normal_table[v_index].z);
                 glVertex3d(aux_obj->vertex_table[v_index].coord.x,
                         aux_obj->vertex_table[v_index].coord.y,
                         aux_obj->vertex_table[v_index].coord.z);

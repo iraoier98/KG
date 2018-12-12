@@ -146,6 +146,7 @@ struct object3d{
     struct object3d *next;              /* next element in the pile of objects */
     char* filename;                     /* which file contains this object*/
     pila* transformazio_pila;           /* transformazio matrizeen pila */
+    vector3* normal_table               /* erpin bakoitzaren normalen taula */
 };
 
 typedef struct object3d object3d;

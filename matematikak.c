@@ -22,6 +22,21 @@ double zeinua(double x){
 
 /* BEKTOREAK */
 
+vector3* normal_vector(vector3* a, vector3* b){
+    GLdouble c1 = a->y * b->z - b->y * a->z;
+    GLdouble c2 = a->z * b->x - b->z * a->x;
+    GLdouble c3 = a->x * b->y - b->x * a->y;
+
+    GLdouble module = sqrt(pow(c1,2) + pow(c2,2) + pow(c3,2));
+    
+    vector3* perp_vector;
+    perp_vector->x = c1/module;
+    perp_vector->y = c2/module;
+    perp_vector->z = c3/module;
+
+    return perp_vector;
+}
+
 
 
 /* MATRIZEAK */
