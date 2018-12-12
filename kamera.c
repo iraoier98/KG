@@ -76,6 +76,9 @@ void kamera_transformatu(kamera* k, int transformazio_mota, int erreferentzia_si
                 GLdouble* transformazio_berria;
                 if (x != 0){
                     x *= KG_THETA;
+
+                    /* Angelu bertikalak biraketa horizontalean ez afektatzeko, lehenik biraketa bertikala desegiten dugu,
+                    gero biraketa horizontala burutu eta azkenik berregin biraketa bertikala */
                     transformazio_berria = matrix_dot_matrix(rotation_matrix(-k->ibil_gorabehera * KG_THETA, 0, 0), aurreko_transformazioa);
                     transformazio_berria = matrix_dot_matrix(rotation_matrix(0, -x, 0), transformazio_berria);
                     transformazio_berria = matrix_dot_matrix(rotation_matrix(k->ibil_gorabehera * KG_THETA, 0, 0), transformazio_berria);

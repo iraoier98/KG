@@ -61,7 +61,7 @@
 #define KG_COL_Z_AXIS_G                     0.5f
 #define KG_COL_Z_AXIS_B                     0.0f
 
-#define KG_MAX_DOUBLE                       10E25
+#define KG_MAX_DOUBLE                       10E5
 
 #define KG_PI                               3.14159265358979323846
 #define KG_THETA                            KG_PI / 20
@@ -146,7 +146,7 @@ struct object3d{
     struct object3d *next;              /* next element in the pile of objects */
     char* filename;                     /* which file contains this object*/
     pila* transformazio_pila;           /* transformazio matrizeen pila */
-    vector3* normal_table               /* erpin bakoitzaren normalen taula */
+    vector3* normal_table;               /* erpin bakoitzaren normalen taula */
 };
 
 typedef struct object3d object3d;
