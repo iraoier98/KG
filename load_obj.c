@@ -48,7 +48,6 @@ printf("%d numbers in the line\n",kont);
  */
 int read_wavefront(char * file_name, object3d * object_ptr) {
     vertex *vertex_table;
-    vector3 *normal_table;
     face *face_table;
     int num_vertices = -1, num_faces = -1, count_vertices = 0, count_faces = 0;
     FILE *obj_file;
@@ -112,7 +111,6 @@ int read_wavefront(char * file_name, object3d * object_ptr) {
     num_faces = count_faces;
 
     vertex_table = (vertex *) malloc(num_vertices * sizeof (vertex));
-    normal_table = (vector3 *) malloc(num_vertices * sizeof (vector3));
     face_table = (face *) malloc(num_faces * sizeof (face));
 
     obj_file = fopen(file_name, "r");
@@ -166,7 +164,6 @@ int read_wavefront(char * file_name, object3d * object_ptr) {
     object_ptr->num_faces = num_faces;
     object_ptr->filename = file_name;
     object_ptr->transformazio_pila = pila_sortu();
-    object_ptr->normal_table = normal_table;
 
 
 
@@ -199,6 +196,39 @@ int read_wavefront(char * file_name, object3d * object_ptr) {
         if (object_ptr->vertex_table[i].coord.z > object_ptr->max.z)
             object_ptr->max.z = object_ptr->vertex_table[i].coord.z;
 
+    }
+
+    /* Calculates each face's normal vector */
+    for (i = 0; i < object_ptr->num_faces; i++){
+        vertex* p1 = &object_ptr->vertex_table[object_ptr->face_table->vertex_table[0]];
+        vertex* p2 = &object_ptr->vertex_table[object_ptr->face_table->vertex_table[1]];
+        vertex* p3 = &object_ptr->vertex_table[object_ptr->face_table->vertex_table[2]];
+
+        vector3* v1 = vertexes2vector(p1,p2);
+        vector3* v2 = vertexes2vector(p1,p3);
+
+        object_ptr->face_table->normal_vector = cross_product(v1,v2);
+    }
+
+    /* Calculates each vertex's mean normal vector. */
+    for (i = 0; i < object_ptr->num_faces; i++){
+        for (j = 0; j < object_ptr->face_table[i].num_vertices; j++){
+            vector3* v = object_ptr->face_table[i].vertex_table[j];
+            if (v != NULL){
+                v = sum_vectors(v,object_ptr->face_table[i].normal_vector);
+            }
+            else{
+                v = object_ptr->face_table[i].normal_vector;
+            }
+        }
+    }
+    for (i = 0; i < object_ptr->num_vertices; i++){
+        vector3* normal = object_ptr->vertex_table[i].normal_vector;
+        int aurpegi_kop = object_ptr->vertex_table[i].num_faces;
+
+        normal->x = normal->x/aurpegi_kop;
+        normal->y = normal->y/aurpegi_kop;
+        normal->z = normal->z/aurpegi_kop;
     }
     return (0);
 }

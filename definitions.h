@@ -119,6 +119,7 @@ typedef struct {
 typedef struct {
     point3 coord;                       /* coordinates,x, y, z */
     GLint num_faces;                    /* number of faces that share this vertex */
+    vector3* normal_vector;             /* normal vector of vertex */
 } vertex;
 
 /****************************
@@ -129,6 +130,7 @@ typedef struct {
 typedef struct {
     GLint num_vertices;                 /* number of vertices in the face */
     GLint *vertex_table;                /* table with the index of each vertex */
+    vector3 normal_vector;              /* normal vector of face */
 } face;
 
 
@@ -146,7 +148,6 @@ struct object3d{
     struct object3d *next;              /* next element in the pile of objects */
     char* filename;                     /* which file contains this object*/
     pila* transformazio_pila;           /* transformazio matrizeen pila */
-    vector3* normal_table               /* erpin bakoitzaren normalen taula */
 };
 
 typedef struct object3d object3d;

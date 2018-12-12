@@ -22,7 +22,16 @@ double zeinua(double x){
 
 /* BEKTOREAK */
 
-vector3* normal_vector(vector3* a, vector3* b){
+vector3* points2vector(vertex* p1, vertex* p2){
+    vector3* v;
+    v->x = p1->coord.x - p2->coord.x;
+    v->y = p1->coord.y - p2->coord.y;
+    v->z = p1->coord.z - p2->coord.z;
+
+    return v;
+}
+
+vector3* cross_product(vector3* a, vector3* b){
     GLdouble c1 = a->y * b->z - b->y * a->z;
     GLdouble c2 = a->z * b->x - b->z * a->x;
     GLdouble c3 = a->x * b->y - b->x * a->y;
@@ -37,7 +46,15 @@ vector3* normal_vector(vector3* a, vector3* b){
     return perp_vector;
 }
 
+vector3* sum_vectors(vector3* a, vector3* b){
+    vector3* v;
 
+    v->x = a->x + b->x;
+    v->y = a->y + b->y;
+    v->z = a->z + b->z;
+
+    return v;
+}
 
 /* MATRIZEAK */
 
