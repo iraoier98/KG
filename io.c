@@ -20,6 +20,12 @@
 #define KG_KEY_CTRL_Z                       26
 #define KG_KEY_CTRL_S                       19
 
+#define KG_KEY_F1                           1
+#define KG_KEY_F2                           2
+#define KG_KEY_F3                           3
+#define KG_KEY_F4                           4
+#define KG_KEY_F5                           5
+
 
 extern object3d * _first_object;
 extern object3d * _selected_object;
@@ -377,6 +383,26 @@ void keyboard(unsigned char key, int x, int y) {
     case 27: /* <ESC> */
         exit(0);
         break;
+    
+    case 49: /* <1> */
+        //Lehenengo argia aukeratu
+        break;
+
+    case 50: /* <1> */
+        //Bigerren argia aukeratu
+        break;
+
+    case 51: /* <1> */
+        //Hirugarren argia aukeratu
+        break;
+
+    case 52: /* <1> */
+        //Laugarren argia aukeratu
+        break;
+
+    case 53: /* <1> */
+        //Bostgarren argia aukeratu
+        break;
 
     default:
         /*In the default case we just print the code of the key. This is usefull to define new cases*/
@@ -442,8 +468,55 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
         case KG_KEY_AVPAG:
             z++;
             break;
+        
+        case KG_KEY_F1:
+            if(glIsEnabled(GL_LIGHT0)){
+                glDisable(GL_LIGHT0);
+            }
+            else{
+                glEnable(GL_LIGHT0);
+            }
+            break;
+
+        case KG_KEY_F2:
+            if(glIsEnabled(GL_LIGHT1)){
+                glDisable(GL_LIGHT1);
+            }
+            else{
+                glEnable(GL_LIGHT1);
+            }
+            break;
+        
+        case KG_KEY_F3:
+            if(glIsEnabled(GL_LIGHT2)){
+                glDisable(GL_LIGHT2);
+            }
+            else{
+                glEnable(GL_LIGHT2);
+            }
+            break;
+
+        case KG_KEY_F4:
+            if(glIsEnabled(GL_LIGHT3)){
+                glDisable(GL_LIGHT3);
+            }
+            else{
+                glEnable(GL_LIGHT3);
+            }
+            break;
+
+        case KG_KEY_F5:
+            if(glIsEnabled(GL_LIGHT4)){
+                glDisable(GL_LIGHT4);
+            }
+            else{
+                glEnable(GL_LIGHT4);
+            }
+            break;
+
         default:
             /* Beste teklaren bat ikutuz gero, bukatu. */
+            printf("Tekla berezia: %d\n", keyCode);
             return;
     }
 

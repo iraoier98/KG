@@ -38,7 +38,7 @@ void initialization (){
     glClearColor(KG_COL_BACK_R, KG_COL_BACK_G, KG_COL_BACK_B, KG_COL_BACK_A);
 
     /*Definition of the method to draw the objects*/
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glPolygonMode(GL_FRONT_AND_BACK,  GL_FILL);
 
     /* Kamera hasieratu */
     _k = kamera_sortu();

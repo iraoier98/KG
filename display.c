@@ -1,5 +1,6 @@
 #include "definitions.h"
 #include "kamera.h"
+#include "argia.h"
 
 #include <GL/glut.h>
 #include <GL/gl.h>
@@ -170,6 +171,11 @@ void display(void) {
         aplikatu_kameraren_transformazioa(_k);
         aux_obj = aux_obj->next;
     }
+
+    /* Argiak kargatu */
+    argia* a = argia_sortu();
+    argia_kargatu(a,GL_LIGHT0);
+
     /*Do the actual drawing*/
     glFlush();
 }

@@ -83,6 +83,10 @@
 #define KG_PERSPEKTIBAKOA                   1
 #define KG_IBILTARIA                        2
 
+#define KG_EGUZKIA                          0
+#define KG_BONBILA                          1
+#define KG_FOKUA                            2
+
 
 
 
