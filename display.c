@@ -19,17 +19,7 @@ extern object3d *_selected_object;
 extern int _saretaErakutsi;
 
 extern kamera* _k;
-
-/**
- * @brief Function to draw a line given two 3D points
- */
-void draw_line(point3 a, point3 b){
-    glBegin(GL_LINES);
-    glVertex3d(a.x, a.y, a.z);
-    glVertex3d(b.x, b.y, b.z);
-    glEnd();
-}
-
+extern argia* _a;
 
 /**
  * @brief Function to draw the axes
@@ -132,6 +122,9 @@ void display(void) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     aplikatu_kameraren_transformazioa(_k);
+
+
+    argia_kargatu(_a, GL_LIGHT0);
     
 
     /*Ardatzak eta sareta marraztu*/

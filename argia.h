@@ -8,18 +8,18 @@ typedef struct argia{
     GLenum argi_mota;			/* bonbila, eguzki edo foku motakoa */
     int angelua;                /* fokuaren kasuan, argiaren angelua*/
 
-    GLfloat* kokapena;
-    GLfloat* norabidea;
+    vector4f kokapena;
+    vector4f norabidea;
 
     float constant_atenuation;
     float linear_atenuation;
     float quadratic_atenuation;
 
-    GLfloat* ambient;
-    GLfloat* diffuse;
-    GLfloat* specular;
+    vector4f ambient;
+    vector4f diffuse;
+    vector4f specular;
 
-    GLfloat gogortasuna;
+    float gogortasuna;
 
     pila* bonbila_pila;
     pila* eguzki_pila;
@@ -31,6 +31,6 @@ typedef struct argia{
 
 argia* argia_sortu();
 void argi_mota_aldatu(argia* a);
-void argia_kargatu(argia* a, int light);
+void argia_kargatu(argia* a, int indizea);
 
 #endif // ARGIA_H

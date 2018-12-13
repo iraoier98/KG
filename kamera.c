@@ -88,12 +88,7 @@ void kamera_transformatu(kamera* k, int transformazio_mota, int erreferentzia_si
                 }
                 push(k->ibil_pila, transformazio_berria);
             }
-
         }
-
-
-
-
     }
 
     else if (k->kamera_mota == KG_PERSPEKTIBAKOA){
@@ -106,7 +101,12 @@ void kamera_transformatu(kamera* k, int transformazio_mota, int erreferentzia_si
             x *= KG_THETA;
             y *= KG_THETA;
             z *= KG_THETA;
-            uneko_transformazioa = rotation_matrix(-y, -x, -z);
+            if (erreferentzia_sistema == KG_TRANSFORMAZIO_LOKALA){
+                x *= -1;
+                y *= -1;
+                z *= -1;
+            }
+            uneko_transformazioa = rotation_matrix(y, x, z);
         }else{
             printf("Oharra: Kamerak ez du transformazio mota hori onartzen.\n");
             return;

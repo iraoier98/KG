@@ -47,9 +47,9 @@ vector3 substract(vector3 v1, vector3 v2){
 
 vector3 cross_product(vector3 a, vector3 b){
     vector3 normal;
-    normal.x = a.y * b.z - a.z - b.y;
-    normal.y = a.z * b.x - a.x - b.z;
-    normal.z = a.x * b.y - a.y - b.x;
+    normal.x = a.y * b.z - a.z * b.y;
+    normal.y = a.z * b.x - a.x * b.z;
+    normal.z = a.x * b.y - a.y * b.x;
 
     double module = length(normal);
     return normalize(normal);

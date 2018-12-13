@@ -216,7 +216,7 @@ int read_wavefront(char * file_name, object3d * object_ptr) {
         //     printf("Txarto!\n");
         // }
 
-        printf("%d . bektore normala: %f,%f,%f\n",i,v.x,v.y,v.z);
+        //printf("%d . bektore normala: %f,%f,%f\n",i,v.x,v.y,v.z);
 
         object_ptr->face_table[i].normal_vector = v;
         

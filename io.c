@@ -443,6 +443,8 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
     double y = 0;
     double z = 0;
 
+    int argiaren_indizea = -1;
+
     switch (keyCode) {
 
         case KG_KEY_GORA:
@@ -470,48 +472,23 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
             break;
         
         case KG_KEY_F1:
-            if(glIsEnabled(GL_LIGHT0)){
-                glDisable(GL_LIGHT0);
-            }
-            else{
-                glEnable(GL_LIGHT0);
-            }
+            argiaren_indizea = GL_LIGHT0;
             break;
 
         case KG_KEY_F2:
-            if(glIsEnabled(GL_LIGHT1)){
-                glDisable(GL_LIGHT1);
-            }
-            else{
-                glEnable(GL_LIGHT1);
-            }
+            argiaren_indizea = GL_LIGHT1;
             break;
         
         case KG_KEY_F3:
-            if(glIsEnabled(GL_LIGHT2)){
-                glDisable(GL_LIGHT2);
-            }
-            else{
-                glEnable(GL_LIGHT2);
-            }
+            argiaren_indizea = GL_LIGHT2;
             break;
 
         case KG_KEY_F4:
-            if(glIsEnabled(GL_LIGHT3)){
-                glDisable(GL_LIGHT3);
-            }
-            else{
-                glEnable(GL_LIGHT3);
-            }
+            argiaren_indizea = GL_LIGHT3;
             break;
 
         case KG_KEY_F5:
-            if(glIsEnabled(GL_LIGHT4)){
-                glDisable(GL_LIGHT4);
-            }
-            else{
-                glEnable(GL_LIGHT4);
-            }
+            argiaren_indizea = GL_LIGHT4;
             break;
 
         default:
@@ -520,57 +497,67 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
             return;
     }
 
-    if (_zer_transformatu == KG_TRANSFORMATU_OBJEKTUA){
-
-        if (_selected_object == NULL){
-            printf("Lehenik aukeratu objektu bat.\n");
-            return;
+    if (argiaren_indizea != -1){
+        if(glIsEnabled(argiaren_indizea)){
+            glDisable(argiaren_indizea);
         }
-
-        switch (_transformazio_mota){
-            case KG_TRANSLAZIOA:
-                m = translation_matrix(x, y, z);
-                transform_object(_selected_object, m, _erreferentzia_sistema);
-                break;
-            case KG_BIRAKETA:
-                x *= KG_THETA;
-                y *= KG_THETA;
-                z *= KG_THETA;
-                m = rotation_matrix(y, x, z);
-                transform_object(_selected_object, m, _erreferentzia_sistema);
-                break;
-            case KG_ESKALAKETA:
-                if (x != 0){
-                    x = 1 + x / 10;
-                    y = 1;
-                    z = 1;
-                }
-                else if (y != 0){
-                    x = 1;
-                    y = 1 + y / 10;
-                    z = 1;
-                }
-                else if (z != 0){
-                    x = 1;
-                    y = 1;
-                    z = 1 + z / 10;
-                }
-                m = scale_matrix(x, y, z);
-                transform_object(_selected_object, m, _erreferentzia_sistema);
-                break;
-            case KG_ZIZAILAKETA:
-                x *= KG_DELTA;
-                y *= KG_DELTA;
-                z *= KG_DELTA;
-                m = shearing_matrix(x, y, z);
-                transform_object(_selected_object, m, _erreferentzia_sistema);
-                break;
+        else{
+            glEnable(argiaren_indizea);
         }
+    }
+    else{
+        if (_zer_transformatu == KG_TRANSFORMATU_OBJEKTUA){
 
+            if (_selected_object == NULL){
+                printf("Lehenik aukeratu objektu bat.\n");
+                return;
+            }
+
+            switch (_transformazio_mota){
+                case KG_TRANSLAZIOA:
+                    m = translation_matrix(x, y, z);
+                    transform_object(_selected_object, m, _erreferentzia_sistema);
+                    break;
+                case KG_BIRAKETA:
+                    x *= KG_THETA;
+                    y *= KG_THETA;
+                    z *= KG_THETA;
+                    m = rotation_matrix(y, x, z);
+                    transform_object(_selected_object, m, _erreferentzia_sistema);
+                    break;
+                case KG_ESKALAKETA:
+                    if (x != 0){
+                        x = 1 + x / 10;
+                        y = 1;
+                        z = 1;
+                    }
+                    else if (y != 0){
+                        x = 1;
+                        y = 1 + y / 10;
+                        z = 1;
+                    }
+                    else if (z != 0){
+                        x = 1;
+                        y = 1;
+                        z = 1 + z / 10;
+                    }
+                    m = scale_matrix(x, y, z);
+                    transform_object(_selected_object, m, _erreferentzia_sistema);
+                    break;
+                case KG_ZIZAILAKETA:
+                    x *= KG_DELTA;
+                    y *= KG_DELTA;
+                    z *= KG_DELTA;
+                    m = shearing_matrix(x, y, z);
+                    transform_object(_selected_object, m, _erreferentzia_sistema);
+                    break;
+            }
+        }
+        else {
+            kamera_transformatu(_k, _transformazio_mota, _erreferentzia_sistema, x, y, z);
+        }
     }
-    else {
-        kamera_transformatu(_k, _transformazio_mota, _erreferentzia_sistema, x, y, z);
-    }
+
 
     
     /*In case we have do any modification affecting the displaying of the object, we redraw them*/

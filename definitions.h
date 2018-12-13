@@ -109,6 +109,10 @@ typedef struct {
     GLdouble x, y, z;
 } vector3;
 
+typedef struct {
+    float x, y, z, t;
+} vector4f;
+
 /****************************
  * Structure to store the   *
  * colors in RGB mode       *
