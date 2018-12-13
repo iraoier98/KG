@@ -1,10 +1,10 @@
 #include "definitions.h"
+#include "kamera.h"
+
 #include <GL/glut.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include <math.h>
 #include <stdio.h>
-#include "kamera.h"
 
 /** EXTERNAL VARIABLES **/
 
@@ -61,7 +61,7 @@ void draw_axes()
 void draw_sareta(){
     if (_saretaErakutsi){
         glColor3f(0, 0, 0);
-        for (float i = -99 ; i < 100; i += 1){
+        for (double i = -99 ; i < 100; i += 1){
             glBegin(GL_LINES);
             glVertex3d(i, 0, -i);
             glVertex3d(i, 0, i);

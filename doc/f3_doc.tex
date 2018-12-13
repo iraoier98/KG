@@ -148,8 +148,6 @@ Pertsona baten mugimendua simulatzen duen kamera da. Perspektibazko kamerarekin 
 
 \subsubsection{Transformazioak}
 
-Transform danak lokalien, mobidu begiradien direkzinoan menpe nahigu ta rotetie kamarie geldi ta begiradie mobitzie gureu.
-
 Transformazio hauek kalkulu konplexuago bat eskatzen dute, ez baita bakarrik matrizeak aurretik edo atzetik biderkatzea bezain sinplea.\\
 Arazoetariko bat kamera $Y=0$ planoan mantentzea da. Biraketa horizontalak ez dio honi trabarik egiten, baina bai bertikalak, lurrarekiko angelua aldatzen duenez, kameraren "aurrera" bektorea  biratzen duelako berarekin, $Y=0$ planoaren paralelo izateari utziz. Horretarako, kalkula dezakegu kamerak zein posiziotan bukatuko duen transformazioa burutzean, gero posizioaren altuerarekin translazio global bat aplikatzeko kontrako norabidean.\\
 
@@ -160,6 +158,8 @@ Hala ere, konponketa honek albo-ondorio bat dakar. Goiko eskuineko irudian ikus 
 Bigarren arazoa lehenengoarekin lotuta dago. Kamera bertikalean biratu ondoren, horizontalean biratuz gero, kameraren posizioa geldi geratzen den arren, begirada ez da horizontalean biratzen, beste plano batekiko baino. Arazoa konpontzeko kameraren biraketa bertikala desegin behar da lehen, gero biratu horizontalean eta azkenik berregin biraketa bertikala, desio den transformazioa lortzeko. Konponketa honek ez dauka albo-ondoriorik.\\
 
 SARTU HAMEN IRUDIXE, ARAZOA EZKERRIEN TA SOLUZINOA ESKUMIEN\\
+
+Matrizeen konbinaketa hau ezinbestekoa da kamera ibiltariaren aldaketa-pilak ondo funtziona dezan, bai aldaketak desegiteko eta bai berregiteko, konbinazioan parte hartzen duten matrize guztiak "pack" berean aplika daitezen.
 
 
 \subsection{Aldaketak desegitea eta berregitea}
