@@ -154,9 +154,11 @@ void display(void) {
             glBegin(GL_POLYGON);
             for (v = 0; v < aux_obj->face_table[f].num_vertices; v++) {
                 v_index = aux_obj->face_table[f].vertex_table[v];
-                glNormal3d(aux_obj->vertex_table[v_index].normal_vector->x,
-                        aux_obj->vertex_table[v_index].normal_vector->y,
-                        aux_obj->vertex_table[v_index].normal_vector->z);
+                
+                glNormal3d(aux_obj->vertex_table[v_index].normal_vector.x,
+                        aux_obj->vertex_table[v_index].normal_vector.y,
+                        aux_obj->vertex_table[v_index].normal_vector.z);
+                
                 glVertex3d(aux_obj->vertex_table[v_index].coord.x,
                         aux_obj->vertex_table[v_index].coord.y,
                         aux_obj->vertex_table[v_index].coord.z);

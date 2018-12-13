@@ -157,6 +157,11 @@ void keyboard(unsigned char key, int x, int y) {
         _zer_transformatu = KG_TRANSFORMATU_KAMERA;
         break;
 
+    case 'a':
+    case 'A':
+        printf("Aldaketak argiei aplikatuko zaizkie\n");
+        _zer_transformatu = KG_TRANSFORMATU_ARGIA;
+        break;
 
     case 'c':
     case 'C':
@@ -351,6 +356,17 @@ void keyboard(unsigned char key, int x, int y) {
                 m = scale_matrix(1.1, 1.1, 1.1);
                 transform_object(_selected_object, m, _erreferentzia_sistema);
             }
+        }
+        break;
+    
+    case 13: /* <ENTER> */
+        if (glIsEnabled(GL_LIGHTING)){
+            glDisable(GL_LIGHTING);
+            glDisable(GL_COLOR_MATERIAL); //GL_COLOR_MATERIAL MOMENTUZ
+        }
+        else{
+            glEnable(GL_LIGHTING);
+            glEnable(GL_COLOR_MATERIAL);
         }
         break;
 

@@ -22,36 +22,36 @@ double zeinua(double x){
 
 /* BEKTOREAK */
 
-vector3* points2vector(vertex* p1, vertex* p2){
-    vector3* v;
-    v->x = p1->coord.x - p2->coord.x;
-    v->y = p1->coord.y - p2->coord.y;
-    v->z = p1->coord.z - p2->coord.z;
+vector3 vertexes2vector(vertex* p1, vertex* p2){
+    vector3 v;
+    v.x = p1->coord.x - p2->coord.x;
+    v.y = p1->coord.y - p2->coord.y;
+    v.z = p1->coord.z - p2->coord.z;
 
     return v;
 }
 
-vector3* cross_product(vector3* a, vector3* b){
+vector3 cross_product(vector3* a, vector3* b){
     GLdouble c1 = a->y * b->z - b->y * a->z;
     GLdouble c2 = a->z * b->x - b->z * a->x;
     GLdouble c3 = a->x * b->y - b->x * a->y;
 
     GLdouble module = sqrt(pow(c1,2) + pow(c2,2) + pow(c3,2));
     
-    vector3* perp_vector;
-    perp_vector->x = c1/module;
-    perp_vector->y = c2/module;
-    perp_vector->z = c3/module;
+    vector3 perp_vector;
+    perp_vector.x = c1/module;
+    perp_vector.y = c2/module;
+    perp_vector.z = c3/module;
 
     return perp_vector;
 }
 
-vector3* sum_vectors(vector3* a, vector3* b){
-    vector3* v;
+vector3 sum_vectors(vector3* a, vector3* b){
+    vector3 v;
 
-    v->x = a->x + b->x;
-    v->y = a->y + b->y;
-    v->z = a->z + b->z;
+    v.x = a->x + b->x;
+    v.y = a->y + b->y;
+    v.z = a->z + b->z;
 
     return v;
 }

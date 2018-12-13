@@ -77,6 +77,7 @@
 
 #define KG_TRANSFORMATU_OBJEKTUA            0
 #define KG_TRANSFORMATU_KAMERA              1
+#define KG_TRANSFORMATU_ARGIA               2
 
 #define KG_ORTOGRAFIKOA                     0
 #define KG_PERSPEKTIBAKOA                   1
@@ -119,7 +120,7 @@ typedef struct {
 typedef struct {
     point3 coord;                       /* coordinates,x, y, z */
     GLint num_faces;                    /* number of faces that share this vertex */
-    vector3* normal_vector;             /* normal vector of vertex */
+    vector3 normal_vector;             /* normal vector of vertex */
 } vertex;
 
 /****************************
