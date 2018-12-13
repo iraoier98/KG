@@ -15,7 +15,7 @@ argia* argia_sortu(){
 
     GLfloat kokapena [4] = {0.0, 10.0, 0.0, 1.0};
     a->kokapena =  kokapena;
-    GLfloat norabidea [4] = {1.0, 0.0, 0.0, 1.0};
+    GLfloat norabidea [4] = {1.0, 0.0, 0.0, 0.0};
     a->norabidea = norabidea;
     a->constant_atenuation = 1.0;
     GLfloat horia [4] = {0.0, 1.0, 1.0,  1.0};
@@ -54,10 +54,10 @@ void argia_kargatu(argia* a, int light){
             glLightf (light , GL_SPOT_CUTOFF , a->angelua);
         }
         else{
-            glLightfv (GL_LIGHT0 , GL_POSITION , a->kokapena );
-            glLightfv (GL_LIGHT0 , GL_SPOT_DIRECTION , a->norabidea );
-            glLightf (GL_LIGHT0 , GL_SPOT_CUTOFF , 180.0); //Eguzki motak beti izango du 180ºko angelua.
-            glLightf (GL_LIGHT0 , GL_SPOT_EXPONENT , a->gogortasuna);
+            glLightfv (light , GL_POSITION , a->kokapena );
+            glLightfv (light , GL_SPOT_DIRECTION , a->norabidea );
+            glLightf (light , GL_SPOT_CUTOFF , 180.0); //Eguzki motak beti izango du 180ºko angelua.
+            glLightf (light , GL_SPOT_EXPONENT , a->gogortasuna);
         }
     }
 }

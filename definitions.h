@@ -124,7 +124,6 @@ typedef struct {
 typedef struct {
     point3 coord;                       /* coordinates,x, y, z */
     GLint num_faces;                    /* number of faces that share this vertex */
-    vector3 normal_vector;             /* normal vector of vertex */
 } vertex;
 
 /****************************

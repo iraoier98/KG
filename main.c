@@ -6,6 +6,7 @@
 #include "io.h"
 #include "definitions.h"
 #include "kamera.h"
+#include "argia.h"
 
 /** GLOBAL VARIABLES **/
 
@@ -17,6 +18,8 @@ GLdouble _ortho_z_min,_ortho_z_max;         /* Variables for the control of the 
 object3d * _first_object= 0;                /* List of objects*/
 object3d * _selected_object = 0;            /* Object currently selected*/
 int _saretaErakutsi = 0;                    /* Sareta erakusteko "boolearra"  // 1 => erakutsi, 0 => ezkutatu*/
+argia* _a;
+
 
 kamera* _k;
 
@@ -45,6 +48,9 @@ void initialization (){
 
     /* IO-ko beharrezko hasieraketak burutu */
     io_init();
+
+    _a = argia_sortu();
+    argia_kargatu(_a,GL_LIGHT0);
 }
 
 

@@ -22,28 +22,37 @@ double zeinua(double x){
 
 /* BEKTOREAK */
 
-vector3 vertexes2vector(vertex* p1, vertex* p2){
-    vector3 v;
-    v.x = p1->coord.x - p2->coord.x;
-    v.y = p1->coord.y - p2->coord.y;
-    v.z = p1->coord.z - p2->coord.z;
-
-    return v;
+double length(vector3 vector){
+    return sqrt(pow(vector.x, 2) + pow(vector.y, 2) + pow(vector.z, 2));
 }
 
-vector3 cross_product(vector3* a, vector3* b){
-    GLdouble c1 = a->y * b->z - b->y * a->z;
-    GLdouble c2 = a->z * b->x - b->z * a->x;
-    GLdouble c3 = a->x * b->y - b->x * a->y;
+vector3 normalize(vector3 vector){
+    vector3 result;
+    double module = length(vector);
+    result.x = vector.x / module;
+    result.y = vector.y / module;
+    result.z = vector.z / module;
+    return result;
+}
 
-    GLdouble module = sqrt(pow(c1,2) + pow(c2,2) + pow(c3,2));
-    
-    vector3 perp_vector;
-    perp_vector.x = c1/module;
-    perp_vector.y = c2/module;
-    perp_vector.z = c3/module;
+vector3 substract(vector3 v1, vector3 v2){
+    vector3 result;
+    result.x = v1.x - v2.x;
+    result.y = v1.y - v2.y;
+    result.z = v1.z - v2.z;
+    return result;
+}
 
-    return perp_vector;
+
+
+vector3 cross_product(vector3 a, vector3 b){
+    vector3 normal;
+    normal.x = a.y * b.z - a.z - b.y;
+    normal.y = a.z * b.x - a.x - b.z;
+    normal.z = a.x * b.y - a.y - b.x;
+
+    double module = length(normal);
+    return normalize(normal);
 }
 
 vector3 sum_vectors(vector3* a, vector3* b){

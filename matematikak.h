@@ -13,11 +13,8 @@ double zeinua(double x);
 
 /* --------------------BEKTOREAK----------------------- */
 
-/* Bi puntu emanda, haien arteko bektorea kalkulatzen du. */
-vector3 vertexes2vector(vertex* p1, vertex* p2);
-
 /* Bi bektore emanda, haien bektore normala kalkulatuko du. */
-vector3 cross_product(vector3* a, vector3* b);
+vector3 cross_product(vector3 a, vector3 b);
 
 /* Bi bektoren elementu bakoitza batzen du. */
 vector3 sum_vectors(vector3* a, vector3* b);

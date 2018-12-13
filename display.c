@@ -138,15 +138,17 @@ void display(void) {
     draw_axes();
     draw_sareta();
 
+    /* Argiak kargatu */
+
     /*Now each of the objects in the list*/
     while (aux_obj != 0) {
 
         /* Select the color, depending on whether the current object is the selected one or not */
-        if (aux_obj == _selected_object){
-            glColor3f(KG_COL_SELECTED_R,KG_COL_SELECTED_G,KG_COL_SELECTED_B);
-        }else{
-            glColor3f(KG_COL_NONSELECTED_R,KG_COL_NONSELECTED_G,KG_COL_NONSELECTED_B);
-        }
+        // if (aux_obj == _selected_object){
+        //     glColor3f(KG_COL_SELECTED_R,KG_COL_SELECTED_G,KG_COL_SELECTED_B);
+        // }else{
+        //     glColor3f(KG_COL_NONSELECTED_R,KG_COL_NONSELECTED_G,KG_COL_NONSELECTED_B);
+        // }
 
         /* Draw the object; for each face create a new polygon with the corresponding vertices */
         //lookat
@@ -156,9 +158,9 @@ void display(void) {
             for (v = 0; v < aux_obj->face_table[f].num_vertices; v++) {
                 v_index = aux_obj->face_table[f].vertex_table[v];
                 
-                glNormal3d(aux_obj->vertex_table[v_index].normal_vector.x,
-                        aux_obj->vertex_table[v_index].normal_vector.y,
-                        aux_obj->vertex_table[v_index].normal_vector.z);
+                glNormal3d(aux_obj->face_table[f].normal_vector.x,
+                        aux_obj->face_table[f].normal_vector.y,
+                        aux_obj->face_table[f].normal_vector.z);
                 
                 glVertex3d(aux_obj->vertex_table[v_index].coord.x,
                         aux_obj->vertex_table[v_index].coord.y,
@@ -171,10 +173,6 @@ void display(void) {
         aplikatu_kameraren_transformazioa(_k);
         aux_obj = aux_obj->next;
     }
-
-    /* Argiak kargatu */
-    argia* a = argia_sortu();
-    argia_kargatu(a,GL_LIGHT0);
 
     /*Do the actual drawing*/
     glFlush();

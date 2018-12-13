@@ -202,46 +202,24 @@ int read_wavefront(char * file_name, object3d * object_ptr) {
     // Calculates each face's normal vector 
     for (i = 0; i < object_ptr->num_faces; i++){
         vector3 v;
-        if(object_ptr->face_table[i].num_vertices >= 3){
-            vertex* p1 = &object_ptr->vertex_table[object_ptr->face_table[i].vertex_table[0]];
-            vertex* p2 = &object_ptr->vertex_table[object_ptr->face_table[i].vertex_table[1]];
-            vertex* p3 = &object_ptr->vertex_table[object_ptr->face_table[i].vertex_table[2]];
+        // if(object_ptr->face_table[i].num_vertices >= 3){
+            vertex p1 = object_ptr->vertex_table[object_ptr->face_table[i].vertex_table[0]];
+            vertex p2 = object_ptr->vertex_table[object_ptr->face_table[i].vertex_table[1]];
+            vertex p3 = object_ptr->vertex_table[object_ptr->face_table[i].vertex_table[2]];
 
-            vector3 v1 = vertexes2vector(p1,p2);
-            vector3 v2 = vertexes2vector(p1,p3);
+            vector3 v1 = {p2.coord.x - p1.coord.x, p2.coord.y - p1.coord.y, p2.coord.z - p1.coord.z};
+            vector3 v2 = {p3.coord.x - p1.coord.x, p3.coord.y - p1.coord.y, p3.coord.z - p1.coord.z};
+            v =  cross_product(v1,v2);
+        // }
+        // else{
+        //     vector3 v = {0.,0.,0.};
+        //     printf("Txarto!\n");
+        // }
 
-            v =  cross_product(&v1,&v2);
-
-        }
-        else{
-            vector3 v = {0.,0.,0.};
-        }
-
-        //printf("%d . bektore normala: %f,%f,%f ",i,v.x,v.y,v.z);
+        printf("%d . bektore normala: %f,%f,%f\n",i,v.x,v.y,v.z);
 
         object_ptr->face_table[i].normal_vector = v;
         
-    }
-    
-    // Calculates each vertex's mean normal vector.
-    for (i = 0; i < object_ptr->num_faces; i++){
-        for (j = 0; j < object_ptr->face_table[i].num_vertices; j++){
-            vector3 v = object_ptr->vertex_table[object_ptr->face_table[i].vertex_table[j]].normal_vector;
-            if (&v != NULL){
-                v = sum_vectors(&v,&object_ptr->face_table[i].normal_vector);
-            }
-            else{
-                v = object_ptr->face_table[i].normal_vector;
-            }
-        }
-    }
-    for (i = 0; i < object_ptr->num_vertices; i++){
-        vector3 normal = object_ptr->vertex_table[i].normal_vector;
-        int aurpegi_kop = object_ptr->vertex_table[i].num_faces;
-
-        normal.x = normal.x/aurpegi_kop;
-        normal.y = normal.y/aurpegi_kop;
-        normal.z = normal.z/aurpegi_kop;
     }
     
     return (0);
