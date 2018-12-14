@@ -32,5 +32,7 @@ typedef struct argia{
 argia* argia_sortu();
 void argi_mota_aldatu(argia* a);
 void argia_kargatu(argia* a, int indizea);
+void argiaren_angelua_handitu(argia* a);
+void argiaren_angelua_txikitu(argia* a);
 
 #endif // ARGIA_H

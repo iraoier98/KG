@@ -25,6 +25,8 @@
 #define KG_KEY_F3                           3
 #define KG_KEY_F4                           4
 #define KG_KEY_F5                           5
+#define KG_KEY_F11                          11
+#define KG_KEY_F12                          12
 
 
 extern object3d * _first_object;
@@ -317,16 +319,23 @@ void keyboard(unsigned char key, int x, int y) {
             }
         }
         else{
-            /* Objektuaren eskala txikitu ardatz guztietan*/
-            if (_selected_object == NULL){
-                printf("Lehenik aukeratu objektu bat.\n");
-                break;
+            if(_zer_transformatu == KG_TRANSFORMATU_OBJEKTUA){
+                /* Objektuaren eskala txikitu ardatz guztietan*/
+                if (_selected_object == NULL){
+                    printf("Lehenik aukeratu objektu bat.\n");
+                    break;
+                }
+                else{
+                    m = scale_matrix(0.9, 0.9, 0.9);
+                    transform_object(_selected_object, m, _erreferentzia_sistema);
+                }
             }
             else{
-                m = scale_matrix(0.9, 0.9, 0.9);
-                transform_object(_selected_object, m, _erreferentzia_sistema);
+                if(_zer_transformatu == KG_TRANSFORMATU_ARGIA){
+                    //HAUTATUTAKO ARGIA FOKUA BADA
+                    //argiaren_angelua_txikitu(a);
+                }
             }
-
 
         }
         break;
@@ -353,14 +362,22 @@ void keyboard(unsigned char key, int x, int y) {
             }
         }
         else{
-            if (_selected_object == NULL){
-                printf("Lehenik aukeratu objektu bat.\n");
-                break;
-            }
+            if(_zer_transformatu == KG_TRANSFORMATU_OBJEKTUA){
+                if (_selected_object == NULL){
+                    printf("Lehenik aukeratu objektu bat.\n");
+                    break;
+                }
 
+                else{
+                    m = scale_matrix(1.1, 1.1, 1.1);
+                    transform_object(_selected_object, m, _erreferentzia_sistema);
+                }
+            }
             else{
-                m = scale_matrix(1.1, 1.1, 1.1);
-                transform_object(_selected_object, m, _erreferentzia_sistema);
+                if(_zer_transformatu == KG_TRANSFORMATU_ARGIA){
+                    //HAUTATUTAKO ARGIA FOKUA BADA
+                    //argiaren_angelua_handitu(a);
+                }
             }
         }
         break;
@@ -384,6 +401,9 @@ void keyboard(unsigned char key, int x, int y) {
         exit(0);
         break;
     
+    case 48: /* <0> */
+        //argi_mota_aldatu(a);
+
     case 49: /* <1> */
         //Lehenengo argia aukeratu
         break;
@@ -489,6 +509,14 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
 
         case KG_KEY_F5:
             argiaren_indizea = GL_LIGHT4;
+            break;
+        
+        case KG_KEY_F11:
+            //HAUTATUTAKO OBJEKTUARI MATERIALA KARGATU
+            break;
+        
+        case KG_KEY_F12:
+            //HAUTATUTAKO OBJEKTUA IKUSTEKO ERA (FLAT/SMOOTH) ALDATU
             break;
 
         default:

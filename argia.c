@@ -64,3 +64,15 @@ void argia_kargatu(argia* a, int indizea){
         }
     }
 }
+
+void argiaren_angelua_handitu(argia* a){
+    if(a->angelua < 90){
+        a->angelua+=1;
+    }
+}
+
+void argiaren_angelua_txikitu(argia* a){
+    if(a->angelua >0){
+        a->angelua-=1;
+    }
+}
