@@ -9,7 +9,7 @@
 #define KG_WINDOW_TITLE                     "Best OpenGL code ever"
 #define KG_WINDOW_WIDTH                     1280
 #define KG_WINDOW_HEIGHT                    720
-#define KG_WINDOW_X                         400
+#define KG_WINDOW_X                         1920 - 1280
 #define KG_WINDOW_Y                         150
 
 #define KG_MSSG_SELECT_FILE                 "Idatz ezazu fitxategiaren path-a: "

@@ -5,11 +5,11 @@
 
 typedef struct argia{
 
-    GLenum argi_mota;			/* bonbila, eguzki edo foku motakoa */
-    int angelua;                /* fokuaren kasuan, argiaren angelua*/
+    int argi_mota;			   /* bonbila, eguzki edo foku motakoa */
+    GLenum indizea;            /* Zein GL_LIGHT baliori dagokion */
+    int gaituta;               /* 1 => gaituta, 0 => gaitu gabe */
 
-    vector4f kokapena;
-    vector4f norabidea;
+    int angelua;               /* fokuaren kasuan, argiaren angelua*/
 
     float constant_atenuation;
     float linear_atenuation;
@@ -18,23 +18,23 @@ typedef struct argia{
     vector4f ambient;
     vector4f diffuse;
     vector4f specular;
-
     float gogortasuna;
 
-    pila* bonbila_pila;
-    pila* eguzki_pila;
-    pila* foku_pila;
+    pila* transformazio_pila;
     
 } argia;
 
-void argiak_hasieratu(argia* a);
-void argia_sortu(argia* a);
+argia* argia_sortu(GLenum indizea);
+
+/* Itzalita badago, piztu, eta alderantziz. */
+void argiaren_egoera_aldatu(argia* a);
 void argi_mota_aldatu(argia* a);
-void argia_kargatu(argia* a, int indizea);
+void argia_kargatu(argia* a);
 void argiaren_angelua_handitu(argia* a);
 void argiaren_angelua_txikitu(argia* a);
 void desegin_argiaren_transformazioa(argia* a);
 void berregin_argiaren_transformazioa(argia* a);
-void argia_transformatu(argia* a, int transformazio_mota, int erreferentzia_sistema, double x, double y, double z);
-void transform_light(argia* a, GLdouble* transf, int erreferentzia_sistema);
+void argia_transformatu(argia* a, int transformazio_mota, double x, double y, double z);
+
+
 #endif // ARGIA_H

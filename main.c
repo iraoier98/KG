@@ -19,11 +19,9 @@ GLdouble _ortho_z_min,_ortho_z_max;         /* Variables for the control of the 
 object3d * _first_object= 0;                /* List of objects*/
 object3d * _selected_object = 0;            /* Object currently selected*/
 
-argia * _first_light= 0;                    /* List of lights*/
-int _selected_light = 0;                    /* Light currently selected*/
+argia* _argiak[5];                          /* 5 argik osatzen duten argien bektorea*/
 
-int _saretaErakutsi = 0;                    /* Sareta erakusteko "boolearra"  // 1 => erakutsi, 0 => ezkutatu*/
-
+int _saretaErakutsi = 0;                    /* Sareta erakusteko "boolearra", 1 => erakutsi, 0 => ezkutatu*/
 
 kamera* _k;
 
@@ -53,9 +51,11 @@ void initialization (){
     /* IO-ko beharrezko hasieraketak burutu */
     io_init();
 
-    /* Argiak  hasieratu */
-    _first_light = (argia*) malloc(5*(sizeof (object3d)));
-    argiak_hasieratu(_first_light);
+    _argiak[0] = argia_sortu(GL_LIGHT0);
+    _argiak[1] = argia_sortu(GL_LIGHT1);
+    _argiak[2] = argia_sortu(GL_LIGHT2);
+    _argiak[3] = argia_sortu(GL_LIGHT3);
+    _argiak[4] = argia_sortu(GL_LIGHT4);
 }
 
 

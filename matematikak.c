@@ -144,6 +144,15 @@ vector3 matrix_dot_vector(GLdouble* mat, vector3 vec){
     return result;
 }
 
+vector4f matrix_dot_vector4f(GLdouble* mat, vector4f vec){
+    vector4f result;
+    result.x = vec.x * mat[0] + vec.y * mat[4] + vec.z * mat[8]  + vec.t * mat[12];
+    result.y = vec.x * mat[1] + vec.y * mat[5] + vec.z * mat[9]  + vec.t * mat[13];
+    result.z = vec.x * mat[2] + vec.y * mat[6] + vec.z * mat[10] + vec.t * mat[14];
+    result.t = vec.x * mat[3] + vec.y * mat[7] + vec.z * mat[11] + vec.t * mat[15];
+    return result;
+}
+
 GLdouble* matrix_dot_matrix(GLdouble* mat1, GLdouble* mat2){
     GLdouble* result = identity();
     float sum;

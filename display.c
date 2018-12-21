@@ -19,7 +19,7 @@ extern object3d *_selected_object;
 extern int _saretaErakutsi;
 
 extern kamera* _k;
-extern argia* _first_light;
+extern argia* _argiak[5];
 
 /**
  * @brief Function to draw the axes
@@ -128,11 +128,9 @@ void display(void) {
     draw_sareta();
 
     /* Argiak kargatu */
-    argia_kargatu(&_first_light[0], GL_LIGHT0);
-    argia_kargatu(&_first_light[1], GL_LIGHT1);
-    argia_kargatu(&_first_light[2], GL_LIGHT2);
-    argia_kargatu(&_first_light[3], GL_LIGHT3);
-    argia_kargatu(&_first_light[4], GL_LIGHT4);
+    for (int i = 0; i < 5; i++){
+        argia_kargatu(_argiak[i]);
+    }
 
     /*Now each of the objects in the list*/
     while (aux_obj != 0) {

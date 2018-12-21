@@ -43,9 +43,9 @@ int _erreferentzia_sistema;
 int _zer_transformatu;
 
 extern kamera* _k;
-extern argia* _first_light;
+extern argia* _argiak[5];
 
-extern int _selected_light;
+int _aukeratutako_argiaren_indizea = 0;
 
 /* transformazioentzako matrizearen erazagupena */
 GLdouble* m = NULL;
@@ -55,11 +55,60 @@ void transformatu_objektua(object3d* obj, GLdouble* transformazio_matrizea);
 
 /* Transformazio-matrizearen hasieraketa */
 void io_init(){
-    object3d* auxiliar_object = (object3d *) malloc(sizeof (object3d));
+    object3d* auxiliar_object = (object3d*) malloc(sizeof (object3d));
     read_wavefront("obj/cessna.obj", auxiliar_object);
+    GLdouble* m = translation_matrix(-50, 0, 0);
+    transform_object(auxiliar_object, m, _erreferentzia_sistema);
+
     auxiliar_object->next = _first_object;
     _first_object = auxiliar_object;
     _selected_object = _first_object;
+
+    auxiliar_object = (object3d*) malloc(sizeof (object3d));
+    read_wavefront("obj/cessna.obj", auxiliar_object);
+    m = translation_matrix(50, 0, 0);
+    transform_object(auxiliar_object, m, _erreferentzia_sistema);
+
+    auxiliar_object->next = _first_object;
+    _first_object = auxiliar_object;
+    _selected_object = _first_object;
+
+    auxiliar_object = (object3d*) malloc(sizeof (object3d));
+    read_wavefront("obj/cessna.obj", auxiliar_object);
+    m = translation_matrix(0, -50, 0);
+    transform_object(auxiliar_object, m, _erreferentzia_sistema);
+
+    auxiliar_object->next = _first_object;
+    _first_object = auxiliar_object;
+    _selected_object = _first_object;
+
+    auxiliar_object = (object3d*) malloc(sizeof (object3d));
+    read_wavefront("obj/cessna.obj", auxiliar_object);
+    m = translation_matrix(0, 50, 0);
+    transform_object(auxiliar_object, m, _erreferentzia_sistema);
+
+    auxiliar_object->next = _first_object;
+    _first_object = auxiliar_object;
+    _selected_object = _first_object;
+
+    auxiliar_object = (object3d*) malloc(sizeof (object3d));
+    read_wavefront("obj/cessna.obj", auxiliar_object);
+    m = translation_matrix(0, 0, -50);
+    transform_object(auxiliar_object, m, _erreferentzia_sistema);
+
+    auxiliar_object->next = _first_object;
+    _first_object = auxiliar_object;
+    _selected_object = _first_object;
+
+    auxiliar_object = (object3d*) malloc(sizeof (object3d));
+    read_wavefront("obj/cessna.obj", auxiliar_object);
+    m = translation_matrix(0, 0, 50);
+    transform_object(auxiliar_object, m, _erreferentzia_sistema);
+
+    auxiliar_object->next = _first_object;
+    _first_object = auxiliar_object;
+    _selected_object = _first_object;
+
 }
 
 
@@ -193,7 +242,7 @@ void keyboard(unsigned char key, int x, int y) {
                 desegin_transformazioa(_k);
             }
         }
-        else{
+        else if (_zer_transformatu == KG_TRANSFORMATU_OBJEKTUA){
             if (_selected_object == NULL){
                 printf("Lehenik aukeratu objektu bat.\n");
                 break;
@@ -206,6 +255,16 @@ void keyboard(unsigned char key, int x, int y) {
             else{
                 /* Transformazioak desegin */
                 pop(_selected_object->transformazio_pila);
+            }
+        }
+        else{
+            if (glutGetModifiers() & GLUT_ACTIVE_SHIFT){
+                /* Transformazioak berregin */
+                depop(_argiak[_aukeratutako_argiaren_indizea]->transformazio_pila);
+            }
+            else{
+                /* Transformazioak desegin */
+                pop(_argiak[_aukeratutako_argiaren_indizea]->transformazio_pila);
             }
         }
         break;
@@ -336,7 +395,7 @@ void keyboard(unsigned char key, int x, int y) {
             }
             else{
                 if(_zer_transformatu == KG_TRANSFORMATU_ARGIA){
-                    argiaren_angelua_txikitu(&_first_light[_selected_light]);
+                    argiaren_angelua_txikitu(_argiak[_aukeratutako_argiaren_indizea]);
                 }
             }
 
@@ -378,7 +437,7 @@ void keyboard(unsigned char key, int x, int y) {
             }
             else{
                 if(_zer_transformatu == KG_TRANSFORMATU_ARGIA){
-                    argiaren_angelua_handitu(&_first_light[_selected_light]);
+                    argiaren_angelua_handitu(_argiak[_aukeratutako_argiaren_indizea]);
                 }
             }
         }
@@ -388,12 +447,12 @@ void keyboard(unsigned char key, int x, int y) {
         if (glIsEnabled(GL_LIGHTING)){
             glDisable(GL_LIGHTING);
             glDisable(GL_COLOR_MATERIAL); //GL_COLOR_MATERIAL MOMENTUZ
-            printf("Argia desgaituta");
+            printf("Argiak desgaituta.\n");
         }
         else{
             glEnable(GL_LIGHTING);
             glEnable(GL_COLOR_MATERIAL);
-            printf("Argia gaituta");
+            printf("Argiak gaituta.\n");
         }
         break;
 
@@ -406,26 +465,27 @@ void keyboard(unsigned char key, int x, int y) {
         break;
     
     case 48: /* <0> */
-        argi_mota_aldatu(&_first_light[_selected_light]);
+        argi_mota_aldatu(_argiak[_aukeratutako_argiaren_indizea]);
+        break;
 
     case 49: /* <1> */
-        _selected_light = 0;
+        _aukeratutako_argiaren_indizea = 0;
         break;
 
-    case 50: /* <1> */
-        _selected_light = 1;
+    case 50: /* <2> */
+        _aukeratutako_argiaren_indizea = 1;
         break;
 
-    case 51: /* <1> */
-        _selected_light = 2;
+    case 51: /* <3> */
+        _aukeratutako_argiaren_indizea = 2;
         break;
 
-    case 52: /* <1> */
-        _selected_light = 3;
+    case 52: /* <4> */
+        _aukeratutako_argiaren_indizea = 3;
         break;
 
-    case 53: /* <1> */
-        _selected_light = 4;
+    case 53: /* <5> */
+        _aukeratutako_argiaren_indizea = 4;
         break;
 
     default:
@@ -467,7 +527,7 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
     double y = 0;
     double z = 0;
 
-    int argiaren_indizea = -1;
+    int zein_argi_piztu_itzali = -1;
 
     switch (keyCode) {
 
@@ -496,23 +556,23 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
             break;
         
         case KG_KEY_F1:
-            argiaren_indizea = GL_LIGHT0;
+            zein_argi_piztu_itzali = 0;
             break;
 
         case KG_KEY_F2:
-            argiaren_indizea = GL_LIGHT1;
+            zein_argi_piztu_itzali = 1;
             break;
         
         case KG_KEY_F3:
-            argiaren_indizea = GL_LIGHT2;
+            zein_argi_piztu_itzali = 2;
             break;
 
         case KG_KEY_F4:
-            argiaren_indizea = GL_LIGHT3;
+            zein_argi_piztu_itzali = 3;
             break;
 
         case KG_KEY_F5:
-            argiaren_indizea = GL_LIGHT4;
+            zein_argi_piztu_itzali = 4;
             break;
         
         case KG_KEY_F11:
@@ -529,15 +589,8 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
             return;
     }
 
-    if (argiaren_indizea != -1){
-        if(glIsEnabled(argiaren_indizea)){
-            glDisable(argiaren_indizea);
-            printf("Argia itzalita");
-        }
-        else{
-            printf("Argia piztuta");
-            glEnable(argiaren_indizea);
-        }
+    if (zein_argi_piztu_itzali != -1){
+        argiaren_egoera_aldatu(_argiak[zein_argi_piztu_itzali]);
     }
     else{
         if (_zer_transformatu == KG_TRANSFORMATU_OBJEKTUA){
@@ -587,13 +640,11 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
                     break;
             }
         }
-        else {
-            if(_zer_transformatu == KG_TRANSFORMATU_KAMERA){
-                kamera_transformatu(_k, _transformazio_mota, _erreferentzia_sistema, x, y, z);
-            }
-            else{
-                argia_transformatu(&_first_light[_selected_light], _transformazio_mota, _erreferentzia_sistema, x, y, z);
-            }
+        else if(_zer_transformatu == KG_TRANSFORMATU_KAMERA){
+            kamera_transformatu(_k, _transformazio_mota, _erreferentzia_sistema, x, y, z);
+        }
+        else{
+            argia_transformatu(_argiak[_aukeratutako_argiaren_indizea], _transformazio_mota, x, y, z);
         }
     }
 

@@ -47,6 +47,9 @@ point3 matrix_dot_point(GLdouble* mat, point3 vec);
 /* Emandako bektorea emandako matrizearekin transformatu eta bektore berri batean itzultzen du emaitza */ 
 vector3 matrix_dot_vector(GLdouble* mat, vector3 vec);
 
+/* Emandako 4 floatek osatutako bektorea emandako matrizearekin biderkatu eta bektore berri batean itzultzen du emaitza */
+vector4f matrix_dot_vector4f(GLdouble* mat, vector4f vec);
+
 /* Matrizeen arteko dot product-a kalkulatzen du */ 
 GLdouble* matrix_dot_matrix(GLdouble* mat1, GLdouble* mat2);
 
