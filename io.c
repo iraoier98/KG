@@ -2,6 +2,7 @@
 #include "kamera.h"
 #include "matematikak.h"
 #include "load_obj.h"
+#include "argia.h"
 
 #include <GL/glut.h>
 #include <stdio.h>
@@ -42,6 +43,9 @@ int _erreferentzia_sistema;
 int _zer_transformatu;
 
 extern kamera* _k;
+extern argia* _first_light;
+
+extern int _selected_light;
 
 /* transformazioentzako matrizearen erazagupena */
 GLdouble* m = NULL;
@@ -332,8 +336,7 @@ void keyboard(unsigned char key, int x, int y) {
             }
             else{
                 if(_zer_transformatu == KG_TRANSFORMATU_ARGIA){
-                    //HAUTATUTAKO ARGIA FOKUA BADA
-                    //argiaren_angelua_txikitu(a);
+                    argiaren_angelua_txikitu(&_first_light[_selected_light]);
                 }
             }
 
@@ -375,8 +378,7 @@ void keyboard(unsigned char key, int x, int y) {
             }
             else{
                 if(_zer_transformatu == KG_TRANSFORMATU_ARGIA){
-                    //HAUTATUTAKO ARGIA FOKUA BADA
-                    //argiaren_angelua_handitu(a);
+                    argiaren_angelua_handitu(&_first_light[_selected_light]);
                 }
             }
         }
@@ -386,10 +388,12 @@ void keyboard(unsigned char key, int x, int y) {
         if (glIsEnabled(GL_LIGHTING)){
             glDisable(GL_LIGHTING);
             glDisable(GL_COLOR_MATERIAL); //GL_COLOR_MATERIAL MOMENTUZ
+            printf("Argia desgaituta");
         }
         else{
             glEnable(GL_LIGHTING);
             glEnable(GL_COLOR_MATERIAL);
+            printf("Argia gaituta");
         }
         break;
 
@@ -402,26 +406,26 @@ void keyboard(unsigned char key, int x, int y) {
         break;
     
     case 48: /* <0> */
-        //argi_mota_aldatu(a);
+        argi_mota_aldatu(&_first_light[_selected_light]);
 
     case 49: /* <1> */
-        //Lehenengo argia aukeratu
+        _selected_light = 0;
         break;
 
     case 50: /* <1> */
-        //Bigerren argia aukeratu
+        _selected_light = 1;
         break;
 
     case 51: /* <1> */
-        //Hirugarren argia aukeratu
+        _selected_light = 2;
         break;
 
     case 52: /* <1> */
-        //Laugarren argia aukeratu
+        _selected_light = 3;
         break;
 
     case 53: /* <1> */
-        //Bostgarren argia aukeratu
+        _selected_light = 4;
         break;
 
     default:
@@ -528,8 +532,10 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
     if (argiaren_indizea != -1){
         if(glIsEnabled(argiaren_indizea)){
             glDisable(argiaren_indizea);
+            printf("Argia itzalita");
         }
         else{
+            printf("Argia piztuta");
             glEnable(argiaren_indizea);
         }
     }
@@ -582,7 +588,12 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
             }
         }
         else {
-            kamera_transformatu(_k, _transformazio_mota, _erreferentzia_sistema, x, y, z);
+            if(_zer_transformatu == KG_TRANSFORMATU_KAMERA){
+                kamera_transformatu(_k, _transformazio_mota, _erreferentzia_sistema, x, y, z);
+            }
+            else{
+                argia_transformatu(&_first_light[_selected_light], _transformazio_mota, _erreferentzia_sistema, x, y, z);
+            }
         }
     }
 

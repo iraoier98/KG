@@ -19,7 +19,7 @@ extern object3d *_selected_object;
 extern int _saretaErakutsi;
 
 extern kamera* _k;
-extern argia* _a;
+extern argia* _first_light;
 
 /**
  * @brief Function to draw the axes
@@ -122,16 +122,17 @@ void display(void) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     aplikatu_kameraren_transformazioa(_k);
-
-
-    argia_kargatu(_a, GL_LIGHT0);
     
-
     /*Ardatzak eta sareta marraztu*/
     draw_axes();
     draw_sareta();
 
     /* Argiak kargatu */
+    argia_kargatu(&_first_light[0], GL_LIGHT0);
+    argia_kargatu(&_first_light[1], GL_LIGHT1);
+    argia_kargatu(&_first_light[2], GL_LIGHT2);
+    argia_kargatu(&_first_light[3], GL_LIGHT3);
+    argia_kargatu(&_first_light[4], GL_LIGHT4);
 
     /*Now each of the objects in the list*/
     while (aux_obj != 0) {
