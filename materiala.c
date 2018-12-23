@@ -1,81 +1,74 @@
 #include <GL/glut.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <malloc.h>
-#include "definitions.h"
+
 #include "materiala.h"
-
-#define MAXLINE 200
-
-
-materiala* materiala_sortu(vector3* amb, vector3* dif, vector3* spec, float shin){
-
-    vector3* ambient = amb;
-    vector3* diffuse = dif;
-    vector3* specular = spec;
-    float shininess = shin;
-    
-}
 
 /* @brief Fitxategi batetik parametroak esleitzen dizkio material bati
  * @param Fitxategiaren izena
- * @param Materialaren instantzia
- * @return Funtzioaren kodea: ondo egin duen ala erroreren bat egon den.
- * */
-int read_material(char * file_name, materiala* mat){
+ * @return fitxategiko materiala. Errorea gertatuz gero, shininess balioan -1 itzuliko du.
+*/
+struct materiala materiala_irakurri(char* file_name){
+    FILE* file = fopen(file_name, "r");
+    if (file == NULL){
+        struct materiala mat;
+        mat.shininess = -1;
+        return mat;
+    }
 
-    FILE *mat_file;
-    char line[MAXLINE], line_1[MAXLINE], aux[45];
-    int k;
-    int i, j;
-    int values[MAXLINE];
+    char name[128];
+    fscanf(file, "#%s\n", name);
+    printf("Materiala: %s\n", name);
 
-    /* Ka: Ambient colour */
-    /* Kd: Diffuse colour */
-    /* Ks: Specular colour*/
-    /* Ns: Shininess      */
+    float v1, v2, v3;
+    fscanf(file, "%f %f %f\n", &v1, &v2, &v3);
+    printf("Ambient: %f %f %f\n", v1, v2, v3);
+    vector4f ambient = {v1, v2, v3, 1.0};
 
-    vector3* ka = 0;
-    vector3* kd = 0;
-    vector3* ks = 0;
-    float ns = 0;
-    if ((mat_file = fopen(file_name, "r")) == NULL) return (1);
+    fscanf(file, "%f %f %f\n", &v1, &v2, &v3);
+    printf("Diffuse: %f %f %f\n", v1, v2, v3);
+    vector4f diffuse = {v1, v2, v3, 1.0};
 
-    fscanf(mat_file, "\n%[^\n]", line);
-    sscanf(line, "%lf%lf%lf", &(ka->x),
-                    &(ka->y), &(ka->z));
+    fscanf(file, "%f %f %f\n", &v1, &v2, &v3);
+    printf("Specular: %f %f %f\n", v1, v2, v3);
+    vector4f specular = {v1, v2, v3, 1.0};
 
-    fscanf(mat_file, "\n%[^\n]", line);
-    sscanf(line, "%lf%lf%lf", &(kd->x),
-                    &(kd->y), &(kd->z));
+    fscanf(file, "%f %f %f\n", &v1, &v2, &v3);
+    printf("Emission: %f %f %f\n", v1, v2, v3);
+    vector4f emission = {v1, v2, v3, 1.0};
 
-    fscanf(mat_file, "\n%[^\n]", line);
-    sscanf(line, "%lf%lf%lf", &(ks->x),
-                    &(ks->y), &(ks->z));
+    float shininess;
+    fscanf(file, "%f\n", &shininess);
+    printf("Shininess: %f\n", shininess);
 
-    fscanf(mat_file, "\n%[^\n]", line);
-    sscanf(line, "%f", &ns);
+    fclose(file);
 
-    fclose(mat_file);
-
-    /*
-     * Information read is introduced in the structure */
-
-    mat->ambient = &ka;
-    mat->diffuse = &kd;
-    mat->specular = &ks;
-    mat->shininess = ns;
-
-    return (0);
+    struct materiala mat = {ambient, diffuse, specular, emission, shininess};
+    return mat;
 }
+
+struct materiala materiala_default(){
+    struct materiala mat;
+    vector4f ambient = {0.0, 0.05, 0.05, 1.0};
+    vector4f diffuse = {0.4, 0.5, 0.5, 1.0};
+    vector4f specular = {0.04, 0.7, 0.7, 1.0};
+    vector4f emission = {0.0, 0.0, 0.0, 1.0};
+    mat.ambient = ambient;
+    mat.diffuse = diffuse;
+    mat.specular = specular;
+    mat.emission = emission;
+    mat.shininess = 0.07;
+    return mat;
+}
+
+
 
 /* @brief Materialaren informazioa objektuan kargatzen du
  * @param Materialaren instantzia
  * */
-void materiala_kargatu(materiala* m){
-    glMaterialfv (GL_FRONT_AND_BACK , GL_AMBIENT , &(GLfloat) {m->ambient->x, m->ambient->y, m->ambient->z,1.0} );
-    glMaterialfv (GL_FRONT_AND_BACK , GL_DIFFUSE , &(GLfloat) {m->diffuse->x, m->diffuse->y, m->diffuse->z,1.0});
-    glMaterialfv (GL_FRONT_AND_BACK , GL_SPECULAR , &(GLfloat) {m->specular->x, m->specular->y, m->specular->z,1.0});
-    glMaterialf (GL_FRONT_AND_BACK , GL_SHININESS , m->shininess);
+void materiala_kargatu(struct materiala m){
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, (float*) &m.ambient);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, (float*) &m.diffuse);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, (float*) &m.specular);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, (float*) &m.emission);
+    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, m.shininess);
 }

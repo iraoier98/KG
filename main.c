@@ -19,7 +19,7 @@ GLdouble _ortho_z_min,_ortho_z_max;         /* Variables for the control of the 
 object3d * _first_object= 0;                /* List of objects*/
 object3d * _selected_object = 0;            /* Object currently selected*/
 
-argia* _argiak[5];                          /* 5 argik osatzen duten argien bektorea*/
+argia* _argiak[8];                          /* 5 argik osatzen duten argien bektorea*/
 
 int _saretaErakutsi = 0;                    /* Sareta erakusteko "boolearra", 1 => erakutsi, 0 => ezkutatu*/
 
@@ -56,6 +56,9 @@ void initialization (){
     _argiak[2] = argia_sortu(GL_LIGHT2);
     _argiak[3] = argia_sortu(GL_LIGHT3);
     _argiak[4] = argia_sortu(GL_LIGHT4);
+    _argiak[5] = argia_sortu(GL_LIGHT5);
+    _argiak[6] = argia_sortu(GL_LIGHT6);
+    _argiak[7] = argia_sortu(GL_LIGHT7);
 }
 
 

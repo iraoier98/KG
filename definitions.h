@@ -110,6 +110,10 @@ typedef struct {
     GLdouble x, y, z;
 } vector3;
 
+/*****************************
+ * Structure to store the    *
+ * coordinates of 4D vectors *
+ *****************************/
 typedef struct {
     float x, y, z, t;
 } vector4f;
@@ -124,7 +128,7 @@ typedef struct {
 
 /****************************
  * Structure to store       *
- * objects' vertices         *
+ * objects' vertices        *
  ****************************/
 typedef struct {
     point3 coord;                       /* coordinates,x, y, z */
@@ -143,6 +147,16 @@ typedef struct {
 } face;
 
 
+struct materiala{
+    vector4f ambient;
+    vector4f diffuse;
+    vector4f specular;
+    vector4f emission;
+    float shininess;
+};
+
+//typedef struct materiala materiala;
+
 /****************************
  * Structure to store a     *
  * pile of 3D objects       *
@@ -156,7 +170,7 @@ struct object3d{
     point3 max;                         /* coordinates' bigger bounds */
     struct object3d *next;              /* next element in the pile of objects */
     char* filename;                     /* which file contains this object*/
-    materiala* materiala;               /* objektu honen materiala */
+    struct materiala materiala;         /* objektu honen materiala */
     pila* transformazio_pila;           /* transformazio matrizeen pila */
 };
 
