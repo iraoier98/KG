@@ -165,6 +165,7 @@ int read_wavefront(char * file_name, object3d * object_ptr) {
     object_ptr->num_faces = num_faces;
     object_ptr->filename = file_name;
     object_ptr->transformazio_pila = pila_sortu();
+    object_ptr->materiala = 0;
 
 
 

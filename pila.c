@@ -1,6 +1,9 @@
 #include "pila.h"
 #include "stdlib.h"
 
+/* @brief Pila instantzia sortzen du, identitate matrizeaz hasieratuta.
+ * @return Pilaren instantzia
+ * */
 pila* pila_sortu(){
     pila* p = (pila*) malloc(sizeof(pila));
     p->tail = NULL;
@@ -14,6 +17,10 @@ pila* pila_sortu(){
     return p;
 }
 
+/* @brief Pilan matrize berria sartzen du
+ * @param Pilaren instantzia
+ * @param Matrizea
+ * */
 void push(pila* p, GLdouble* matrizea){
     matrize* sartzeko = (matrize*) malloc(sizeof(matrize));
     sartzeko->matrizea = matrizea;
@@ -27,6 +34,10 @@ void push(pila* p, GLdouble* matrizea){
 
 }
 
+/* @brief Pilaren gailurrean dagoen matrizea ateratzen du eta bueltatzen du
+ * @param Pilaren instantzia
+ * @return Pilaren gailurrean dagoen matrizea.
+ * */
 GLdouble* pop(pila* p){
     GLdouble* result = p->tail->matrizea;
     //  Lehen elementua (I) beti nahi dugu egotea pilan, beraz p->tail inoiz ere ezin da izan NULL.
@@ -36,12 +47,17 @@ GLdouble* pop(pila* p){
     return result;
 }
 
-
+/* @brief Pilaren gailurrean dagoen matrizea bueltatzen du, baina ez du ateratzen
+ * @param Pilaren instantzia
+ * @return Pilaren gailurrean deagoen matrizea
+ * */
 GLdouble* peek(pila* p){
     return p->tail->matrizea;
 }
 
-
+/* @brief Ateratako matrizea berreskuratzen du
+ * @param Pilaren instantzia
+ * */
 void depop(pila* p){
     if (p->tail != NULL){
         if (p->tail != NULL && p->tail->hurrengoa != NULL){

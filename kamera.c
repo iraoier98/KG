@@ -13,7 +13,9 @@ point3 hasierako_pos = {0, 0, 0};
 point3 hasierako_look = {0, 0, -1};
 vector3 hasierako_up = {0, 1, 0};
 
-
+/* @brief Kamarara instantzia sortu
+ * @return Kamara objektua
+ * */
 kamera* kamera_sortu(){
     kamera* k = (kamera*) malloc(sizeof(kamera));
 
@@ -26,12 +28,17 @@ kamera* kamera_sortu(){
     return k;
 }
 
-
+/* @brief Kamara mota aldatu
+ * @param Kamararen objektua
+ * */
 void kamera_mota_aldatu(kamera* k){
     k->kamera_mota++;
     k->kamera_mota %= 3;
 }
 
+/* @brief Kamararen kokapen berria kalkulatzen du
+ * @param Kamararen objektua
+ * */
 void aplikatu_kameraren_transformazioa(kamera* k){
     if (k->kamera_mota == KG_PERSPEKTIBAKOA){
         point3 eye = matrix_dot_point(peek(k->per_pila), hasierako_pos);
@@ -47,6 +54,15 @@ void aplikatu_kameraren_transformazioa(kamera* k){
     }
 }
 
+/* @brief Kamararen transformazio berria lortzen da, motaren arabera
+ * @param Kamararen objektua
+ * @param Transformazio mota
+ * @param Erreferentzia sistema: globala edo lokala.
+ * @param kamararen kokapenaren x aldagaia
+ * @param kamararen kokapenaren y aldagaia
+ * @param kamararen kokapenaren z aldagaia
+ * @return 
+ * */
 
 void kamera_transformatu(kamera* k, int transformazio_mota, int erreferentzia_sistema, double x, double y, double z){
 
@@ -129,7 +145,9 @@ void kamera_transformatu(kamera* k, int transformazio_mota, int erreferentzia_si
 
 }
 
-
+/* @brief Kamararen transformazioa desegiten du
+ * @param Kamararen objektua
+ * */
 void desegin_transformazioa(kamera* k){
     if (k->kamera_mota == KG_PERSPEKTIBAKOA){
         pop(k->per_pila);
@@ -138,6 +156,9 @@ void desegin_transformazioa(kamera* k){
     }
 }
 
+/* @brief Kamararen transformazioa berregiten du
+ * @param Kamararen objektua
+ * */
 void berregin_transformazioa(kamera* k){
     if (k->kamera_mota == KG_PERSPEKTIBAKOA){
         depop(k->per_pila);

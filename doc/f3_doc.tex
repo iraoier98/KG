@@ -172,7 +172,7 @@ Bigarren arazoa lehenengoarekin lotuta dago. Kamera bertikalean biratu ondoren, 
 Matrizeen konbinaketa hau ezinbestekoa da kamera ibiltariaren aldaketa-pilak ondo funtziona dezan, bai aldaketak desegiteko eta bai berregiteko, konbinazioan parte hartzen duten matrize guztiak "pack" berean aplika daitezen.
 
 
-\subsection{Aldaketak desegitea eta berregitea}
+\subsection{Aldaketak desegitea eta berregitea}\label{aldaketak}
 
 Objektuekin bezala, kamerari aplikatutako transformazioak desegitea eta berregitea badago, pila mota berdinak baitira. Kamera mota bakoitza bata-bestearekiko independentea izatea nahi dugunez, perspektibazko kamerarentzako pila bat eta ibiltariarentzako beste bat sortuko ditugu (ikus \textbf{1. irudia}). Demagun perspektibazko kamerari edozein hiru transformazio lokal aplikatzen dioguzela, orduan pilaren egoera hurrengoa izango zen:\\
 transformazioen ordena lehenik \textbf{M1}, gero \textbf{M2} eta azkenik \textbf{M3} izanik eta \textbf{I} identitate matrizea,
@@ -219,15 +219,61 @@ Hona hemen datu-egituraren diagrama bat:
 \textbf{2. diagrama}: Pilaren elementuen arteko lotura.
 \end{center}
 
+\section{Argia}
+
+Azken faseko ataletako bat argiak inplementazean datza. Argiak inplementatzeko momentuan hiru motakoak sortuko dugu, bizitza errealekoak imitatzen dituztenak: eguzkia, bonbila eta fokua.\\
+
+Lehenengoa direkzionala da, hau da, ez dauka kokapen finkorik eta bakarrik definitu behar da argiaren norabidea. Beste biak posizionalak dira: bonbilarekin ez dugu norabidea definitu behar da eta fokuarekin bai kokapena, bai norabidea zehaztu behar dira.\\
+
+Hasteko, bost argi definitu ditugu hasieran, baina defektuz desgaituta egongo dira. Orokorrean argiak gaitzeko \tekla{ENTER} sakatu behar da. Hori egin ondoren, argi bakoitza piztu nahi bada banaka joan behar da \tekla{Fn} sakatuz, n argiaren zenbakia izanik, 1etik 5era.\\
+
+Argi bakoitzari ere kolore bat zehaztu ahal zaio. Horretarako, badaude lau aldagai:  \aldagai{ambient}, \aldagai{diffuse}, \aldagai{specular} eta \aldagai{shininess}.\\
+
+Argi bakoitza aukeratzeko erabil daitezke \tekla{1}etik \tekla{5}erako teklak erabili daitezke, horietan transformazioak aplikatzeko.
+
+\subsection{Argien transformazioak}
+
+Argiak transformatzeko kamara proiektiboa bezala egin dugu. Bi transformazio mota egiten ditugu: biraketak eta translazioak. Hala ere, zenbait "muga" jarri ditugu:
+
+\begin{itemize}
+\item Eguzki-argia bakarrik errota daiteke: ez dauka zentzurik argi direkzionala mugitzea, edozein lekutan bektorea berdina baita.
+
+\item Bonbila-argia bakarrik mugitu daiteke: eguzkiaren kontrakoa da.
+
+\item Bakarrik fokuen biraketa lokala izango da; besteak, globalak.
+\end{itemize}
+
+Argien aldaketak egiteko eta desegiteko ikus \erref{aldaketak}.\\
+
+\textbf{OHARRA}: Kamera motaz aldatzean aldaketa guztiak galtzen dira; stack bakarra inplementatuta dago.
+
+\subsection{Fokuen angelua handitu edo txikitu}
+
+Foku motako argia hautatuta badugu eta \tekla{+} edo \tekla{-} sakatzen badugu, honen angelua handituz edo txikituz. Angelua 10 eta 180 tartean egongo da.
+
+\subsection{Argien definizioa kargatu fitxategien bitartez}
+
+Argien definizioa kargatzeko, \fitxategi{materiala.c} fitxategian \metodo{readmateriala()} sortu dugu eta hautatutako argiari balioak esleitzen dizkio.\\
+
+ñjkkjsabdfkasbdfaskfdbsakf
 
 \section{matematikak.c}\label{matematikak}
 
 Kalkulu matematikoak fitxategi bat baino gehiagotik burutzen zirenez eta metodo berak behar zirenez, gure programak behar dituen kalkulu matematiko gutziak \fitxategi{matematikak.c} fitxategian gorde ditugu. Gehien bat matrizeak kudeatzen dituen arren, badauka eskalarrekin eta bektoreekin operatzen dituzten funtzioak.\\
 
-Fitxategi honen abantailarik handiena transformazio-matrizeak sortzeko eta biderkatzeko ahalmena da. Horrela, fitxategi hau erabiltzen duten beste fitxategietan kode txukunagoa dute eta gainera, inplementazioa aldatu nahi badugu, bakarrik metodo bat aldatzea izango da, dena zentralizatuta baitago orain.\\
+Fitxategi honen abantailarik handiena transformazio-matrizeak sortzeko eta biderkatzeko ahalmena da. Horrela, fitxategi hau erabiltzen duten beste fitxategietan kode txukunagoa dute eta gainera, inplementazioa aldatu nahi badugu, bakarrik metodo bat aldatzea izango da, dena zentralizatuta baitago orain.
 
-4. FASIERI BURUZ ZOZE ESAN?
+\section{Materialak}
 
+Behin argiak dauzkagula, beharrezkoa da zehaztea zein koloretakoa izango den objektu bakoitza. Hemen materialak sartzen dira. Hauen bitartez definitzen da objektu bakoitzaren kolorea.\\
+
+Materiala estrukturak argiaren balio berdinak dauzka objektuaren kolorea definitzeko.
+
+\subsection{Materialen definizioa kargatu fitxategien bitartez}
+
+Argien definizioa kargatzeko, \fitxategi{materiala.c} fitxategian \metodo{readmateriala()} sortu dugu eta hautatutako argiari balioak esleitzen dizkio.\\
+
+Materiala kargatzeko fitxategiak hurrengo formatua izango du: lerro bakoitzeko, ordenean, \aldagai{ambient}, \aldagai{diffuse}, \aldagai{specular} eta \aldagai{shininess} aldagaien balioak agertuko dira, besterik ez. Horrela ez izatekotan, erroreak ager daitezke.
 
 \section{Konstante berriak}\label{constants}
 
@@ -245,6 +291,7 @@ Kameraren funtzionamendurako sartutako konstanteak hurrengoak dira:
 \begin{itemize}
 \item KG\_TRANSFORMATU\_OBJEKTUA
 \item KG\_TRANSFORMATU\_KAMERA
+\item KG\_TRANSFORMATU\_ARGIA
 \end{itemize}
 
 \item Kameraren proiekzioaren balioak:
@@ -261,9 +308,14 @@ Kameraren funtzionamendurako sartutako konstanteak hurrengoak dira:
 \item IBIL\_MAX\_GORA\_BEHERA
 \end{itemize}
 
+\item Argi mota:
+\begin{itemize}
+\item KG\_EGUZKIA
+\item KG\_BONBILA
+\item KG\_FOKUA
 \end{itemize}
 
-...
+\end{itemize}
 
 \bibliographystyle{abbrv}
 \bibliography{main}

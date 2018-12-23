@@ -1,5 +1,6 @@
 #include "argia.h"
 #include "matematikak.h"
+#include "definitions.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -8,7 +9,12 @@
 
 vector4f hasierako_kokapena = {0.0, 0.0, 0.0, 1.0};
 vector4f hasierako_norabidea = {0.0, -1.0, 0.0, 0.0};
+vector3 hasierako_norabidea_v3 = {0.0, -1.0, 0.0};
 
+/* @brief Argiaren instantzia sortzen du
+ * @param Argi mota: GL_LIGHT0...
+ * @return Argiaren objektua
+ * */
 argia* argia_sortu(GLenum indizea){
 
     argia* a = (argia*) malloc(sizeof(argia));
@@ -35,6 +41,9 @@ argia* argia_sortu(GLenum indizea){
     return a;
 }
 
+/* @brief Argiaren gaitzen edo desgaitzen du.
+ * @param Argiaren instantzia
+ * */
 void argiaren_egoera_aldatu(argia* a){
     int gaituta = a->gaituta;
     gaituta++;
@@ -52,13 +61,18 @@ void argiaren_egoera_aldatu(argia* a){
 
 }
 
-/* GARRANTZITSUE: KAMARA MOTAZ ALDATZERAKOAN DESEIN EITTEN DA TRANSFORMAZINOAN PILIE. DOKUMENTEU HORI, OSO INPORTANTIE DA. */
+/* @brief Argi mota aldatzen du
+* @param Argiaren instantzia
+* */
 void argi_mota_aldatu(argia* a){
     a->argi_mota++;
     a->argi_mota %= 3;
     a->transformazio_pila = pila_sortu();
 }
 
+/* @brief Argiaren kargatzen du displayean
+ * @param Argiaren instantzia
+ * */
 void argia_kargatu(argia* a){
 
     if (a->gaituta == 0){
@@ -106,7 +120,7 @@ void argia_kargatu(argia* a){
             // glColor3f(0.0, 0.0, 0.0);
         }
         else{
-            vector4f norabidea = matrix_dot_vector4f(transformazioa, hasierako_norabidea);
+            vector3 norabidea = matrix_dot_vector(transformazioa, hasierako_norabidea_v3);
             glLightfv(a->indizea, GL_POSITION, (float*) &kokapena);
             glLightfv(a->indizea, GL_SPOT_DIRECTION, (float*) &norabidea);
             glLightf(a->indizea, GL_SPOT_CUTOFF, a->angelua);
@@ -133,26 +147,46 @@ void argia_kargatu(argia* a){
     }
 }
 
+/* @brief Argiaren angelua handitzen du.
+ * @param Argiaren instantzia
+ * */
 void argiaren_angelua_handitu(argia* a){
     if(a->angelua < 90){
         a->angelua+=1;
     }
 }
 
+/* @brief Argiaren angelua txikitzen du
+ * @param Argiaren instantzia
+ * */
 void argiaren_angelua_txikitu(argia* a){
     if(a->angelua > 10){
         a->angelua-=1;
     }
 }
 
+/* @brief Argiaren transformazioa desegiten du
+ * @param Argiaren instantzia
+ * */
 void desegin_argiaren_transformazioa(argia* a){
     pop(a->transformazio_pila);
 }
 
+/* @brief Argiaren transformazioa berregiten du
+ * @param Argiaren instantzia
+ * */
 void berregin_argiaren_transformazioa(argia* a){
     depop(a->transformazio_pila);
 }
 
+
+/* @brief Argiaren transformatu berria lortzen du
+ * @param Argiaren instantzia
+ * @param Transformazio mota
+ * @param Argiaren x kokapena
+ * @param Argiaren y kokapena
+ * @param Argiaren z kokapena
+ * */   
 void argia_transformatu(argia* a, int transformazio_mota, double x, double y, double z){
 
     if (a->argi_mota == KG_EGUZKIA && transformazio_mota == KG_TRANSLAZIOA){

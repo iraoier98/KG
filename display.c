@@ -1,6 +1,7 @@
 #include "definitions.h"
 #include "kamera.h"
 #include "argia.h"
+#include "materiala.h"
 
 #include <GL/glut.h>
 #include <GL/gl.h>
@@ -147,6 +148,16 @@ void display(void) {
         glMultMatrixd(peek(aux_obj->transformazio_pila));
         for (f = 0; f < aux_obj->num_faces; f++) {
             glBegin(GL_POLYGON);
+
+            //Objektuak material kargatua badu, dsiplayean kargatu, bestela, defektuzkoa.
+            if(_selected_object == 0){
+                glEnable(GL_COLOR_MATERIAL);
+            }
+            else{
+                glDisable(GL_COLOR_MATERIAL);
+                materiala_kargatu(_selected_object->materiala);
+            }
+            //Erpin bakoitzeko, bere aurpegiko bektore normala esleitzen dio.
             for (v = 0; v < aux_obj->face_table[f].num_vertices; v++) {
                 v_index = aux_obj->face_table[f].vertex_table[v];
                 

@@ -3,6 +3,7 @@
 
 #include <GL/gl.h>
 #include "pila.h"
+#include "materiala.h"
 
 /** DEFINITIONS **/
 
@@ -155,6 +156,7 @@ struct object3d{
     point3 max;                         /* coordinates' bigger bounds */
     struct object3d *next;              /* next element in the pile of objects */
     char* filename;                     /* which file contains this object*/
+    materiala* materiala;               /* objektu honen materiala */
     pila* transformazio_pila;           /* transformazio matrizeen pila */
 };
 

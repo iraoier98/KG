@@ -3,6 +3,7 @@
 #include "matematikak.h"
 #include "load_obj.h"
 #include "argia.h"
+#include "materiala.h"
 
 #include <GL/glut.h>
 #include <stdio.h>
@@ -529,6 +530,10 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
 
     int zein_argi_piztu_itzali = -1;
 
+    materiala *auxiliar_material = 0;
+    int read = 0;
+    char* fname = malloc(sizeof (char)*128);
+
     switch (keyCode) {
 
         case KG_KEY_GORA:
@@ -576,7 +581,35 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
             break;
         
         case KG_KEY_F11:
-            //HAUTATUTAKO OBJEKTUARI MATERIALA KARGATU
+
+            if(_selected_object == 0){
+                break;
+            }
+            /*Ask for file*/
+            printf("%s", KG_MSSG_SELECT_FILE);
+            scanf("%s", fname);
+            /*Allocate memory for the structure and read the file*/
+            auxiliar_material = (materiala *) malloc(sizeof (materiala));
+            _selected_object->materiala = auxiliar_material;
+            read = read_material(fname, auxiliar_material);
+            switch (read) {
+            /*Errors in the reading*/
+            case 1:
+                printf("%s: %s\n", fname, KG_MSSG_FILENOTFOUND);
+                break;
+            case 2:
+                printf("%s: %s\n", fname, KG_MSSG_INVALIDFILE);
+                break;
+            case 3:
+                printf("%s: %s\n", fname, KG_MSSG_EMPTYFILE);
+                break;
+            /*Read OK*/
+            case 0:
+                /*Insert the new material into the selected object*/
+                _selected_object->materiala = auxiliar_material;
+                printf("%s\n",KG_MSSG_FILEREAD);
+                break;
+            }
             break;
         
         case KG_KEY_F12:
