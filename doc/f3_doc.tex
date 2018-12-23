@@ -255,18 +255,19 @@ Bizitza errealeko argiak simulatzen dituzten hiru argi mota inplementatu ditugu:
 
 Eguzkia direkzionala da, edozein puntutan bere argiak angelu berarekin inziditzen baitu. Beraz, bakarrik hartu behar dugu kontutan norabidea (eguzkia infinituan baitago). Beste biak posizionalak dira, argi-izpiak posizio batetik era erradial eta dibergente batean abiatuz. Hala ere, bonbilaren kasuan, norabideak ez du garrantziarik, norabide guztietan igortzen baitu argia. Posizoa eta norabidea, biak kontutan hartzen dituen argi mota bakarra fokua da.
 
+\begin{center}
+\includegraphics[scale=0.6]{argia_posdirek.jpeg}
 
-EZ DA IKUSTEN DESBERDINTASUNE IRUDIXETAN.
+\textbf{9. irudia}: argi posizionala eta direkzionala.
+\end{center}
 
 \aldagai{OpenGLk} desberdintasn hau nabaritzen du \aldagai{GL\_POSITION-i} pasatzen diogunaren arabera: bektorearen azken elementua 0 bada, bektore bat pasatzen ari gara, beraz, \aldagai{OpenGLk} eguzki-motatzat hartuko du argi hori. Pasatzen diogun bektorearen azken balioa 1 bada, argia posizionala bezala tratatuko du.\\
 
 \begin{center}
 \includegraphics[scale=2.5]{argia_estruktura.png}
 
-\textbf{9. irudia}: argia estruktura.
+\textbf{10. irudia}: argia estruktura.
 \end{center}
-
-BARRIRO ATARA ARGAZKIXE PLS, ALDATU EINDOT ETA.\\
 
 Goiko irudian agertzen den esstrukturaz baliatuz, argairen datuak gordeko ditugu. \aldagai{argi\_mota} eguzki -0- , bonbila -1- edo foku -2- artean desberdintzeko balio du. \aldagai{indizea} zehazten du zein argiri dagokion instantzia horien datuak. \aldagai{gaituta} adierazten du ea argia piztuta dagoenentz. \aldagai{angelua} fokuaren kasuan honek daukan zabalera zehazteko balio du. \aldagai{diffuse} aldagaiak argiaren kolorea zehazten du. \aldagai{ambient} hitzak esaten duen moduan, argiaren ingurumenaren kolorea zehazten du. \aldagai{specular} objektua distiratsua bada, honen kolorea kalkulatzeko zehazten den argiaren kolore-mota hau balio du. \aldagai{gogortasuna} argitik iluntasunera dagoen espektroaren "gogortasuna"zehazten du. Amaitzeko, \aldagai{transformazio\_pila} argiari egindako transfromazio matrizeen pila gordetzeko balio du.\\
 
@@ -294,12 +295,11 @@ Batzuetan argiaren posizioa edo norabideaz ahaztea gerta daitekenez, \textit{deb
 
 \textbf{Oharra}: hasieran, bai posizioak eta norabideak munduko jatorria adierazten duten ardatzekin bat egingo dute eta baliteke ezin ikusi ahal izatea.\\
 
-Hona hemen adibide bat:
+Hona hemen adibide bat:\\
 \begin{center}
-SARTU KAPTURA FOKOREN BAT DEBUG MODOAN, (IKUSTIE ONDO ARDATZAK, NORABIDIENA BEBAI).
-%\includegraphics[scale=1]{}
+\includegraphics[scale=1.3]{debug.png}
 
-\textbf{10. irudia}: \textit{debug} laguntza.
+\textbf{11. irudia}: \textit{debug} laguntza.
 \end{center}
 
 Baina, nola pasatzen dizkiogu OpenGL-ri argiaren egiturako datuak?\\
