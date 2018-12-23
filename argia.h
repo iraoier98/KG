@@ -5,11 +5,10 @@
 
 typedef struct argia{
 
-    int argi_mota;			   /* bonbila, eguzki edo foku motakoa */
-    GLenum indizea;            /* Zein GL_LIGHT baliori dagokion */
-    int gaituta;               /* 1 => gaituta, 0 => gaitu gabe */
-
-    int angelua;               /* fokuaren kasuan, argiaren angelua*/
+    int argi_mota;			    /* bonbila, eguzki edo foku motakoa */
+    GLenum indizea;             /* Zein GL_LIGHT baliori dagokion */
+    int gaituta;                /* 1 => gaituta, 0 => gaitu gabe */
+    int debug;                  /* Debugeatzeko argiaren posizioa/norabidea erakusteko boolearra, 1 => erakutsi, 0 => ez erakutsi */
 
     /* Argia eta objektuaren arteko distantziaren arabera */
     /* intentsitatea kalkulatzeko koefizienteak zehazten  */
@@ -19,20 +18,24 @@ typedef struct argia{
     float quadratic_atenuation;
 
     /* Argiaren koloreak zehazteko */
-
-    vector4f ambient;
-    vector4f diffuse;
-    vector4f specular;
-    float gogortasuna;
+    vector4f ambient;       /* Argiaren izpiak aurpegiaren normalarekiko paraleloak direnean hartzen duen kolore "oinarri bat" */
+    vector4f diffuse;       /* Argiaren kolorea */
+    vector4f specular;      /* Distiraren kolorea */
+    int angelua;            /* Fokuaren kasuan, argiaren angelua*/
+    float gogortasuna;      /* Fokuaren kasuan, argiaren ertzetako "decay"-a. */
 
     pila* transformazio_pila;
     
 } argia;
 
+/* Argi berri bat sortzen du defektuzko balioekin */
 argia* argia_sortu(GLenum indizea);
 
 /* Itzalita badago, piztu, eta alderantziz. */
 void argiaren_egoera_aldatu(argia* a);
+
+/* Argiaren posizioa/norabidea erakutsi */
+void toggle_debug(argia* a);
 
 /* Eguzki, bonbila edo foku moten artean mota aldatzeko */
 void argi_mota_aldatu(argia* a);

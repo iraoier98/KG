@@ -46,8 +46,8 @@ struct materiala materiala_irakurri(char* file_name){
     return mat;
 }
 
-/* @brief Defektuzko balioak dauzkan materiala sortzen du.
- * @return Materiala, defektuzko balioekin.
+/* @brief Defektuzko balioak dauzkan materiala sortzen du: CYAN RUBBER materiala.
+ * @return Defektuzko materiala.
 */
 struct materiala materiala_default(){
     struct materiala mat;

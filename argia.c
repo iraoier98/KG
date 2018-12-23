@@ -11,8 +11,8 @@ vector4f hasierako_kokapena = {0.0, 0.0, 0.0, 1.0};
 vector4f hasierako_norabidea = {0.0, -1.0, 0.0, 0.0};
 
 /* @brief Argiaren instantzia sortzen du
- * @param Argi mota: GL_LIGHT0...
- * @return Argiaren objektua
+ * @param indizea: GL_LIGHT0, GL_LIGHT1...
+ * @return Argiaren instantzia
  * */
 argia* argia_sortu(GLenum indizea){
 
@@ -20,8 +20,7 @@ argia* argia_sortu(GLenum indizea){
     a->argi_mota = KG_EGUZKIA;
     a->indizea = indizea;
     a->gaituta = 0;
-
-    a->angelua = 20;
+    a->debug = 0;
 
     vector4f beltza = {0.0, 0.0, 0.0, 1.0};
     vector4f grisa = {0.3, 0.3, 0.3, 1.0};
@@ -33,6 +32,7 @@ argia* argia_sortu(GLenum indizea){
     a->constant_atenuation = 1.0;
     a->linear_atenuation = 0.0;
     a->quadratic_atenuation = 0.0;
+    a->angelua = 20;
     a->gogortasuna = 0.1;
 
     a->transformazio_pila = pila_sortu();
@@ -57,8 +57,17 @@ void argiaren_egoera_aldatu(argia* a){
         glDisable(a->indizea);
     }
     a->gaituta = gaituta;
-
 }
+
+/* @brief Argiaren posizioa/norabidea pantailaratzea ahalbiudetzen du.
+* @param Argiaren instantzia
+* */
+void toggle_debug(argia* a){
+    a->debug++;
+    a->debug %= 2;
+}
+
+
 
 /* @brief Argi mota aldatzen du
 * @param Argiaren instantzia
@@ -69,7 +78,7 @@ void argi_mota_aldatu(argia* a){
     a->transformazio_pila = pila_sortu();
 }
 
-/* @brief Argiaren kargatzen du displayean
+/* @brief Uneko MODELVIEW matrizean kargatzen du argia.
  * @param Argiaren instantzia
  * */
 void argia_kargatu(argia* a){
@@ -92,32 +101,36 @@ void argia_kargatu(argia* a){
     if (a->argi_mota==KG_EGUZKIA){
         vector4f norabidea = matrix_dot_vector4f(transformazioa, hasierako_norabidea);
         glLightfv(a->indizea, GL_POSITION, (float*) &norabidea);
-        // glColor3f(1.0, 1.0, 1.0);
-        // glBegin(GL_LINES);
-        // glVertex3d(0, 0, 0);
-        // glVertex3d(kokapena.x, kokapena.y, kokapena.z);
-        // glEnd();
-        // glColor3f(0.0, 0.0, 0.0);
+        if (a->debug == 1){
+            glColor3f(1.0, 1.0, 1.0);
+            glBegin(GL_LINES);
+            glVertex3d(0, 0, 0);
+            glVertex3d(-5 * norabidea.x, -5 * norabidea.y, -5 * norabidea.z);
+            glEnd();
+            glColor3f(0.0, 0.0, 0.0);
+        }
     }
     else{
         vector4f kokapena = matrix_dot_vector4f(transformazioa, hasierako_kokapena);
         if (a->argi_mota==KG_BONBILA){
             glLightfv(a->indizea, GL_POSITION, (float*) &kokapena);
             glLightf(a->indizea, GL_SPOT_CUTOFF, 180.0);
-            // glColor3f(1.0, 1.0, 1.0);
-            // glBegin(GL_LINES);
-            // glVertex3d(kokapena.x + 10, kokapena.y, kokapena.z);
-            // glVertex3d(kokapena.x - 10, kokapena.y, kokapena.z);
-            // glEnd();
-            // glBegin(GL_LINES);
-            // glVertex3d(kokapena.x, kokapena.y + 10, kokapena.z);
-            // glVertex3d(kokapena.x, kokapena.y - 10, kokapena.z);
-            // glEnd();
-            // glBegin(GL_LINES);
-            // glVertex3d(kokapena.x, kokapena.y, kokapena.z + 10);
-            // glVertex3d(kokapena.x, kokapena.y, kokapena.z - 10);
-            // glEnd();
-            // glColor3f(0.0, 0.0, 0.0);
+            if (a->debug == 1){
+                glColor3f(1.0, 1.0, 1.0);
+                glBegin(GL_LINES);
+                glVertex3d(kokapena.x + 3, kokapena.y, kokapena.z);
+                glVertex3d(kokapena.x - 3, kokapena.y, kokapena.z);
+                glEnd();
+                glBegin(GL_LINES);
+                glVertex3d(kokapena.x, kokapena.y + 3, kokapena.z);
+                glVertex3d(kokapena.x, kokapena.y - 3, kokapena.z);
+                glEnd();
+                glBegin(GL_LINES);
+                glVertex3d(kokapena.x, kokapena.y, kokapena.z + 3);
+                glVertex3d(kokapena.x, kokapena.y, kokapena.z - 3);
+                glEnd();
+                glColor3f(0.0, 0.0, 0.0);
+            }
         }
         else{
             vector4f norabidea = matrix_dot_vector4f(transformazioa, hasierako_norabidea);
@@ -125,42 +138,44 @@ void argia_kargatu(argia* a){
             glLightfv(a->indizea, GL_SPOT_DIRECTION, (float*) &norabidea);
             glLightf(a->indizea, GL_SPOT_CUTOFF, a->angelua);
             glLightf(a->indizea, GL_SPOT_EXPONENT, a->gogortasuna);
-            // glColor3f(1.0, 1.0, 1.0);
-            // glBegin(GL_LINES);
-            // glVertex3d(kokapena.x + 10, kokapena.y, kokapena.z);
-            // glVertex3d(kokapena.x - 10, kokapena.y, kokapena.z);
-            // glEnd();
-            // glBegin(GL_LINES);
-            // glVertex3d(kokapena.x, kokapena.y + 10, kokapena.z);
-            // glVertex3d(kokapena.x, kokapena.y - 10, kokapena.z);
-            // glEnd();
-            // glBegin(GL_LINES);
-            // glVertex3d(kokapena.x, kokapena.y, kokapena.z + 10);
-            // glVertex3d(kokapena.x, kokapena.y, kokapena.z - 10);
-            // glEnd();
-            // glBegin(GL_LINES);
-            // glVertex3d(kokapena.x, kokapena.y, kokapena.z);
-            // glVertex3d(kokapena.x + norabidea.x, kokapena.y + norabidea.y, kokapena.z + norabidea.z);
-            // glEnd();
-            // glColor3f(0.0, 0.0, 0.0);
+            if (a->debug == 1){
+                glColor3f(1.0, 1.0, 1.0);
+                glBegin(GL_LINES);
+                glVertex3d(kokapena.x + 3, kokapena.y, kokapena.z);
+                glVertex3d(kokapena.x - 3, kokapena.y, kokapena.z);
+                glEnd();
+                glBegin(GL_LINES);
+                glVertex3d(kokapena.x, kokapena.y + 3, kokapena.z);
+                glVertex3d(kokapena.x, kokapena.y - 3, kokapena.z);
+                glEnd();
+                glBegin(GL_LINES);
+                glVertex3d(kokapena.x, kokapena.y, kokapena.z + 3);
+                glVertex3d(kokapena.x, kokapena.y, kokapena.z - 3);
+                glEnd();
+                glBegin(GL_LINES);
+                glVertex3d(kokapena.x, kokapena.y, kokapena.z);
+                glVertex3d(kokapena.x + 5 * norabidea.x, kokapena.y + 5 * norabidea.y, kokapena.z + 5 * norabidea.z);
+                glEnd();
+                glColor3f(0.0, 0.0, 0.0);
+            }
         }
     }
 }
 
-/* @brief Argiaren angelua handitzen du.
+/* @brief Fokuaren angelua handitzen du.
  * @param Argiaren instantzia
  * */
 void argiaren_angelua_handitu(argia* a){
-    if(a->angelua < 90){
+    if(a->argi_mota == KG_FOKUA && a->angelua < 90){
         a->angelua+=1;
     }
 }
 
-/* @brief Argiaren angelua txikitzen du
+/* @brief Fokuaren angelua txikitzen du
  * @param Argiaren instantzia
  * */
 void argiaren_angelua_txikitu(argia* a){
-    if(a->angelua > 10){
+    if(a->argi_mota == KG_FOKUA && a->angelua > 10){
         a->angelua-=1;
     }
 }
@@ -182,10 +197,8 @@ void berregin_argiaren_transformazioa(argia* a){
 
 /* @brief Argiaren transformatu berria lortzen du
  * @param Argiaren instantzia
- * @param Transformazio mota
- * @param Zenbat mugitu x ardatzean
- * @param Zenbat mugitu y ardatzean
- * @param Zenbat mugitu z ardatzean
+ * @param Transformazio mota.
+ * @param x, y, z. Zein tekla sakatu den.
  * */   
 void argia_transformatu(argia* a, int transformazio_mota, double x, double y, double z){
 
@@ -202,13 +215,25 @@ void argia_transformatu(argia* a, int transformazio_mota, double x, double y, do
     GLdouble* aurreko_transformazioa = peek(a->transformazio_pila);
     GLdouble* transformazioa = NULL;
     if (transformazio_mota == KG_TRANSLAZIOA){
-        transformazioa = translation_matrix(x, y, z);
+        transformazioa = matrix_dot_matrix(aurreko_transformazioa, translation_matrix(x, y, z));
     }
     else if (transformazio_mota == KG_BIRAKETA){
         x *= KG_THETA;
         y *= KG_THETA;
         z *= KG_THETA;
-        transformazioa = rotation_matrix(-y, -x, -z);
+
+        if (a->argi_mota == KG_FOKUA){
+
+            /*  Fokuaren kasuan norabidea bakarrik biratu nahi dugu, beraz lehenik desegin behar dugu posizioa,
+                gero biratu eta azkenik berregin posizioa */
+            vector4f posizio_transformatua = matrix_dot_vector4f(aurreko_transformazioa, hasierako_kokapena);
+            transformazioa = matrix_dot_matrix(aurreko_transformazioa, translation_matrix(-posizio_transformatua.x, -posizio_transformatua.y, -posizio_transformatua.z));
+            transformazioa = matrix_dot_matrix(transformazioa, rotation_matrix(-y, -x, -z));
+            transformazioa = matrix_dot_matrix(transformazioa, translation_matrix(posizio_transformatua.x, posizio_transformatua.y, posizio_transformatua.z));
+        }else{
+            transformazioa = matrix_dot_matrix(aurreko_transformazioa, rotation_matrix(-y, -x, -z));
+        }
+
     }
     else{
         printf("Oharra: Argiek ez dute transformazio mota hau onartzen.\n");
@@ -216,5 +241,5 @@ void argia_transformatu(argia* a, int transformazio_mota, double x, double y, do
     }
 
     /* Sartu pilan transformazio berria */
-    push(a->transformazio_pila, matrix_dot_matrix(aurreko_transformazioa, transformazioa));
+    push(a->transformazio_pila, transformazioa);
 }

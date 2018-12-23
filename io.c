@@ -233,6 +233,13 @@ void keyboard(unsigned char key, int x, int y) {
         kamera_mota_aldatu(_k);
         break;
 
+    case 'd':
+    case 'D':
+        if (_zer_transformatu == KG_TRANSFORMATU_ARGIA){
+            toggle_debug(_argiak[_aukeratutako_argiaren_indizea]);
+        }
+        break;
+
 
     case KG_KEY_CTRL_Z:
 
@@ -610,12 +617,14 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
             }
             /*Ask for file*/
             char fname[128];
-            //fname[0] = '\0';
             printf("%s", KG_MSSG_SELECT_FILE);
             scanf("%s", fname);
-            materiala mat = materiala_irakurri(fname);
+            struct materiala mat = materiala_irakurri(fname);
             if (mat.shininess != -1){
                 _selected_object->materiala = mat;
+            }
+            else{
+                printf("%s\n", KG_MSSG_INVALIDFILE);
             }
             break;
         

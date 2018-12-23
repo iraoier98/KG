@@ -151,7 +151,7 @@ void display(void) {
         for (f = 0; f < aux_obj->num_faces; f++) {
             glBegin(GL_POLYGON);
 
-            //Erpin bakoitzeko, bere aurpegiko bektore normala esleitzen dio.
+            //Erpin bakoitzeko, bere aurpegiko bektore normala eta posizioa kargatu.
             for (v = 0; v < aux_obj->face_table[f].num_vertices; v++) {
                 v_index = aux_obj->face_table[f].vertex_table[v];
                 
@@ -167,7 +167,7 @@ void display(void) {
             glEnd();
         }
         
-        //Kamararen transformazioa sartzen dugu berriro
+        //Kamararen transformazioa hasieratu hurrengo objektuarentzako.
         glLoadIdentity();
         aplikatu_kameraren_transformazioa(_k);
         aux_obj = aux_obj->next;

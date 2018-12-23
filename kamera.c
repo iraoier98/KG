@@ -8,13 +8,12 @@
 
 #define IBIL_MAX_GORA_BEHERA    8
 
-
 point3 hasierako_pos = {0, 0, 0};
 point3 hasierako_look = {0, 0, -1};
 vector3 hasierako_up = {0, 1, 0};
 
 /* @brief Kamarara instantzia sortu
- * @return Kamara objektua
+ * @return Kamera berria
  * */
 kamera* kamera_sortu(){
     kamera* k = (kamera*) malloc(sizeof(kamera));
@@ -29,15 +28,15 @@ kamera* kamera_sortu(){
 }
 
 /* @brief Kamara mota aldatu
- * @param Kamararen objektua
+ * @param Kamararen instantzia
  * */
 void kamera_mota_aldatu(kamera* k){
     k->kamera_mota++;
     k->kamera_mota %= 3;
 }
 
-/* @brief Kamararen kokapen berria kalkulatzen du
- * @param Kamararen objektua
+/* @brief Kameraren transformazioa aplikatzen du uneko MODELVIEW matrizean.
+ * @param Kamararen instantzia
  * */
 void aplikatu_kameraren_transformazioa(kamera* k){
     /* Kamara bakoitza pila desberdina duenez, if hau jarri behar da */
@@ -56,15 +55,12 @@ void aplikatu_kameraren_transformazioa(kamera* k){
 }
 
 /* @brief Kamararen transformazio berria lortzen da, motaren arabera
- * @param Kamararen objektua
+ * @param Kamararen instantzia
  * @param Transformazio mota
  * @param Erreferentzia sistema: globala edo lokala.
- * @param kamararen kokapenaren x aldagaia
- * @param kamararen kokapenaren y aldagaia
- * @param kamararen kokapenaren z aldagaia
+ * @param x, y, z. Zein tekla sakatu den.
  * @return 
  * */
-
 void kamera_transformatu(kamera* k, int transformazio_mota, int erreferentzia_sistema, double x, double y, double z){
 
     /*  Gogoratu x, y eta z aldagaiek zein tekla sakatu den adierazten dutela.

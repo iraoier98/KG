@@ -19,11 +19,11 @@ GLdouble _ortho_z_min,_ortho_z_max;         /* Variables for the control of the 
 object3d * _first_object= 0;                /* List of objects*/
 object3d * _selected_object = 0;            /* Object currently selected*/
 
-argia* _argiak[8];                          /* 5 argik osatzen duten argien bektorea*/
+argia* _argiak[8];                          /* 8 argik osatzen duten argien bektorea */
 
 int _saretaErakutsi = 0;                    /* Sareta erakusteko "boolearra", 1 => erakutsi, 0 => ezkutatu*/
 
-kamera* _k;
+kamera* _k;                                 /* Eszenako kamera */
 
 
 /** GENERAL INITIALIZATION **/
@@ -51,6 +51,7 @@ void initialization (){
     /* IO-ko beharrezko hasieraketak burutu */
     io_init();
 
+    /* Argi bakoitza OpenGLko argi bakoitzari esleitu eta hasieratu */
     _argiak[0] = argia_sortu(GL_LIGHT0);
     _argiak[1] = argia_sortu(GL_LIGHT1);
     _argiak[2] = argia_sortu(GL_LIGHT2);
@@ -69,7 +70,7 @@ int main(int argc, char** argv) {
     print_help();
 
     /* OpenGLren bertsioa pantailaratu */
-    printf("GL version: %s\n", glGetString(GL_VERSION));
+    //printf("GL version: %s\n", glGetString(GL_VERSION));
 
     /* glut initializations */
     glutInit(&argc, argv);

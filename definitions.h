@@ -16,7 +16,7 @@
 #define KG_MSSG_SELECT_FILE                 "Idatz ezazu fitxategiaren path-a: "
 #define KG_MSSG_FILENOTFOUND                "Fitxategi hori ez da existitzen!!"
 #define KG_MSSG_INVALIDFILE                 "Arazoren bat egon da fitxategiarekin ..."
-#define KG_MSSG_EMPTYFILE                   "Fitxategia utsik dago"
+#define KG_MSSG_EMPTYFILE                   "Fitxategia hutsik dago"
 #define KG_MSSG_FILEREAD                    "Fitxategiaren irakurketa buruta"
 
 #define KG_STEP_MOVE                        5.0f

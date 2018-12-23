@@ -182,7 +182,7 @@ GLdouble* shearing_matrix(double x, double y, double z){
 /* @brief Puntu bat emanda, 3 x 4 ko matrizearekin biderkatzen du.
  * @param Matrizea
  * @param Puntua
- * @return Puntu berria
+ * @return Puntu transformatua
 */
 point3 matrix_dot_point(GLdouble* mat, point3 vec){
     point3 result;
@@ -195,7 +195,7 @@ point3 matrix_dot_point(GLdouble* mat, point3 vec){
 /* @brief 3 elementuko bektorea bat emanda, 3 x 3 ko matrizearekin biderkatzen du.
  * @param Matrizea
  * @param Bektorea
- * @return Bektore berria
+ * @return Bektore transformatua
 */
 vector3 matrix_dot_vector(GLdouble* mat, vector3 vec){
     vector3 result;
@@ -209,7 +209,7 @@ vector3 matrix_dot_vector(GLdouble* mat, vector3 vec){
 /* @brief 4 elementuko bektorea bat emanda, 4 x 4 ko matrizearekin biderkatzen du.
  * @param Matrizea
  * @param Bektorea
- * @return Bektore berria
+ * @return Bektore transformatua
 */
 vector4f matrix_dot_vector4f(GLdouble* mat, vector4f vec){
     vector4f result;
@@ -224,7 +224,7 @@ vector4f matrix_dot_vector4f(GLdouble* mat, vector4f vec){
 /* @brief 4 x 4ko bi matrizeen arteko biderketa.
  * @param Matrizea
  * @param Matrizea
- * @return Matrize berria
+ * @return Matrizeen biderketa.
 */
 GLdouble* matrix_dot_matrix(GLdouble* mat1, GLdouble* mat2){
     GLdouble* result = identity();
