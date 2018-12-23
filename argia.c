@@ -9,7 +9,6 @@
 
 vector4f hasierako_kokapena = {0.0, 0.0, 0.0, 1.0};
 vector4f hasierako_norabidea = {0.0, -1.0, 0.0, 0.0};
-vector3 hasierako_norabidea_v3 = {0.0, -1.0, 0.0};
 
 /* @brief Argiaren instantzia sortzen du
  * @param Argi mota: GL_LIGHT0...
@@ -24,17 +23,17 @@ argia* argia_sortu(GLenum indizea){
 
     a->angelua = 20;
 
-    vector4f horia = {0.2, 0.2, 0.0, 1.0};
-    vector4f grisa = {0.1, 0.1, 0.1, 1.0};
-    vector4f zuria = {1.0, 1.0, 1.0, 1.0};
-    a->ambient = horia;
+    vector4f beltza = {0.0, 0.0, 0.0, 1.0};
+    vector4f grisa = {0.3, 0.3, 0.3, 1.0};
+    vector4f zuria = {0.7, 0.7, 0.7, 1.0};
+    a->ambient = beltza;
     a->diffuse = grisa;
     a->specular = zuria;
 
     a->constant_atenuation = 1.0;
     a->linear_atenuation = 0.0;
     a->quadratic_atenuation = 0.0;
-    a->gogortasuna = 1.0;
+    a->gogortasuna = 0.1;
 
     a->transformazio_pila = pila_sortu();
 
@@ -121,7 +120,7 @@ void argia_kargatu(argia* a){
             // glColor3f(0.0, 0.0, 0.0);
         }
         else{
-            vector3 norabidea = matrix_dot_vector(transformazioa, hasierako_norabidea_v3);
+            vector4f norabidea = matrix_dot_vector4f(transformazioa, hasierako_norabidea);
             glLightfv(a->indizea, GL_POSITION, (float*) &kokapena);
             glLightfv(a->indizea, GL_SPOT_DIRECTION, (float*) &norabidea);
             glLightf(a->indizea, GL_SPOT_CUTOFF, a->angelua);
@@ -216,12 +215,6 @@ void argia_transformatu(argia* a, int transformazio_mota, double x, double y, do
         return;
     }
 
-    /* BAKARRIK FOKOAN BIRAKETIE LOKALA, BESTELA GLOBALA */
-    GLdouble* transformatua = NULL;
-    if (a->argi_mota == KG_FOKUA && transformazio_mota == KG_BIRAKETA){
-        transformatua = matrix_dot_matrix(transformazioa, aurreko_transformazioa);
-    }else{
-        transformatua = matrix_dot_matrix(aurreko_transformazioa, transformazioa);
-    }
-    push(a->transformazio_pila, transformatua);
+    /* Sartu pilan transformazio berria */
+    push(a->transformazio_pila, matrix_dot_matrix(aurreko_transformazioa, transformazioa));
 }

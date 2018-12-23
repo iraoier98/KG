@@ -20,7 +20,7 @@ extern object3d *_selected_object;
 extern int _saretaErakutsi;
 
 extern kamera* _k;
-extern argia* _argiak[5];
+extern argia* _argiak[8];
 
 /**
  * @brief Function to draw the axes
@@ -123,40 +123,32 @@ void display(void) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     aplikatu_kameraren_transformazioa(_k);
+
+    /* Sareta eta ardatzek euren kolorea izan dezaten */
+    glEnable(GL_COLOR_MATERIAL);
     
     /*Ardatzak eta sareta marraztu*/
     draw_axes();
     draw_sareta();
 
+
+    /* Objektuen kolorea ezartzeko materialak kargatuko ditugu, glColor() erabili beharrean */
+    glDisable(GL_COLOR_MATERIAL);
+
     /* Argiak kargatu */
-    for (int i = 0; i < 5; i++){
+    for (int i = 0; i < 8; i++){
         argia_kargatu(_argiak[i]);
     }
 
     /*Now each of the objects in the list*/
     while (aux_obj != 0) {
 
-        /* Select the color, depending on whether the current object is the selected one or not */
-        // if (aux_obj == _selected_object){
-        //     glColor3f(KG_COL_SELECTED_R,KG_COL_SELECTED_G,KG_COL_SELECTED_B);
-        // }else{
-        //     glColor3f(KG_COL_NONSELECTED_R,KG_COL_NONSELECTED_G,KG_COL_NONSELECTED_B);
-        // }
-
-        /* Draw the object; for each face create a new polygon with the corresponding vertices */
-        //lookat
         glMultMatrixd(peek(aux_obj->transformazio_pila));
+        materiala_kargatu(aux_obj->materiala);
+
         for (f = 0; f < aux_obj->num_faces; f++) {
             glBegin(GL_POLYGON);
 
-            //Objektuak material kargatua badu, dsiplayean kargatu, bestela, defektuzkoa.
-            if(_selected_object == 0){
-                glEnable(GL_COLOR_MATERIAL);
-            }
-            else{
-                glDisable(GL_COLOR_MATERIAL);
-                materiala_kargatu(_selected_object->materiala);
-            }
             //Erpin bakoitzeko, bere aurpegiko bektore normala esleitzen dio.
             for (v = 0; v < aux_obj->face_table[f].num_vertices; v++) {
                 v_index = aux_obj->face_table[f].vertex_table[v];
@@ -172,6 +164,7 @@ void display(void) {
             }
             glEnd();
         }
+
         glLoadIdentity();
         aplikatu_kameraren_transformazioa(_k);
         aux_obj = aux_obj->next;

@@ -27,6 +27,9 @@
 #define KG_KEY_F3                           3
 #define KG_KEY_F4                           4
 #define KG_KEY_F5                           5
+#define KG_KEY_F6                           6
+#define KG_KEY_F7                           7
+#define KG_KEY_F8                           8
 #define KG_KEY_F11                          11
 #define KG_KEY_F12                          12
 
@@ -44,7 +47,7 @@ int _erreferentzia_sistema;
 int _zer_transformatu;
 
 extern kamera* _k;
-extern argia* _argiak[5];
+extern argia* _argiak[8];
 
 int _aukeratutako_argiaren_indizea = 0;
 
@@ -489,6 +492,18 @@ void keyboard(unsigned char key, int x, int y) {
         _aukeratutako_argiaren_indizea = 4;
         break;
 
+    case 54: /* <6> */
+        _aukeratutako_argiaren_indizea = 5;
+        break;
+
+    case 55: /* <7> */
+        _aukeratutako_argiaren_indizea = 6;
+        break;
+
+    case 56: /* <8> */
+        _aukeratutako_argiaren_indizea = 7;
+        break;
+
     default:
         /*In the default case we just print the code of the key. This is usefull to define new cases*/
         printf("Tekla arrunta: %d %c\n", key, key);
@@ -529,10 +544,6 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
     double z = 0;
 
     int zein_argi_piztu_itzali = -1;
-
-    materiala *auxiliar_material = 0;
-    int read = 0;
-    char* fname = malloc(sizeof (char)*128);
 
     switch (keyCode) {
 
@@ -579,6 +590,18 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
         case KG_KEY_F5:
             zein_argi_piztu_itzali = 4;
             break;
+
+        case KG_KEY_F6:
+            zein_argi_piztu_itzali = 5;
+            break;
+
+        case KG_KEY_F7:
+            zein_argi_piztu_itzali = 6;
+            break;
+
+        case KG_KEY_F8:
+            zein_argi_piztu_itzali = 7;
+            break;
         
         case KG_KEY_F11:
 
@@ -586,29 +609,13 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
                 break;
             }
             /*Ask for file*/
+            char fname[128];
+            //fname[0] = '\0';
             printf("%s", KG_MSSG_SELECT_FILE);
             scanf("%s", fname);
-            /*Allocate memory for the structure and read the file*/
-            auxiliar_material = (materiala *) malloc(sizeof (materiala));
-            _selected_object->materiala = auxiliar_material;
-            read = read_material(fname, auxiliar_material);
-            switch (read) {
-            /*Errors in the reading*/
-            case 1:
-                printf("%s: %s\n", fname, KG_MSSG_FILENOTFOUND);
-                break;
-            case 2:
-                printf("%s: %s\n", fname, KG_MSSG_INVALIDFILE);
-                break;
-            case 3:
-                printf("%s: %s\n", fname, KG_MSSG_EMPTYFILE);
-                break;
-            /*Read OK*/
-            case 0:
-                /*Insert the new material into the selected object*/
-                _selected_object->materiala = auxiliar_material;
-                printf("%s\n",KG_MSSG_FILEREAD);
-                break;
+            materiala mat = materiala_irakurri(fname);
+            if (mat.shininess != -1){
+                _selected_object->materiala = mat;
             }
             break;
         
@@ -625,7 +632,7 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
     if (zein_argi_piztu_itzali != -1){
         argiaren_egoera_aldatu(_argiak[zein_argi_piztu_itzali]);
     }
-    else{
+    else if (x != 0 || y != 0 || z != 0){
         if (_zer_transformatu == KG_TRANSFORMATU_OBJEKTUA){
 
             if (_selected_object == NULL){

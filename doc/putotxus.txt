@@ -1,0 +1,10 @@
+fokoan be biraketa globala.
+
+eskatzen da hiru argi erabiltzeko. Guk zortzi argi dekoguz hiru motatakoan izen aldienak.
+
+materialak erabiltzen doguzenez, argixek beti kolore bera eukodeu:
+ambient baltza, diffuse gris ilune ta specular gris argixe. Argixek stackie ahal izeteko objetuek hartzeko kolore maximoa, ta ez segiduen.
+
+materialak mat karpetan dauz eta http://devernay.free.fr/cours/opengl/materials.html paginetik hartudie.
+
+artxiboan formatoa esplikeu ta errore mekanismoa ein.

@@ -12,6 +12,7 @@
 #include <malloc.h>
 #include "definitions.h"
 #include "matematikak.h"
+#include "materiala.h"
 
 #define MAXLINE 200
 
@@ -165,7 +166,7 @@ int read_wavefront(char * file_name, object3d * object_ptr) {
     object_ptr->num_faces = num_faces;
     object_ptr->filename = file_name;
     object_ptr->transformazio_pila = pila_sortu();
-    object_ptr->materiala = 0;
+    object_ptr->materiala = materiala_default();
 
 
 
