@@ -276,7 +276,7 @@ Argia piztu edo amatatzean, \metodo{argiaren\_egoera\_aldatu()} deitzen zaio eta
 
 \aldagai{GL\_POSITION} aldagaiari argiaren kokapena pasatuko diogu posizionalen kasuan eta bektore bat direkzionaletan, argiaren noranzkoa zehazten duena.\\
 
-\aldagai{GL\_SPOT\_CUTOFF} aldagaiari argiaren angelua pasatuko diogu argi posizionaletan. Fokuaren kasuan, estrukturan \aldagai{angelua} aldagaian gorde duguna izango da eta bonbilaren kasuan 180 gradutako balioa pasatuko diogu.\\
+\aldagai{GL\_SPOT\_CUTOFF} aldagaiari argiaren angelua pasatuko diogu argi posizionaletan. Fokuaren kasuan, estrukturan \aldagai{angelua} aldagaian gorde duguna izango da eta bonbilaren kasuan 180 graduko balioa pasatuko diogu.\\
 
 \aldagai{GL\_SPOT\_DIRECTION} aldagaiari argi posizionalen norabidearen bektorea pasatuko diogu.\\
 
@@ -286,11 +286,11 @@ Argia piztu edo amatatzean, \metodo{argiaren\_egoera\_aldatu()} deitzen zaio eta
 (float*) &a->ambient
 \end{lstlisting}
 
-Argiak pantailaratzeko momentuan "type punning"\cite{punning} egiten dugu (goian dagoen kodean egiten dena). Estrukturan vector4f eran daukagu gordeta, baina \metodo{glLightfv()-ri} float[4]gisa pasatu behar diogu. Parseatze hau ondo dabil bi kasuetan laut \aldagai{float} direlako memorian bata bestearen ondoan daudenak. Hala ere, arriskutsua da egitea ez bada aurretik esandakoa betetzen.\\
+Argiak pantailaratzeko momentuan "type punning"\cite{punning} egiten dugu (goian dagoen kodean egiten dena). Estrukturan vector4f eran daukagu gordeta, baina \metodo{glLightfv()-ri} float[4] gisa pasatu behar diogu. Parseatze hau ondo dabil bi kasuetan laut \aldagai{float} direlako memorian bata bestearen ondoan daudenak. Hala ere, arriskutsua da egitea ez bada aurretik esandakoa betetzen.\\
 
-Argiaren koloreak zehazteko, fitxategi baten bitartez egin daiteke (ikus SAFDASF).\\
+Argi bakoitza aukeratzeko erabil daitezke \tekla{1}etik \tekla{5}erako teklak erabili daitezke, horietan transformazioak aplikatzeko.\\
 
-Argi bakoitza aukeratzeko erabil daitezke \tekla{1}etik \tekla{5}erako teklak erabili daitezke, horietan transformazioak aplikatzeko.
+\textbf{OHARRA:} Materialen kolorea berehala ez saturatzeko ta argi bat baino gehiago nabaritzeko, defektuz, argien \aldagai{ambient} kolorea beltza, \aldagai{diffuse} gris iluna eta \aldagai{specular} gris argia izango dira.
 
 \subsection{Argien transformazioak}
 
@@ -301,12 +301,17 @@ Argiak transformatzeko kamara proiektiboa bezala egin dugu. Bi transformazio mot
 
 \item Bonbila-argia bakarrik mugitu daiteke inguru osoa argiztatzen baitu, ez dauka zentzurik errotatzea.
 
-\item Bakarrik fokuen biraketa lokala izango da; beste transformazio guztiak globalak.
+\item Transformazio guztiak lokalak izango dira. Berez lokala/globala desberdintasuna egin daiteke orain arte egin dugun moduan, hala ere, probak egin eta gero konturatu gara logikoagoa dela lokal moduan egitea transformazio guztiak, global eran argiak gehiegi mugitzen baitira.
+
 \end{itemize}
 
 Argien aldaketak egiteko eta desegiteko ikus \erref{aldaketak}.\\
 
 \textbf{Oharra}: Argi motaz aldatzean, transformazioa hasieratzen da aldaketa guztiak galduz.
+
+\subsection{Argi mota gehiago definitzea}
+
+Oinarrizko hiru argietaz gain, bost gehiago definitu ditugu 1etik 8ra, hots, \aldagai{GL\_LIGHT0}tik \aldagai{GL\_LIGHT7}ra. Hau \fitxategi{main.c}ko funtzio nagusian egiten da.
 
 \subsection{Fokuen angelua handitu edo txikitu}
 
@@ -324,49 +329,23 @@ Fitxategi honen abantailarik handiena transformazio-matrizeak sortzeko eta bider
 
 Behin argiak dauzkagula, beharrezkoa da zehaztea zein koloretakoa izango den objektu bakoitza, distiratasuna edota argi propioa daukan. Hemen materialak sartzen dira. Hauen bitartez definitzen dira aurretik esandago propietateak.\\
 
-OSTABE ERABILLI VECTOR4F PUTIEK ZE 4 KONPONENTEKOAK DIE MACHO.\\
+Materiala estruktura sortu dugu \fitxategi{definitions.h} fitxategian eta \fitxategi{materiala.c}-n definitu ditugu materialekin erlazionatutako funtzioak.\\
 
-Materiala estrukturak argiaren balio berdinak dauzka objektuaren kolorea definitzeko.\\
+Materiala estrukturak argiaren lau aldagai berdinak dauzka eta horietaz gain \aldagai{GL\_EMISSION} daukagu materialaren propietateak definitzeko.\\
 
-HAU GEZURRE DA. SARTU EMISSION, 0 IZEN ARREN, SARTU. ETA GERO ATARA KAPTURIE STRUCTERI TA HAMEN JARRI, BESTIEKAZ EINTELEZ.\\
+Lehenengo hiru propietateek (\aldagai{ambient}, \aldagai{diffuse} eta \aldagai{specular}) materialek argiarekiko duten portaera definitzen dute. Laugarren propietatea, \aldagai{shininess}, materialaren dirdira definitzeko balio du. Azken propietatea, \aldagai{emission}, materialak igortzen duen argia definitzeko balio du.
+
+Objektu bat ez badu materialik, defektuz, \aldagai{cyan rubber} materiala kargatzen zaio.\\
 
 \subsection{Materialen definizioa kargatu fitxategien bitartez}
 
 Materialen definizioa kargatzeko, \fitxategi{materiala.c} fitxategian \metodo{read\_materiala()} sortu dugu eta hautatutako objektuaren materialari balioak esleitzen dizkio.\\
 
-Materiala kargatzeko fitxategiak hurrengo formatua izango du: lerro bakoitzeko, ordenean, \aldagai{ambient}, \aldagai{diffuse}, \aldagai{specular}, \aldagai{emission} eta \aldagai{shininess} aldagaien balioak agertuko dira, besterik ez. Horrela ez izatekotan, erroreak ager daitezke.\\
+Materiala kargatzeko fitxategiak hurrengo formatua izango du: lerro bakoitzeko, ordenean, \aldagai{ambient}, \aldagai{diffuse}, \aldagai{specular}, \aldagai{emission} eta \aldagai{shininess} aldagaien balioak agertuko dira, besterik ez. Horrela ez izatekotan, erroreak ager daitezke. Fitxategia ez bada existitzen, defektuz, \aldagai{shininess} aldagaia -1era jarriko da, besterik ez.\\
 
+Materialak kargatzeko \metodo{materiala\_kargatu()} metodoa daukagu \fitxategi{materiala.c}-n eta \fitxategi{load\_obj.c} fitxategitik deitzen zaio, objektua kargatu baino lehen.
 
-BERREIN MATERIALANA. ONDO IDATZI DANA.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Amaitzeko, esan beharra dago materialen fitxategien\footnote{http://devernay.free.fr/cours/opengl/materials.html} kokapena \fitxategi{/mat} karpetan aurkitu daitezke.
 
 \section{Konstante berriak}\label{constants}
 

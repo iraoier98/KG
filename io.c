@@ -613,7 +613,7 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
             //fname[0] = '\0';
             printf("%s", KG_MSSG_SELECT_FILE);
             scanf("%s", fname);
-            materiala mat = materiala_irakurri(fname);
+            struct materiala mat = materiala_irakurri(fname);
             if (mat.shininess != -1){
                 _selected_object->materiala = mat;
             }
