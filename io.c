@@ -513,7 +513,8 @@ void keyboard(unsigned char key, int x, int y) {
 
     default:
         /*In the default case we just print the code of the key. This is usefull to define new cases*/
-        printf("Tekla arrunta: %d %c\n", key, key);
+        //printf("Tekla arrunta: %d %c\n", key, key);
+        return;
     }
     /*In case we have do any modification affecting the displaying of the object, we redraw them*/
     glutPostRedisplay();
@@ -634,7 +635,7 @@ void special_keyboard(int keyCode, int mouse_x, int mouse_y){
 
         default:
             /* Beste teklaren bat ikutuz gero, bukatu. */
-            printf("Tekla berezia: %d\n", keyCode);
+            //printf("Tekla berezia: %d\n", keyCode);
             return;
     }
 
