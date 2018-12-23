@@ -42,9 +42,9 @@
 
 \tableofcontents
 
-\vspace{1.7cm}
+\vspace{0.7cm}
 \begin{center}
-\includegraphics[scale=0.28]{fase_34_portada.png}\\
+\includegraphics[scale=0.24]{fase_34_portada.png}\\
 \end{center}
 
 \pagebreak
@@ -219,7 +219,12 @@ Hona hemen datu-egituraren diagrama bat:
 \textbf{2. diagrama}: Pilaren elementuen arteko lotura.
 \end{center}
 
-\section{Z-buffer}
+
+
+
+\section{Argia}
+
+\subsection{Z-buffer}
 
 Orain gainazalak marraztu behar ditugula, beharrezkoa da jakitea zein puntu dagoen bestearen atzean. Horretarako, Z-bufferra gaitu behar da \fitxategi{main.c-ko} \metodo{init()} funtzioan.
 
@@ -234,90 +239,99 @@ Kontuan hartu behar da buffer berria gaitu dugunez, bufferra garbitu behar da er
 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 \end{lstlisting}
 
-\section{Erpinen bektore normalak}
+\subsection{Aurpegien bektore normalak}
 
-Argiak eta koloreak ondo funtzionatzeko, erpinen bektore normalak kalkulatu behar dira. Horretarako, \fitxategi{definitions.h}-ko face estrukturan \aldagai{normal\_vector} atributua gehitu diogu, bertan bektore normala gorde dadin.\\
+Errealitatean bezala, argi-izpiek ez dute berdin argiztatzen plano desberdinetan dauden gainazalak, gainazalaren eta argi-izpien arteko angeluaren menpe egonik. Gure programan angelu bera kalkulatu beharko dugu eta horretarako, lehenik objektuen aurpegien bektore normalak (edo perpendikularrak) kalkulatu beharko ditugu. Balioak gordetzeko \fitxategi{definitions.h}-ko \aldagai{face} egituran \aldagai{vector3 normal\_vector} atributua gehitu dugu.\\
 
-\fitxategi{load\_obj.c} fitxategian aurpegi bakoitzaren hiru erpin hartzen ditugu, horietatik bi bektore lortzen ditugu eta horien bektore normala kalkulatzen dugu \fitxategi{matematikak.c} fitxategiko \metodo{cross\_product()} funtzioaz baliatuta, aurpegi horri esleituz. Horrela behin bakarrik egin behar ditugu kalkulu guztiak.\\
+Normalak kalkulatzeko, objektua kargatzerakoan aurpegi bakoitzaren lehen hiru erpinak hartzen ditugu. Kalkulu hau bakarrik behin burutu behar da, transformazioek normalei ere eragiten baitie. Kalkulua burutzeko \fitxategi{matematikak.c} fitxategiko \metodo{cross\_product()} funtzioaz baliatuko gara.\\
 
-\fitxategi{display.c} fitxategiaren \metodo{display()} funtzioan erpin bakoitzaren bektore normala kargatzen dugu bektore bakoitzeko bere aurpegiaren bektore normala pasatuz. Hori egiteko \metodo{glNormal3d()} funtzioa erabiltzen dugu eta bektore normalaren x, y eta z koordenatuak pasatzen dizkiogu.\\
+Azkenik, OpenGL-k normalak erabili ditzan, \fitxategi{display.c} fitxategiko \metodo{display()} funtzioan, erpinen posizioa eman baino lehen, erpin horrek osatzen duen aurpegiaren bektore normala kargatuko dugu. Hori egiteko \metodo{glNormal3d()} funtzioa erabiliko dugu bektore normalaren x, y eta z koordenatuak pasatuz.\\
+
+\textbf{Oharra}: Erpin bakoitza aurpegi bat baino gehiagoren parte izan daitekenez, prozesatzen den azken aurpegiaren normalaren balioa hartuko du, aurreko balioaren gainean idatziko baita normal berriaren balioa.
  
+\subsection{Erazagupena}
 
-\section{Argia}
+Bizitza errealeko argiak simulatzen dituzten hiru argi mota inplementatu ditugu: eguzkia, bonbila eta fokua.\\
 
-Azken faseko ataletako bat argiak inplementazean datza. Argiak inplementatzeko momentuan hiru motakoak sortuko dugu, bizitza errealekoak imitatzen dituztenak: eguzkia, bonbila eta fokua.\\
+Eguzkia direkzionala da, edozein puntutan bere argiak angelu berarekin inziditzen baitu. Beraz, bakarrik hartu behar dugu kontutan norabidea (eguzkia infinituan baitago). Beste biak posizionalak dira, argi-izpiak posizio batetik era erradial eta dibergente batean abiatuz. Hala ere, bonbilaren kasuan, norabideak ez du garrantziarik, norabide guztietan igortzen baitu argia. Posizoa eta norabidea, biak kontutan hartzen dituen argi mota bakarra fokua da.
 
-Lehenengoa direkzionala da, hau da, ez dauka kokapen finkorik infinituan kokatuta dagoelako, hortaz, bakarrik definitu behar da argiaren norabidea, puntu guztietan angelu berdinarekin igortzen baitu. Beste biak posizionalak dira: bonbilarekin ez dugu norabidea definitu behar da eta fokuarekin bai kokapena, bai norabidea zehaztu behar dira.\\
 
-\begin{center}
-\includegraphics[scale=0.8]{argi_direkzionala.png}
-\includegraphics[scale=0.9]{argi_posizionala.png}
-
-\textbf{9. irudia}: argi direkzionala. \textbf{10. irudia}: argi posizionala.
-\end{center}
+EZ DA IKUSTEN DESBERDINTASUNE IRUDIXETAN.
 
 \aldagai{OpenGLk} desberdintasn hau nabaritzen du \aldagai{GL\_POSITION-i} pasatzen diogunaren arabera: bektorearen azken elementua 0 bada, bektore bat pasatzen ari gara, beraz, \aldagai{OpenGLk} eguzki-motatzat hartuko du argi hori. Pasatzen diogun bektorearen azken balioa 1 bada, argia posizionala bezala tratatuko du.\\
 
 \begin{center}
-\includegraphics[scale=2]{argia_estruktura.png}
+\includegraphics[scale=2.5]{argia_estruktura.png}
 
-\textbf{11. irudia}: argia estruktura.
+\textbf{9. irudia}: argia estruktura.
 \end{center}
+
+BARRIRO ATARA ARGAZKIXE PLS, ALDATU EINDOT ETA.\\
 
 Goiko irudian agertzen den esstrukturaz baliatuz, argairen datuak gordeko ditugu. \aldagai{argi\_mota} eguzki -0- , bonbila -1- edo foku -2- artean desberdintzeko balio du. \aldagai{indizea} zehazten du zein argiri dagokion instantzia horien datuak. \aldagai{gaituta} adierazten du ea argia piztuta dagoenentz. \aldagai{angelua} fokuaren kasuan honek daukan zabalera zehazteko balio du. \aldagai{diffuse} aldagaiak argiaren kolorea zehazten du. \aldagai{ambient} hitzak esaten duen moduan, argiaren ingurumenaren kolorea zehazten du. \aldagai{specular} objektua distiratsua bada, honen kolorea kalkulatzeko zehazten den argiaren kolore-mota hau balio du. \aldagai{gogortasuna} argitik iluntasunera dagoen espektroaren "gogortasuna"zehazten du. Amaitzeko, \aldagai{transformazio\_pila} argiari egindako transfromazio matrizeen pila gordetzeko balio du.\\
 
 Orain arte, \aldagai{double} motako zenbakiekin lan egin dugu, baina argiak definitzeko glLightfv-ko parametroak \aldagai{float} motakoak direnez, \aldagai{vector4f} estruktura sortu dugu \fitxategi{definitions.h-n}. Estruktura honek lau \aldagai{float-eko} bektorea gordetzen du.\\
 
-Hasteko, bost argi definitu ditugu hasieran, baina defektuz desgaituta egongo dira. Orokorrean argiak gaitzeko \tekla{ENTER} sakatu behar da. Hori egin ondoren, argi bakoitza piztu nahi bada banaka joan behar da \tekla{F1} - \tekla{F5} teklak sakatuz.\\
 
-Argia piztu edo amatatzean, \metodo{argiaren\_egoera\_aldatu()} deitzen zaio eta bertan argiaren kontrako egoera jartzen zaio: gaituta bazegoen desgaitzen dugu \metodo{glDisable()} futnzioari honen argia pasatuz, eta alderantziz.
+\subsection{Inplementazioa}
 
-\fitxategi{display.c-n} argiak kargatzeko, objktuak marraztu baino lehen, \metodo{argia\_kargatu()} funtzioari argi bakoitza pasatzen zaio. Argia desgaituta badago ez da ezer egiten, baina gaituta egonez gero, \metodo{glLightfv()} metodoari argia (GL\_LIGHT0...), zehaztu nahi dugun parametroa (GL\_POSITION, GL\_SPOT\_CUTOFF...) eta honi dagokion balioa pasatuko diogu.\\
+Zortzi argi definitu ditugu hasieran (3 extra), defektuz desgaituta.\\
+Argiztapena gaitzeko \tekla{ENTER} sakatu behar da, \metodo{glEnable(GL\_LIGHTING)} metodoa deituko duena. Ostean, argi bakoitza pizteko, \tekla{F1} - \tekla{F8} teklak sakatuz, \metodo{argiaren\_egoera\_aldatu()} metodoa deituko duena, dagokion argia piztuz edo itzaliz. Argia gaituta bazegoen, desgaitu egiten du \metodo{glDisable()} funtzioari argiaren indizea pasatuz, kontrako kasuan \metodo{glEnable()} erabiliz.\\
 
-\aldagai{GL\_POSITION} aldagaiari argiaren kokapena pasatuko diogu posizionalen kasuan eta bektore bat direkzionaletan, argiaren noranzkoa zehazten duena.\\
+Argiek objektuetan eragin dezaten, objektuak marraztu baino lehen \metodo{argia\_kargatu()} metodoa erabili behar da argi bakoitzarekin, desgaituta egon arren. Metodo honek argi mota bakoitzaren arabera, argiaren posizioa, norabidea, fokuaren zabalera... ezarriko ditu.\\
 
-\aldagai{GL\_SPOT\_CUTOFF} aldagaiari argiaren angelua pasatuko diogu argi posizionaletan. Fokuaren kasuan, estrukturan \aldagai{angelua} aldagaian gorde duguna izango da eta bonbilaren kasuan 180 graduko balioa pasatuko diogu.\\
-
-\aldagai{GL\_SPOT\_DIRECTION} aldagaiari argi posizionalen norabidearen bektorea pasatuko diogu.\\
-
-\aldagai{GL\_SPOT\_EXPONENT} aldagaiari argitik iluntasunera dagoen espektroaren "gogortasuna" pasatuko diogu.\\
-
-\begin{lstlisting}[language=C]
-(float*) &a->ambient
-\end{lstlisting}
-
-Argiak pantailaratzeko momentuan "type punning"\cite{punning} egiten dugu (goian dagoen kodean egiten dena). Estrukturan vector4f eran daukagu gordeta, baina \metodo{glLightfv()-ri} float[4] gisa pasatu behar diogu. Parseatze hau ondo dabil bi kasuetan laut \aldagai{float} direlako memorian bata bestearen ondoan daudenak. Hala ere, arriskutsua da egitea ez bada aurretik esandakoa betetzen.\\
-
-Argi bakoitza aukeratzeko erabil daitezke \tekla{1}etik \tekla{5}erako teklak erabili daitezke, horietan transformazioak aplikatzeko.\\
-
-\textbf{OHARRA:} Materialen kolorea berehala ez saturatzeko ta argi bat baino gehiago nabaritzeko, defektuz, argien \aldagai{ambient} kolorea beltza, \aldagai{diffuse} gris iluna eta \aldagai{specular} gris argia izango dira.
-
-\subsection{Argien transformazioak}
-
-Argiak transformatzeko kamara proiektiboa bezala egin dugu. Bi transformazio mota egiten ditugu: biraketak eta translazioak. Hala ere, zenbait "muga" jarri ditugu:
+Batzuetan argiaren posizioa edo norabideaz ahaztea gerta daitekenez, \textit{debug} tekla bat inplementatu dugu, argiaren datuak marraztuko dituena. Ezinbestekoa da aurretik \tekla{A} sakatzea eta gaitutako argi bat aukeratuta izatea. Argiaren motaren arabera, datu ezberdinak emango dira:
 
 \begin{itemize}
-\item Eguzki-argia bakarrik errota daiteke: translazioek puntuak afektatzen dituzte, ez bektoreak.
 
-\item Bonbila-argia bakarrik mugitu daiteke inguru osoa argiztatzen baitu, ez dauka zentzurik errotatzea.
+\item Eguzkiaren kasuan, jatorrian zentratutako lerro batek adieraziko du izpien norabidea.
 
-\item Transformazio guztiak lokalak izango dira. Berez lokala/globala desberdintasuna egin daiteke orain arte egin dugun moduan, hala ere, probak egin eta gero konturatu gara logikoagoa dela lokal moduan egitea transformazio guztiak, global eran argiak gehiegi mugitzen baitira.
+\item Bonbilaren kasuan, posizioa adieraziko dute hiru lerroren ebaketak (ardatz bakoitzeko bat, munduaren jatorriaren ardatzen bezala).
+
+\item Fokuaren kasuan, bonbilaren bezala adieraziko da posizioa eta norabidea posizioan zentratutako lerro luzeago batek adieraziko du.
 
 \end{itemize}
 
-Argien aldaketak egiteko eta desegiteko ikus \erref{aldaketak}.\\
+\textbf{Oharra}: hasieran, bai posizioak eta norabideak munduko jatorria adierazten duten ardatzekin bat egingo dute eta baliteke ezin ikusi ahal izatea.\\
 
-\textbf{Oharra}: Argi motaz aldatzean, transformazioa hasieratzen da aldaketa guztiak galduz.
+Hona hemen adibide bat:
+\begin{center}
+SARTU KAPTURA FOKOREN BAT DEBUG MODOAN, (IKUSTIE ONDO ARDATZAK, NORABIDIENA BEBAI).
+%\includegraphics[scale=1]{}
 
-\subsection{Argi mota gehiago definitzea}
+\textbf{10. irudia}: \textit{debug} laguntza.
+\end{center}
 
-Oinarrizko hiru argietaz gain, bost gehiago definitu ditugu 1etik 8ra, hots, \aldagai{GL\_LIGHT0}tik \aldagai{GL\_LIGHT7}ra. Hau \fitxategi{main.c}ko funtzio nagusian egiten da.
+Baina, nola pasatzen dizkiogu OpenGL-ri argiaren egiturako datuak?\\
+Bi modu daude, elementu bakarreko datuak pasatzeko \metodo{glLightf(argiaren indizea, propietatea, datua)} metodoa erabiliko dugu, non 
+propietatea fokuaren angelua \textit{(GL\_SPOT\_CUTOFF)}, atenuazio-faktore lineala \textit{GL\_CONSTANT\_ATTENUATION}... izan daitezken eta datua, berari dagokion kameraren egiturako datua; kasu honetan \aldagai{angelua} eta \aldagai{constant\_attenuation}, hurrenez hurren.\\
+
+Elementu anitzeko balioak pasatzeko hurrengo metodoa erabiliko dugu:
+\begin{lstlisting}[language=C]
+glLightfv(argiaren indizea, propietatea, (float*) &datua);
+\end{lstlisting}
+Kasu honetan \textit{type punning}\cite{punning} bat erabiltzen dugu, datuak \aldagai{vector4f} egituran gordetzen baititugu eta funtzioak \aldagai{float} motako zerrenda batean eskatzen baitizkigu balioak. Praktika hau arriskutsua izan daiteken arren, bi datu-motek era berean errepresentatzen dituztenez memorian balioak, gure kasuan funtzionatzen du.
+
+\subsection{Argien transformazioak}
+
+Argi bakoitza transformatzeko, \tekla{1}etik \tekla{8}erako teklekin aukeratu behar da lehenik. Kameraren bezala, argiak bakarrik biratu eta mugitu daitezke. Hala ere, zenbait argi mota bakoitzak bere mugak ditu:
+
+\begin{itemize}
+\item Eguzki-argia bakarrik bira daiteke. Eguzkiaren definizioan esan bezala, kokapena ez delako erabiltzen kalkuluan, norabidea baizik.
+
+\item Bonbila-argia bakarrik mugi daiteke. Inguru osoa argiztatzen duenez, ez dauka zentzurik biratzeak.
+
+\item Fokuaren norabidearen biraketa posizioaren inguruan izango da, ez jatorriaren inguruan. Horretarako hiru transformazio konbinatu behar dira. Lenehik, posizioa desegin, gero biraketa eta azkenik posizioa berregin.
+
+\end{itemize}
+
+Transformazio guztiak era globalean emango dira. Beraz, ez dago hautatutako erreferentzia-sistema kontutan hartu beharrik.\\
+
+\textbf{Oharra}: Argi motaz aldatzean, transformazioa hasieratzen da aldaketa guztiak galduz. Ez dauka zentzurik fokuaren posizioa gordetzeak eguzkiarentzako, esaterako.
 
 \subsection{Fokuen angelua handitu edo txikitu}
 
-Foku motako argia hautatuta badugu eta \tekla{+} edo \tekla{-} sakatzen badugu, honen angelua handituz edo txikituz. Angelua 10 gradu eta 90 graduren artean egongo da.\\
-
-Argiaren \aldagai{angelua} aldagaia aldatzen dugu eta goian azaldu den \aldagai{GL\_SPOT\_CUTOFF} aldagaiari pasatuko diogu argia pantailaratzeko.\\
+Foku motako argia hautatuta badugu, argiztapen-eremua handitzean edo txikia daukagu. \tekla{+} edo \tekla{-} sakatuz gero, fokuaren angelua aldatzen dugu, beti ere angelua 10 gradu eta 90 graduren artean egonik.
 
 \section{matematikak.c}\label{matematikak}
 
@@ -387,7 +401,15 @@ Kameraren funtzionamendurako sartutako konstanteak hurrengoak dira:
 \item KG\_FOKUA
 \end{itemize}
 
+\item (\fitxategi{io.c} fitxategian) Tekla berrien kodeak:
+\begin{itemize}
+\item F1 - F8 teklak. Argiak gaitzeko/desgaitzeko.
+\item F11 tekla. Objektuaren materiala kargatzeko.
 \end{itemize}
+
+\end{itemize}
+
+\pagebreak
 
 \bibliographystyle{abbrv}
 \bibliography{main}
@@ -423,7 +445,7 @@ Kameraren funtzionamendurako sartutako konstanteak hurrengoak dira:
 \url{https://www.programiz.com/c-programming/c-pointers}
 
 \bibitem{punning}
-\underline{Punning}:\\
+\underline{Type Punning}:\\
 \url{https://en.wikipedia.org/wiki/Type_punning}
 
 
