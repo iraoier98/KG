@@ -40,6 +40,7 @@ void kamera_mota_aldatu(kamera* k){
  * @param Kamararen objektua
  * */
 void aplikatu_kameraren_transformazioa(kamera* k){
+    /* Kamara bakoitza pila desberdina duenez, if hau jarri behar da */
     if (k->kamera_mota == KG_PERSPEKTIBAKOA){
         point3 eye = matrix_dot_point(peek(k->per_pila), hasierako_pos);
         point3 look = matrix_dot_point(peek(k->per_pila), hasierako_look);
@@ -107,6 +108,8 @@ void kamera_transformatu(kamera* k, int transformazio_mota, int erreferentzia_si
         }
     }
 
+
+    /* Perspektiba kamararen kasuan, obkektua bezala transformatzen da */
     else if (k->kamera_mota == KG_PERSPEKTIBAKOA){
 
         GLdouble* uneko_transformazioa = NULL;

@@ -146,13 +146,17 @@ typedef struct {
     vector3 normal_vector;              /* normal vector of face */
 } face;
 
-
+/****************************
+ * Structure to store       *
+ * objects' material's      *
+ * properties               *
+ ****************************/
 struct materiala{
-    vector4f ambient;
-    vector4f diffuse;
-    vector4f specular;
-    vector4f emission;
-    float shininess;
+    vector4f ambient;                   /* objektuaren kolorea argia ematen dionean */
+    vector4f diffuse;                   /* objektuaren kolorea argia ematen ez dionean */
+    vector4f specular;                  /* objektuaren distiraren kolorea */
+    vector4f emission;                  /* objektuaren argi propioa */
+    float shininess;                    /* objektuaren distira */
 };
 
 //typedef struct materiala materiala;

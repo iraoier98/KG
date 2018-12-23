@@ -183,9 +183,9 @@ void berregin_argiaren_transformazioa(argia* a){
 /* @brief Argiaren transformatu berria lortzen du
  * @param Argiaren instantzia
  * @param Transformazio mota
- * @param Argiaren x kokapena
- * @param Argiaren y kokapena
- * @param Argiaren z kokapena
+ * @param Zenbat mugitu x ardatzean
+ * @param Zenbat mugitu y ardatzean
+ * @param Zenbat mugitu z ardatzean
  * */   
 void argia_transformatu(argia* a, int transformazio_mota, double x, double y, double z){
 

@@ -7,6 +7,10 @@
 
 /* ESKALARRAK */
 
+/* @brief Zenbakiaren zeinua bueltatzen du
+ * @param Zenbakia
+ * @return Zenbakiaren zeinua
+*/
 double zeinua(double x){
     if (x > 0){
         return 1;
@@ -22,10 +26,18 @@ double zeinua(double x){
 
 /* BEKTOREAK */
 
+/* @brief Bektore baten luzera kalulatzen du
+ * @param Bektorea
+ * @return Bektorearen luzera
+*/
 double length(vector3 vector){
     return sqrt(pow(vector.x, 2) + pow(vector.y, 2) + pow(vector.z, 2));
 }
 
+/* @brief Bektorea normalizatzen du
+ * @param Bektorea
+ * @return Bektore normalizatua bueltatzen du
+*/
 vector3 normalize(vector3 vector){
     vector3 result;
     double module = length(vector);
@@ -35,6 +47,11 @@ vector3 normalize(vector3 vector){
     return result;
 }
 
+/* @brief Bi bektoreen arteko kenketa bueltatuko du
+ * @param Bektore bat
+ * @param Beste bektore bat
+ * @return Bi bektoreen arteko kenketa.
+*/
 vector3 substract(vector3 v1, vector3 v2){
     vector3 result;
     result.x = v1.x - v2.x;
@@ -44,7 +61,11 @@ vector3 substract(vector3 v1, vector3 v2){
 }
 
 
-
+/* @brief Bi bektore emanda, hauen bektore normala bueltatuko du
+ * @param Bektore bat
+ * @param Beste bektore bat
+ * @return Bi bektoreen normala bueltatzen du
+*/
 vector3 cross_product(vector3 a, vector3 b){
     vector3 normal;
     normal.x = a.y * b.z - a.z * b.y;
@@ -55,6 +76,11 @@ vector3 cross_product(vector3 a, vector3 b){
     return normalize(normal);
 }
 
+/* @brief Bi bektoreen gehiketa egiten du
+ * @param Bektore bat
+ * @param Beste bektore bat
+ * @return Bi bektoreen arteko gehiketa
+*/
 vector3 sum_vectors(vector3* a, vector3* b){
     vector3 v;
 
@@ -67,7 +93,9 @@ vector3 sum_vectors(vector3* a, vector3* b){
 
 /* MATRIZEAK */
 
-
+/* @brief Identitate matrizea bueltatzen du
+ * @return Identitate matrizea
+*/
 GLdouble* identity(){
     GLdouble* m = (GLdouble*) malloc(16 * sizeof(GLdouble));
     m[0]=1;   m[4]=0;   m[8]=0;    m[12]=0;
@@ -77,6 +105,12 @@ GLdouble* identity(){
     return m;
 }
 
+/* @brief Puntu bat emanda, 4 x 4 ko translazio matrizea bueltatzen du
+ * @param x koordenatua
+ * @param y koordenatua
+ * @param z koordenatua
+ * @return Translazio matrizea
+*/
 GLdouble* translation_matrix(double x, double y, double z){
     GLdouble* m = identity();
     m[12] = x;
@@ -85,6 +119,12 @@ GLdouble* translation_matrix(double x, double y, double z){
     return m;
 }
 
+/* @brief Puntu bat emanda, 4 x 4 ko errotazio matrizea bueltatuko du.
+ * @param x koordenatua
+ * @param y koordenatua
+ * @param z koordenatua
+ * @return Errotazio matrizea
+*/
 GLdouble* rotation_matrix(double x, double y, double z){
     GLdouble* m1 = identity();
     GLdouble m[16];
@@ -110,6 +150,12 @@ GLdouble* rotation_matrix(double x, double y, double z){
     return m1;
 }
 
+/* @brief Puntu bat emanda, 4 x 4 ko eskalaketa matrizea bueltatuko du.
+ * @param x koordenatua
+ * @param y koordenatua
+ * @param z koordenatua
+ * @return Eskalaketa matrizea
+*/
 GLdouble* scale_matrix(double x, double y, double z){
     GLdouble* m = identity();
     m[0] = x;
@@ -118,6 +164,12 @@ GLdouble* scale_matrix(double x, double y, double z){
     return m;
 }
 
+/* @brief Puntu bat emanda, 4 x 4 ko zizailaketa matrizea bueltatuko du.
+ * @param x koordenatua
+ * @param y koordenatua
+ * @param z koordenatua
+ * @return Zizailaketa matrizea
+*/
 GLdouble* shearing_matrix(double x, double y, double z){
     GLdouble* m = identity();
     m[4]=x;
@@ -127,7 +179,11 @@ GLdouble* shearing_matrix(double x, double y, double z){
 }
 
 
-
+/* @brief Puntu bat emanda, 3 x 4 ko matrizearekin biderkatzen du.
+ * @param Matrizea
+ * @param Puntua
+ * @return Puntu berria
+*/
 point3 matrix_dot_point(GLdouble* mat, point3 vec){
     point3 result;
     result.x = vec.x * mat[0] + vec.y * mat[4] + vec.z * mat[8] + mat[12];
@@ -136,6 +192,11 @@ point3 matrix_dot_point(GLdouble* mat, point3 vec){
     return result;
 }
 
+/* @brief 3 elementuko bektorea bat emanda, 3 x 3 ko matrizearekin biderkatzen du.
+ * @param Matrizea
+ * @param Bektorea
+ * @return Bektore berria
+*/
 vector3 matrix_dot_vector(GLdouble* mat, vector3 vec){
     vector3 result;
     result.x = vec.x * mat[0] + vec.y * mat[4] + vec.z * mat[8];
@@ -144,6 +205,12 @@ vector3 matrix_dot_vector(GLdouble* mat, vector3 vec){
     return result;
 }
 
+
+/* @brief 4 elementuko bektorea bat emanda, 4 x 4 ko matrizearekin biderkatzen du.
+ * @param Matrizea
+ * @param Bektorea
+ * @return Bektore berria
+*/
 vector4f matrix_dot_vector4f(GLdouble* mat, vector4f vec){
     vector4f result;
     result.x = vec.x * mat[0] + vec.y * mat[4] + vec.z * mat[8]  + vec.t * mat[12];
@@ -153,6 +220,12 @@ vector4f matrix_dot_vector4f(GLdouble* mat, vector4f vec){
     return result;
 }
 
+
+/* @brief 4 x 4ko bi matrizeen arteko biderketa.
+ * @param Matrizea
+ * @param Matrizea
+ * @return Matrize berria
+*/
 GLdouble* matrix_dot_matrix(GLdouble* mat1, GLdouble* mat2){
     GLdouble* result = identity();
     float sum;
@@ -170,7 +243,10 @@ GLdouble* matrix_dot_matrix(GLdouble* mat1, GLdouble* mat2){
     return result;
 }
 
-
+/* @brief Matrizea stdout-tik printeatuko du.
+ * @param Matrizea
+ * @oharra bakarrik erabiltzen da debugeatzeko.
+*/
 void printMatrix(GLdouble* matrix){
     int c, d;
     for (c = 0; c < 4; c++) {
@@ -183,6 +259,11 @@ void printMatrix(GLdouble* matrix){
 
 /* BESTETARIKOAK */
 
+/* @brief Objektuaren transformazio matrizea berrirarekin biderkatzen eta sartzen du.
+ * @param Objektua
+ * @param Transformazio matrizea
+ * @param Erreferentzia sistema: lokala edo globala
+*/
 void transform_object(object3d* obj, GLdouble* transf, int erreferentzia_sistema){
     GLdouble* aurreko_transformazioa = peek(obj->transformazio_pila);
     GLdouble* transformatua;

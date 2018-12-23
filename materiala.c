@@ -46,6 +46,9 @@ struct materiala materiala_irakurri(char* file_name){
     return mat;
 }
 
+/* @brief Defektuzko balioak dauzkan materiala sortzen du.
+ * @return Materiala, defektuzko balioekin.
+*/
 struct materiala materiala_default(){
     struct materiala mat;
     vector4f ambient = {0.0, 0.05, 0.05, 1.0};

@@ -142,10 +142,12 @@ void display(void) {
 
     /*Now each of the objects in the list*/
     while (aux_obj != 0) {
-
+        
+        /* Objektuaren transformazio matrizea eta materiala kargatzen dugu */
         glMultMatrixd(peek(aux_obj->transformazio_pila));
         materiala_kargatu(aux_obj->materiala);
 
+        /* Aurpegi bakoitzeko erpinak marrazten ditugu */
         for (f = 0; f < aux_obj->num_faces; f++) {
             glBegin(GL_POLYGON);
 
@@ -164,7 +166,8 @@ void display(void) {
             }
             glEnd();
         }
-
+        
+        //Kamararen transformazioa sartzen dugu berriro
         glLoadIdentity();
         aplikatu_kameraren_transformazioa(_k);
         aux_obj = aux_obj->next;
