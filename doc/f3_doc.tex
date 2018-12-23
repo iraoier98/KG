@@ -219,35 +219,76 @@ Hona hemen datu-egituraren diagrama bat:
 \textbf{2. diagrama}: Pilaren elementuen arteko lotura.
 \end{center}
 
+\section{Z-buffer}
+
+Orain gainazalak marraztu behar ditugula, beharrezkoa da jakitea zein puntu dagoen bestearen atzean. Horretarako, Z-bufferra gaitu behar da \fitxategi{main.c-ko} \metodo{init()} funtzioan.
+
+\begin{lstlisting}[language=C]
+glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH );
+glEnable(GL_DEPTH_TEST );
+\end{lstlisting}
+
+Kontuan hartu behar da buffer berria gaitu dugunez, bufferra garbitu behar da errenderizazio iterazio bakoitzeko.
+
+\begin{lstlisting}[language=C]
+glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+\end{lstlisting}
+
+\section{Erpinen bektore normalak}
+
+Argiak eta koloreak ondo funtzionatzeko, erpinen bektore normalak kalkulatu behar dira. Horretarako, \fitxategi{definitions.h}-ko face estrukturan \aldagai{normal\_vector} atributua gehitu diogu, bertan bektore normala gorde dadin.\\
+
+\fitxategi{load\_obj.c} fitxategian aurpegi bakoitzaren hiru erpin hartzen ditugu, horietatik bi bektore lortzen ditugu eta horien bektore normala kalkulatzen dugu \fitxategi{matematikak.c} fitxategiko \metodo{cross\_product()} funtzioaz baliatuta, aurpegi horri esleituz. Horrela behin bakarrik egin behar ditugu kalkulu guztiak.\\
+
+\fitxategi{display.c} fitxategiaren \metodo{display()} funtzioan erpin bakoitzaren bektore normala kargatzen dugu bektore bakoitzeko bere aurpegiaren bektore normala pasatuz. Hori egiteko \metodo{glNormal3d()} funtzioa erabiltzen dugu eta bektore normalaren x, y eta z koordenatuak pasatzen dizkiogu.\\
+ 
+
 \section{Argia}
 
 Azken faseko ataletako bat argiak inplementazean datza. Argiak inplementatzeko momentuan hiru motakoak sortuko dugu, bizitza errealekoak imitatzen dituztenak: eguzkia, bonbila eta fokua.\\
 
-Lehenengoa direkzionala da, hau da, ez dauka kokapen finkorik eta bakarrik definitu behar da argiaren norabidea. Beste biak posizionalak dira: bonbilarekin ez dugu norabidea definitu behar da eta fokuarekin bai kokapena, bai norabidea zehaztu behar dira.\\
+Lehenengoa direkzionala da, hau da, ez dauka kokapen finkorik infinituan kokatuta dagoelako, hortaz, bakarrik definitu behar da argiaren norabidea, puntu guztietan angelu berdinarekin igortzen baitu. Beste biak posizionalak dira: bonbilarekin ez dugu norabidea definitu behar da eta fokuarekin bai kokapena, bai norabidea zehaztu behar dira.\\
 
-JARRI IRUDIREN BAT IKUSTEKO DESBERDINTASUNE. TA ESAN DIREKZIONALA DALA ZE PUNTU GUZTIXETAN ARGIXEN ANGULO BARDINEGAZ INCIDIDUTEN DABELAKO, EUZKIXE INFINITOAN DAUELAKO.\\
+\begin{center}
+\includegraphics[scale=0.8]{argi_direkzionala.png}
+\includegraphics[scale=0.9]{argi_posizionala.png}
 
-KOMENTEU BEBAI ZELAN DAKIN OPENGLK DIREKZIONALA DALA (BEKTOREKO AZKEN KONPONENTIE 0 IZENDA).\\
+\textbf{9. irudia}: argi direkzionala. \textbf{10. irudia}: argi posizionala.
+\end{center}
 
-GERO JARRI ARGIXEN ESTRUKTURIEN PANTALLAZO BAT, KAMARIEGAZ EINTEN BARDIN ETA AZALDU BEHIEN STRUCTEKO MEMBER BAKOTXAK EITTEN DABENA. AIPATU vector4f MOTIE ERAZAGUTUGULE BEBAI, OINARTE DOUBLIEK ERABILTZEN IBIL GARELAKO BAINA glLightfv-ko F HORI FLOATEGAITTIK DALEZ, OIN FLOATATAN GORDEBIGUZ DATUEK. GANERA 4 COMPONENTIEK.\\
+\aldagai{OpenGLk} desberdintasn hau nabaritzen du \aldagai{GL\_POSITION-i} pasatzen diogunaren arabera: bektorearen azken elementua 0 bada, bektore bat pasatzen ari gara, beraz, \aldagai{OpenGLk} eguzki-motatzat hartuko du argi hori. Pasatzen diogun bektorearen azken balioa 1 bada, argia posizionala bezala tratatuko du.\\
 
+\begin{center}
+\includegraphics[scale=2]{argia_estruktura.png}
 
+\textbf{11. irudia}: argia estruktura.
+\end{center}
+
+Goiko irudian agertzen den esstrukturaz baliatuz, argairen datuak gordeko ditugu. \aldagai{argi\_mota} eguzki -0- , bonbila -1- edo foku -2- artean desberdintzeko balio du. \aldagai{indizea} zehazten du zein argiri dagokion instantzia horien datuak. \aldagai{gaituta} adierazten du ea argia piztuta dagoenentz. \aldagai{angelua} fokuaren kasuan honek daukan zabalera zehazteko balio du. \aldagai{diffuse} aldagaiak argiaren kolorea zehazten du. \aldagai{ambient} hitzak esaten duen moduan, argiaren ingurumenaren kolorea zehazten du. \aldagai{specular} objektua distiratsua bada, honen kolorea kalkulatzeko zehazten den argiaren kolore-mota hau balio du. \aldagai{gogortasuna} argitik iluntasunera dagoen espektroaren "gogortasuna"zehazten du. Amaitzeko, \aldagai{transformazio\_pila} argiari egindako transfromazio matrizeen pila gordetzeko balio du.\\
+
+Orain arte, \aldagai{double} motako zenbakiekin lan egin dugu, baina argiak definitzeko glLightfv-ko parametroak \aldagai{float} motakoak direnez, \aldagai{vector4f} estruktura sortu dugu \fitxategi{definitions.h-n}. Estruktura honek lau \aldagai{float-eko} bektorea gordetzen du.\\
 
 Hasteko, bost argi definitu ditugu hasieran, baina defektuz desgaituta egongo dira. Orokorrean argiak gaitzeko \tekla{ENTER} sakatu behar da. Hori egin ondoren, argi bakoitza piztu nahi bada banaka joan behar da \tekla{F1} - \tekla{F5} teklak sakatuz.\\
 
-ZE PASETAN DA ARGI BAKOTXA PIZTU/AMATEKERAN? AZALDU argiaren\_egoera\_aldatu() funtzinoa. TA PIZTUTE DAUENIEN ZELAN KARGETAN DA ARGIXE? AZALDU argia\_kargatu FUNTZINOA. AZALDU BE
+Argia piztu edo amatatzean, \metodo{argiaren\_egoera\_aldatu()} deitzen zaio eta bertan argiaren kontrako egoera jartzen zaio: gaituta bazegoen desgaitzen dugu \metodo{glDisable()} futnzioari honen argia pasatuz, eta alderantziz.
+
+\fitxategi{display.c-n} argiak kargatzeko, objktuak marraztu baino lehen, \metodo{argia\_kargatu()} funtzioari argi bakoitza pasatzen zaio. Argia desgaituta badago ez da ezer egiten, baina gaituta egonez gero, \metodo{glLightfv()} metodoari argia (GL\_LIGHT0...), zehaztu nahi dugun parametroa (GL\_POSITION, GL\_SPOT\_CUTOFF...) eta honi dagokion balioa pasatuko diogu.\\
+
+\aldagai{GL\_POSITION} aldagaiari argiaren kokapena pasatuko diogu posizionalen kasuan eta bektore bat direkzionaletan, argiaren noranzkoa zehazten duena.\\
+
+\aldagai{GL\_SPOT\_CUTOFF} aldagaiari argiaren angelua pasatuko diogu argi posizionaletan. Fokuaren kasuan, estrukturan \aldagai{angelua} aldagaian gorde duguna izango da eta bonbilaren kasuan 180 gradutako balioa pasatuko diogu.\\
+
+\aldagai{GL\_SPOT\_DIRECTION} aldagaiari argi posizionalen norabidearen bektorea pasatuko diogu.\\
+
+\aldagai{GL\_SPOT\_EXPONENT} aldagaiari argitik iluntasunera dagoen espektroaren "gogortasuna" pasatuko diogu.\\
 
 \begin{lstlisting}[language=C]
 (float*) &a->ambient
 \end{lstlisting}
 
-ZEAITTIK EITTEN DAN. TYPE PUNNING BAT DA, HARTZIE DATU MOTA BAT TA BESTE ERA BATERA ERREPRESENTETIE, GURE KASUEN vector4f-ETIK float[4]-ra. HONEK FUNCIONETAN DEU ZE BI KASUETAN 4 FLOAT DIRE MEMORIAN KONTIGUO DAUZENAK. HALAN DA BE ARRISKUTSUE DA PRAKTIKA HAU, BAIA EL PUTO AMO NAZELEZ ME LO PUEDO PERMITIR.\\
+Argiak pantailaratzeko momentuan "type punning"\cite{punning} egiten dugu (goian dagoen kodean egiten dena). Estrukturan vector4f eran daukagu gordeta, baina \metodo{glLightfv()-ri} float[4]gisa pasatu behar diogu. Parseatze hau ondo dabil bi kasuetan laut \aldagai{float} direlako memorian bata bestearen ondoan daudenak. Hala ere, arriskutsua da egitea ez bada aurretik esandakoa betetzen.\\
 
-Argi bakoitzari ere kolore bat zehaztu ahal zaio. Horretarako, badaude lau aldagai:  \aldagai{ambient}, \aldagai{diffuse}, \aldagai{specular} eta \aldagai{shininess}.\\
-
-HAU GEZURRE DA, EZINYAKO ZEHAZTU, HARDCODIETA DAUZ. EMON AUKERIE ALDATZEKO.\\
-
-AZALDU LAU ALDAGAIXEK ZE EITTEN DABEN.\\
+Argiaren koloreak zehazteko, fitxategi baten bitartez egin daiteke (ikus SAFDASF).\\
 
 Argi bakoitza aukeratzeko erabil daitezke \tekla{1}etik \tekla{5}erako teklak erabili daitezke, horietan transformazioak aplikatzeko.
 
@@ -256,9 +297,9 @@ Argi bakoitza aukeratzeko erabil daitezke \tekla{1}etik \tekla{5}erako teklak er
 Argiak transformatzeko kamara proiektiboa bezala egin dugu. Bi transformazio mota egiten ditugu: biraketak eta translazioak. Hala ere, zenbait "muga" jarri ditugu:
 
 \begin{itemize}
-\item Eguzki-argia bakarrik errota daiteke: TRANSLAZINOAK EZTABELAKO AFEKTETAN BEKTORAK, BAKARRIK POSIZINOAK.
+\item Eguzki-argia bakarrik errota daiteke: translazioek puntuak afektatzen dituzte, ez bektoreak.
 
-\item Bonbila-argia bakarrik mugitu daiteke: ZE EZTEKO ZENTZURIK GIRETIEK ZE INGURU GUZTIXE ARGIZTATZEN DEU.
+\item Bonbila-argia bakarrik mugitu daiteke inguru osoa argiztatzen baitu, ez dauka zentzurik errotatzea.
 
 \item Bakarrik fokuen biraketa lokala izango da; beste transformazio guztiak globalak.
 \end{itemize}
@@ -271,7 +312,7 @@ Argien aldaketak egiteko eta desegiteko ikus \erref{aldaketak}.\\
 
 Foku motako argia hautatuta badugu eta \tekla{+} edo \tekla{-} sakatzen badugu, honen angelua handituz edo txikituz. Angelua 10 gradu eta 90 graduren artean egongo da.\\
 
-ERAKUTSI ZER ALDATZEZUN TA NUN AFEKTETAN DABEN. GL\_SPOT\_CUTOFF.\\
+Argiaren \aldagai{angelua} aldagaia aldatzen dugu eta goian azaldu den \aldagai{GL\_SPOT\_CUTOFF} aldagaiari pasatuko diogu argia pantailaratzeko.\\
 
 \section{matematikak.c}\label{matematikak}
 
@@ -281,9 +322,7 @@ Fitxategi honen abantailarik handiena transformazio-matrizeak sortzeko eta bider
 
 \section{Materialak}
 
-Behin argiak dauzkagula, beharrezkoa da zehaztea zein koloretakoa izango den objektu bakoitza. Hemen materialak sartzen dira. Hauen bitartez definitzen da objektu bakoitzaren kolorea.\\
-
-EZ DA BAKARRIK KOLORIE. EMISSION IA ARGIXE EMITIDUTEN BADEU ETA SHININESS IA  BRILLANTIE BADA.\\
+Behin argiak dauzkagula, beharrezkoa da zehaztea zein koloretakoa izango den objektu bakoitza, distiratasuna edota argi propioa daukan. Hemen materialak sartzen dira. Hauen bitartez definitzen dira aurretik esandago propietateak.\\
 
 OSTABE ERABILLI VECTOR4F PUTIEK ZE 4 KONPONENTEKOAK DIE MACHO.\\
 
@@ -293,25 +332,12 @@ HAU GEZURRE DA. SARTU EMISSION, 0 IZEN ARREN, SARTU. ETA GERO ATARA KAPTURIE STR
 
 \subsection{Materialen definizioa kargatu fitxategien bitartez}
 
-Argien definizioa kargatzeko, \fitxategi{materiala.c} fitxategian \metodo{readmateriala()} sortu dugu eta hautatutako argiari balioak esleitzen dizkio.\\
+Materialen definizioa kargatzeko, \fitxategi{materiala.c} fitxategian \metodo{read\_materiala()} sortu dugu eta hautatutako objektuaren materialari balioak esleitzen dizkio.\\
 
-HAU GOIKO FRASIE BERRIRO EIN ONDO.\\
-
-Materiala kargatzeko fitxategiak hurrengo formatua izango du: lerro bakoitzeko, ordenean, \aldagai{ambient}, \aldagai{diffuse}, \aldagai{specular} eta \aldagai{shininess} aldagaien balioak agertuko dira, besterik ez. Horrela ez izatekotan, erroreak ager daitezke.\\
-
-TA EMISSION?\\
+Materiala kargatzeko fitxategiak hurrengo formatua izango du: lerro bakoitzeko, ordenean, \aldagai{ambient}, \aldagai{diffuse}, \aldagai{specular}, \aldagai{emission} eta \aldagai{shininess} aldagaien balioak agertuko dira, besterik ez. Horrela ez izatekotan, erroreak ager daitezke.\\
 
 
-
-
-
-
-
-
-
-
-BERREIN MATERIALANA. ONDO IDATZI DANA. APARTE, EZTOZU KOMENTEU Z-BUFFERAN EZEBE, OIN OBJEKTOAK LERROAKAZ BARIK POLIGOKOAKAZ PINTTETANGUZELA, NORMALARI BURUZ BE EZEBE, TA OSO GARRANTZITSUE DA.
-EN FIN, BETE NIK JARRITEN DANA.
+BERREIN MATERIALANA. ONDO IDATZI DANA.
 
 
 
@@ -416,6 +442,10 @@ Kameraren funtzionamendurako sartutako konstanteak hurrengoak dira:
 \bibitem{pointer} 
 \underline{Pointer}:\\
 \url{https://www.programiz.com/c-programming/c-pointers}
+
+\bibitem{punning}
+\underline{Punning}:\\
+\url{https://en.wikipedia.org/wiki/Type_punning}
 
 
 

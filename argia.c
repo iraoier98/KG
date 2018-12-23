@@ -75,6 +75,7 @@ void argi_mota_aldatu(argia* a){
  * */
 void argia_kargatu(argia* a){
 
+    // Desgaituta badago ez egin ezer, bestela, argiaren informazioa kargatu.
     if (a->gaituta == 0){
         return;
     }
