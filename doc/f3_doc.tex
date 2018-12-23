@@ -2,7 +2,7 @@
 \usepackage{hyperref}
 \usepackage[a4paper]{geometry}
 \usepackage{graphicx}
-%\usepackage{listings}
+\usepackage{listings}
 \usepackage{multirow}
 
 \newcommand{\fitxategi}[1] {\underline{\textit{#1}}}
@@ -225,9 +225,29 @@ Azken faseko ataletako bat argiak inplementazean datza. Argiak inplementatzeko m
 
 Lehenengoa direkzionala da, hau da, ez dauka kokapen finkorik eta bakarrik definitu behar da argiaren norabidea. Beste biak posizionalak dira: bonbilarekin ez dugu norabidea definitu behar da eta fokuarekin bai kokapena, bai norabidea zehaztu behar dira.\\
 
-Hasteko, bost argi definitu ditugu hasieran, baina defektuz desgaituta egongo dira. Orokorrean argiak gaitzeko \tekla{ENTER} sakatu behar da. Hori egin ondoren, argi bakoitza piztu nahi bada banaka joan behar da \tekla{Fn} sakatuz, n argiaren zenbakia izanik, 1etik 5era.\\
+JARRI IRUDIREN BAT IKUSTEKO DESBERDINTASUNE. TA ESAN DIREKZIONALA DALA ZE PUNTU GUZTIXETAN ARGIXEN ANGULO BARDINEGAZ INCIDIDUTEN DABELAKO, EUZKIXE INFINITOAN DAUELAKO.\\
+
+KOMENTEU BEBAI ZELAN DAKIN OPENGLK DIREKZIONALA DALA (BEKTOREKO AZKEN KONPONENTIE 0 IZENDA).\\
+
+GERO JARRI ARGIXEN ESTRUKTURIEN PANTALLAZO BAT, KAMARIEGAZ EINTEN BARDIN ETA AZALDU BEHIEN STRUCTEKO MEMBER BAKOTXAK EITTEN DABENA. AIPATU vector4f MOTIE ERAZAGUTUGULE BEBAI, OINARTE DOUBLIEK ERABILTZEN IBIL GARELAKO BAINA glLightfv-ko F HORI FLOATEGAITTIK DALEZ, OIN FLOATATAN GORDEBIGUZ DATUEK. GANERA 4 COMPONENTIEK.\\
+
+
+
+Hasteko, bost argi definitu ditugu hasieran, baina defektuz desgaituta egongo dira. Orokorrean argiak gaitzeko \tekla{ENTER} sakatu behar da. Hori egin ondoren, argi bakoitza piztu nahi bada banaka joan behar da \tekla{F1} - \tekla{F5} teklak sakatuz.\\
+
+ZE PASETAN DA ARGI BAKOTXA PIZTU/AMATEKERAN? AZALDU argiaren\_egoera\_aldatu() funtzinoa. TA PIZTUTE DAUENIEN ZELAN KARGETAN DA ARGIXE? AZALDU argia\_kargatu FUNTZINOA. AZALDU BE
+
+\begin{lstlisting}[language=C]
+(float*) &a->ambient
+\end{lstlisting}
+
+ZEAITTIK EITTEN DAN. TYPE PUNNING BAT DA, HARTZIE DATU MOTA BAT TA BESTE ERA BATERA ERREPRESENTETIE, GURE KASUEN vector4f-ETIK float[4]-ra. HONEK FUNCIONETAN DEU ZE BI KASUETAN 4 FLOAT DIRE MEMORIAN KONTIGUO DAUZENAK. HALAN DA BE ARRISKUTSUE DA PRAKTIKA HAU, BAIA EL PUTO AMO NAZELEZ ME LO PUEDO PERMITIR.\\
 
 Argi bakoitzari ere kolore bat zehaztu ahal zaio. Horretarako, badaude lau aldagai:  \aldagai{ambient}, \aldagai{diffuse}, \aldagai{specular} eta \aldagai{shininess}.\\
+
+HAU GEZURRE DA, EZINYAKO ZEHAZTU, HARDCODIETA DAUZ. EMON AUKERIE ALDATZEKO.\\
+
+AZALDU LAU ALDAGAIXEK ZE EITTEN DABEN.\\
 
 Argi bakoitza aukeratzeko erabil daitezke \tekla{1}etik \tekla{5}erako teklak erabili daitezke, horietan transformazioak aplikatzeko.
 
@@ -236,44 +256,91 @@ Argi bakoitza aukeratzeko erabil daitezke \tekla{1}etik \tekla{5}erako teklak er
 Argiak transformatzeko kamara proiektiboa bezala egin dugu. Bi transformazio mota egiten ditugu: biraketak eta translazioak. Hala ere, zenbait "muga" jarri ditugu:
 
 \begin{itemize}
-\item Eguzki-argia bakarrik errota daiteke: ez dauka zentzurik argi direkzionala mugitzea, edozein lekutan bektorea berdina baita.
+\item Eguzki-argia bakarrik errota daiteke: TRANSLAZINOAK EZTABELAKO AFEKTETAN BEKTORAK, BAKARRIK POSIZINOAK.
 
-\item Bonbila-argia bakarrik mugitu daiteke: eguzkiaren kontrakoa da.
+\item Bonbila-argia bakarrik mugitu daiteke: ZE EZTEKO ZENTZURIK GIRETIEK ZE INGURU GUZTIXE ARGIZTATZEN DEU.
 
-\item Bakarrik fokuen biraketa lokala izango da; besteak, globalak.
+\item Bakarrik fokuen biraketa lokala izango da; beste transformazio guztiak globalak.
 \end{itemize}
 
 Argien aldaketak egiteko eta desegiteko ikus \erref{aldaketak}.\\
 
-\textbf{OHARRA}: Kamera motaz aldatzean aldaketa guztiak galtzen dira; stack bakarra inplementatuta dago.
+\textbf{Oharra}: Argi motaz aldatzean, transformazioa hasieratzen da aldaketa guztiak galduz.
 
 \subsection{Fokuen angelua handitu edo txikitu}
 
-Foku motako argia hautatuta badugu eta \tekla{+} edo \tekla{-} sakatzen badugu, honen angelua handituz edo txikituz. Angelua 10 eta 180 tartean egongo da.
+Foku motako argia hautatuta badugu eta \tekla{+} edo \tekla{-} sakatzen badugu, honen angelua handituz edo txikituz. Angelua 10 gradu eta 90 graduren artean egongo da.\\
 
-\subsection{Argien definizioa kargatu fitxategien bitartez}
-
-Argien definizioa kargatzeko, \fitxategi{materiala.c} fitxategian \metodo{readmateriala()} sortu dugu eta hautatutako argiari balioak esleitzen dizkio.\\
-
-ñjkkjsabdfkasbdfaskfdbsakf
+ERAKUTSI ZER ALDATZEZUN TA NUN AFEKTETAN DABEN. GL\_SPOT\_CUTOFF.\\
 
 \section{matematikak.c}\label{matematikak}
 
 Kalkulu matematikoak fitxategi bat baino gehiagotik burutzen zirenez eta metodo berak behar zirenez, gure programak behar dituen kalkulu matematiko gutziak \fitxategi{matematikak.c} fitxategian gorde ditugu. Gehien bat matrizeak kudeatzen dituen arren, badauka eskalarrekin eta bektoreekin operatzen dituzten funtzioak.\\
 
-Fitxategi honen abantailarik handiena transformazio-matrizeak sortzeko eta biderkatzeko ahalmena da. Horrela, fitxategi hau erabiltzen duten beste fitxategietan kode txukunagoa dute eta gainera, inplementazioa aldatu nahi badugu, bakarrik metodo bat aldatzea izango da, dena zentralizatuta baitago orain.
+Fitxategi honen abantailarik handiena transformazio-matrizeak sortzeko eta biderkatzeko ahalmena da. Horrela, fitxategi hau erabiltzen duten beste fitxategietan kode txukunagoa dute eta gainera, inplementazioa aldatu nahi badugu, bakarrik metodo bat aldatzea izango da, dena zentralizatuta baitago orain.\\
 
 \section{Materialak}
 
 Behin argiak dauzkagula, beharrezkoa da zehaztea zein koloretakoa izango den objektu bakoitza. Hemen materialak sartzen dira. Hauen bitartez definitzen da objektu bakoitzaren kolorea.\\
 
-Materiala estrukturak argiaren balio berdinak dauzka objektuaren kolorea definitzeko.
+EZ DA BAKARRIK KOLORIE. EMISSION IA ARGIXE EMITIDUTEN BADEU ETA SHININESS IA  BRILLANTIE BADA.\\
+
+OSTABE ERABILLI VECTOR4F PUTIEK ZE 4 KONPONENTEKOAK DIE MACHO.\\
+
+Materiala estrukturak argiaren balio berdinak dauzka objektuaren kolorea definitzeko.\\
+
+HAU GEZURRE DA. SARTU EMISSION, 0 IZEN ARREN, SARTU. ETA GERO ATARA KAPTURIE STRUCTERI TA HAMEN JARRI, BESTIEKAZ EINTELEZ.\\
 
 \subsection{Materialen definizioa kargatu fitxategien bitartez}
 
 Argien definizioa kargatzeko, \fitxategi{materiala.c} fitxategian \metodo{readmateriala()} sortu dugu eta hautatutako argiari balioak esleitzen dizkio.\\
 
-Materiala kargatzeko fitxategiak hurrengo formatua izango du: lerro bakoitzeko, ordenean, \aldagai{ambient}, \aldagai{diffuse}, \aldagai{specular} eta \aldagai{shininess} aldagaien balioak agertuko dira, besterik ez. Horrela ez izatekotan, erroreak ager daitezke.
+HAU GOIKO FRASIE BERRIRO EIN ONDO.\\
+
+Materiala kargatzeko fitxategiak hurrengo formatua izango du: lerro bakoitzeko, ordenean, \aldagai{ambient}, \aldagai{diffuse}, \aldagai{specular} eta \aldagai{shininess} aldagaien balioak agertuko dira, besterik ez. Horrela ez izatekotan, erroreak ager daitezke.\\
+
+TA EMISSION?\\
+
+
+
+
+
+
+
+
+
+
+BERREIN MATERIALANA. ONDO IDATZI DANA. APARTE, EZTOZU KOMENTEU Z-BUFFERAN EZEBE, OIN OBJEKTOAK LERROAKAZ BARIK POLIGOKOAKAZ PINTTETANGUZELA, NORMALARI BURUZ BE EZEBE, TA OSO GARRANTZITSUE DA.
+EN FIN, BETE NIK JARRITEN DANA.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \section{Konstante berriak}\label{constants}
 

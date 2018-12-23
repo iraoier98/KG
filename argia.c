@@ -90,8 +90,8 @@ void argia_kargatu(argia* a){
     GLdouble* transformazioa = peek(a->transformazio_pila);
 
     if (a->argi_mota==KG_EGUZKIA){
-        vector4f kokapena = matrix_dot_vector4f(transformazioa, hasierako_norabidea);
-        glLightfv(a->indizea, GL_POSITION, (float*) &kokapena);
+        vector4f norabidea = matrix_dot_vector4f(transformazioa, hasierako_norabidea);
+        glLightfv(a->indizea, GL_POSITION, (float*) &norabidea);
         // glColor3f(1.0, 1.0, 1.0);
         // glBegin(GL_LINES);
         // glVertex3d(0, 0, 0);
